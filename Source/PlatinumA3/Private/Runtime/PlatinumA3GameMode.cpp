@@ -1,7 +1,7 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "PlatinumA3GameMode.h"
-#include "PlatinumA3Character.h"
+#include "PlatinumA3/Public/Runtime/PlatinumA3GameMode.h"
+#include "PlatinumA3/Public/Runtime/PlatinumA3Character.h"
 #include "UObject/ConstructorHelpers.h"
 
 APlatinumA3GameMode::APlatinumA3GameMode()

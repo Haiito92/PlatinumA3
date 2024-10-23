@@ -57,6 +57,8 @@ public:
 #pragma endregion
 
 
+
+	
 #pragma region Orient
 
 public:
@@ -73,7 +75,6 @@ protected:
 
 	
 #pragma endregion
-
 
 #pragma region State Machine
 
@@ -95,8 +96,6 @@ public:
 	UPDA_StateDatas* GetStateDatas(ESmashCharacterStateID StateID);
 	
 #pragma endregion
-
-
 
 #pragma region Input Move X
 

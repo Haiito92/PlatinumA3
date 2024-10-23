@@ -43,8 +43,7 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
 	
 	for (AArenaPlayerStart* SpawnPoint : SpawnPoints)
 	{
-		EAutoReceiveInput::Type InputType = SpawnPoint->AutoReceiveInput.GetValue();
-		TSubclassOf<ASmashCharacter> SmashCharacterClass = GetSmashCharacterClassFromInputType(InputType);
+		TSubclassOf<ASmashCharacter> SmashCharacterClass = GetCharacterClassFromCharacterType(SpawnPoint->CharacterToSpawn);
 
 		if(SmashCharacterClass == nullptr) continue;
 
@@ -67,21 +66,20 @@ void AMatchGameMode::SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoin
 }
 
 
-TSubclassOf<ASmashCharacter> AMatchGameMode::GetSmashCharacterClassFromInputType(
-	EAutoReceiveInput::Type InputType) const
+TSubclassOf<ASmashCharacter> AMatchGameMode::GetCharacterClassFromCharacterType(ECharacterType InputType) const
 {
 	switch(InputType)
 	{
-		case EAutoReceiveInput::Type::Player0:
+		case ECharacterType::CHARACTERA:
 			return SmashCharacterClassP0;
 
-		case EAutoReceiveInput::Type::Player1:
+		case ECharacterType::CHARACTERB:
 			return SmashCharacterClassP1;
 
-		case EAutoReceiveInput::Type::Player2:
+		case ECharacterType::CHARACTERC:
 			return SmashCharacterClassP2;
 
-		case EAutoReceiveInput::Type::Player3:
+		case ECharacterType::CHARACTERD:
 			return SmashCharacterClassP3;
 
 		default:

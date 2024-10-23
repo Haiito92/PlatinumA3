@@ -13,6 +13,17 @@ class ASmashCharacter;
 /**
  * 
  */
+
+
+UENUM(BlueprintType)
+enum class ECharacterType : uint8
+{
+	CHARACTERA UMETA(DisplayName = "Character A"),
+	CHARACTERB UMETA(DisplayName = "Character B"),
+	CHARACTERC UMETA(DisplayName = "Character C"),
+	CHARACTERD UMETA(DisplayName = "Character D")
+};
+
 UCLASS()
 class STATEMACHINE_API AMatchGameMode : public AGameModeBase
 {
@@ -48,7 +59,7 @@ private:
 	void SpawnCharacters(const TArray<AArenaPlayerStart*>& SpawnPoints);
 	
 	UFUNCTION()
-	TSubclassOf<ASmashCharacter> GetSmashCharacterClassFromInputType(EAutoReceiveInput::Type InputType) const;
+	TSubclassOf<ASmashCharacter> GetCharacterClassFromCharacterType(ECharacterType CharacterType) const;
 
 	USmashCharacterInputData* LoadInputDataFromConfig();
 

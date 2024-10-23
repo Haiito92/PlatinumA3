@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ArenaPlayerStartOrient.h"
 #include "GameFramework/PlayerStart.h"
+#include "Match/MatchGameMode.h"
 #include "ArenaPlayerStart.generated.h"
 
 UCLASS()
@@ -18,4 +19,7 @@ public:
 
 	UPROPERTY(EditAnywhere)
 	EArenaPlayerStartOrient StartOrient = EArenaPlayerStartOrient::Right;
+
+	UPROPERTY(EditAnywhere)
+	ECharacterType CharacterToSpawn;
 };

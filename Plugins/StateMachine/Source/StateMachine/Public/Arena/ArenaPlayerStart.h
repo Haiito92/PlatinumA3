@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "ArenaPlayerStartOrient.h"
 #include "GameFramework/PlayerStart.h"
-#include "Match/MatchGameMode.h"
+#include "Match/SimpleGameMode.h"
 #include "ArenaPlayerStart.generated.h"
 
 UCLASS()

@@ -162,6 +162,46 @@ void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* Enha
 	}
 
 
+
+
+
+
+	if(InputData->InputActionMoveY)
+	{
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionMoveY,
+			ETriggerEvent::Started,
+			this,
+			&ASmashCharacter::OnInputMoveY
+		);
+
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionMoveX,
+			ETriggerEvent::Triggered,
+			this,
+			&ASmashCharacter::OnInputMoveY
+		);
+
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionMoveX,
+			ETriggerEvent::Completed,
+			this,
+			&ASmashCharacter::OnInputMoveY
+		);
+	}
+	
+	if(InputData->InputActionMoveYFast)
+	{
+		EnhancedInputComponent->BindAction(
+			InputData->InputActionMoveYFast,
+			ETriggerEvent::Triggered,
+			this,
+			&ASmashCharacter::OnInputMoveYFast
+		);
+	}
+
+	
+
 	if(InputData->InputActionMoveZ)
 	{
 		EnhancedInputComponent->BindAction(
@@ -182,6 +222,16 @@ void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue
 {
 	InputMoveX = InputActionValue.Get<float>();
 	InputMoveXFastEvent.Broadcast(InputMoveX);
+}
+
+void ASmashCharacter::OnInputMoveY(const FInputActionValue& InputActionValue)
+{
+	InputMoveY = InputActionValue.Get<float>();
+}
+
+void ASmashCharacter::OnInputMoveYFast(const FInputActionValue& InputActionValue)
+{
+	InputMoveY = InputActionValue.Get<float>();
 }
 
 void ASmashCharacter::OnInputMoveZ(const FInputActionValue& InputActionValue)

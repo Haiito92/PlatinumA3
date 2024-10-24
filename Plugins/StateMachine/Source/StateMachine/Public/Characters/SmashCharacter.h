@@ -102,6 +102,8 @@ public:
 
 public:
 	float GetInputMoveX();
+	float GetInputMoveY();
+
 	float GetInputMoveZ();
 
 	UPROPERTY()
@@ -112,6 +114,10 @@ protected:
 	float InputMoveX = 0.0f;
 
 	UPROPERTY()
+	float InputMoveY = 0.0f;
+
+	
+	UPROPERTY()
 	float InputMoveZ = 0.0f;
 
 private:
@@ -119,6 +125,10 @@ private:
 
 	void OnInputMoveX(const FInputActionValue& InputActionValue);
 	void OnInputMoveXFast(const FInputActionValue& InputActionValue);
+
+	void OnInputMoveY(const FInputActionValue& InputActionValue);
+	void OnInputMoveYFast(const FInputActionValue& InputActionValue);
+	
 	void OnInputMoveZ(const FInputActionValue& InputActionValue);
 
 

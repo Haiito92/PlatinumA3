@@ -25,7 +25,6 @@ public:
 
 	virtual void StateTick(float DeltaTime) override;
 
-	UFUNCTION()
-	void OnInputMoveXFast(float InputMoveX);
+
 
 };

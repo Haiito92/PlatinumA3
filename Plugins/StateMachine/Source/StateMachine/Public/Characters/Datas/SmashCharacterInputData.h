@@ -16,20 +16,12 @@ class STATEMACHINE_API USmashCharacterInputData : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> MoveAction;
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> InputActionMoveX;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> SprintAction;
 
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> InputActionMoveXFast;
-
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> InputActionMoveY;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> InputActionMoveYFast;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UInputAction> InputActionMoveZ;
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> HoldingAction;
 };

@@ -37,9 +37,7 @@ void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID
 	// 	FColor::Cyan,
 	// 	TEXT("Enter State Walk")
 	// );
-
-	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-
+	
 }
 
 void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
@@ -52,9 +50,7 @@ void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 	// 	FColor::Red,
 	// 	TEXT("Exit State Walk")
 	// );
-
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-
+	
 }
 
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
@@ -68,18 +64,12 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 	// 	TEXT("Tick State Walk")
 	// );
 	
-	if(FMath::Abs(Character->GetInputMoveX()) < CharacterSettings->InputMoveXThreshold)
-	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
-	}else
-	{
-		Character->SetOrientX(Character->GetInputMoveX());
-		Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX() * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
-	}
-}
-
-
-void USmashCharacterStateWalk::OnInputMoveXFast(float InputMoveX)
-{
-	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+	// if(FMath::Abs(Character->GetInputMoves().Normalize()) < CharacterSettings->InputMoveXThreshold)
+	// {
+	// 	StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+	// }else
+	// {
+	// 	//Character->SetOrientX(Character->GetInputMoves().Normalize());
+	// 	Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX() * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+	// }
 }

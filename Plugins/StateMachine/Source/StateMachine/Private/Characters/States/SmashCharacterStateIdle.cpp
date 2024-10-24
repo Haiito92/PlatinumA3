@@ -36,9 +36,7 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 	// 	FColor::Cyan,
 	// 	TEXT("Enter State Idle")
 	// );
-
-	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
-
+	
 }
 
 void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
@@ -51,10 +49,6 @@ void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 	// 	FColor::Red,
 	// 	TEXT("Exit State Idle")
 	// );
-
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateIdle::OnInputMoveXFast);
-
 }
 
 void USmashCharacterStateIdle::StateTick(float DeltaTime)
@@ -70,18 +64,9 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 	);
 
 
-	if(FMath::Abs(Character->GetInputMoveX()) > CharacterSettings->InputMoveXThreshold)
-	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
-	}
-
-	if(FMath::Abs(Character->GetInputMoveZ()) > 0)
-	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Jump);
-	}
-}
-
-void USmashCharacterStateIdle::OnInputMoveXFast(float InputMoveX)
-{
-	StateMachine->ChangeState(ESmashCharacterStateID::Run);
+	// if(FMath::Abs(Character->GetInputMoves()) > CharacterSettings->InputMoveXThreshold)
+	// {
+	// 	StateMachine->ChangeState(ESmashCharacterStateID::Walk);
+	// }
+	
 }

@@ -4,7 +4,7 @@
 #include "Runtime/Sheep/SheepPen.h"
 
 #include "Components/BoxComponent.h"
-#include "Runtime/GameModes/CampaignGameMode.h"
+#include "Runtime/CampaignCore/CampaignGameMode.h"
 #include "Runtime/Sheep/SheepCharacter.h"
 
 

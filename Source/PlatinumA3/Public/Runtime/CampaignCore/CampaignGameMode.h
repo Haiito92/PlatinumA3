@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+class ACampaignPlayerStart;
 /**
  * 
  */
@@ -20,7 +21,9 @@ private:
 #pragma endregion
 
 #pragma region Players
-	
+	void FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const;
+
+	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const; 
 #pragma endregion 	
 	
 #pragma region Game

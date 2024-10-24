@@ -17,5 +17,5 @@ class PLATINUMA3_API UCampaignModeSettings : public UDeveloperSettings
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category="Characters")
-	TSubclassOf<APlatinumA3Character> CampaignCharacter;
+	TSubclassOf<APlatinumA3Character> CampaignCharacterClass;
 };

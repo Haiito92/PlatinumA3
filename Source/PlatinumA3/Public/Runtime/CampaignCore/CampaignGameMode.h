@@ -23,7 +23,9 @@ private:
 #pragma region Players
 	void FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const;
 
-	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const; 
+	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;
+
+	void CreateAndInitPlayers() const;
 #pragma endregion 	
 	
 #pragma region Game

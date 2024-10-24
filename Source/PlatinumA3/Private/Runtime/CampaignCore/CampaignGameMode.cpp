@@ -3,6 +3,8 @@
 
 #include "Runtime/CampaignCore/CampaignGameMode.h"
 
+#include "LocalMultiplayerSettings.h"
+#include "LocalMultiplayerSubsystem.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/PlatinumA3Character.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
@@ -13,6 +15,8 @@ void ACampaignGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	//Spawn Players
+	CreateAndInitPlayers();
+	
 	TArray<ACampaignPlayerStart*> PlayerStarts;
 	FindPlayerStartsActors(PlayerStarts);
 	SpawnCharacters(PlayerStarts);
@@ -49,7 +53,7 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 		//EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
 
 		APlatinumA3Character* NewCharacter = GetWorld()->SpawnActorDeferred<APlatinumA3Character>(
-			CampaignModeSettings->CampaignCharacter,
+			CampaignModeSettings->CampaignCharacterClass,
 			CampaignPlayerStart->GetTransform()
 			);
 
@@ -58,6 +62,17 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 		NewCharacter->AutoPossessPlayer = CampaignPlayerStart->AutoReceiveInput;
 		NewCharacter->FinishSpawning(CampaignPlayerStart->GetTransform());
 	}
+}
+
+void ACampaignGameMode::CreateAndInitPlayers() const
+{
+	UGameInstance* GameInstance = GetGameInstance();
+	if(GameInstance == nullptr) return;
+	
+	ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
+	if(LocalMultiplayerSubsystem == nullptr) return;
+	
+	LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
 
 #pragma endregion

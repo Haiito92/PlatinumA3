@@ -5,6 +5,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/PlatinumA3Character.h"
+#include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
 #pragma region Defaults
 void ACampaignGameMode::BeginPlay()
@@ -40,12 +41,15 @@ void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& In
 
 void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const
 {
+	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
+	
+	
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
-		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
+		//EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
 
 		APlatinumA3Character* NewCharacter = GetWorld()->SpawnActorDeferred<APlatinumA3Character>(
-			APlatinumA3Character::StaticClass(),
+			CampaignModeSettings->CampaignCharacter,
 			CampaignPlayerStart->GetTransform()
 			);
 

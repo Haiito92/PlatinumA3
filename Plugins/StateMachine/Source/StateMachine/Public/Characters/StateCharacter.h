@@ -70,6 +70,8 @@ private:
 
 	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
 
+	
+
 #pragma endregion
 
 
@@ -82,6 +84,9 @@ private:
 #pragma region Orient
 
 public:
+
+	void Move(FVector2D MovementsValues);
+
 float GetOrientX() const;
 
 void SetOrientX(float NewOrientX);

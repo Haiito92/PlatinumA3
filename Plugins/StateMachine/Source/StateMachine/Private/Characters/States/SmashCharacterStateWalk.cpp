@@ -79,10 +79,10 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 		//Character->SetOrientX(Character->GetInputMoves().Normalize());
 		
 		// Move on Forward Backward
-		Character->AddMovementInput(FVector::ForwardVector,  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+		Character->AddMovementInput(Character->GetActorRightVector(),  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 
 		// Move on Left Right
-		Character->AddMovementInput(FVector::ForwardVector,  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+		Character->AddMovementInput(Character->GetActorForwardVector(),  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 
 	}
 }

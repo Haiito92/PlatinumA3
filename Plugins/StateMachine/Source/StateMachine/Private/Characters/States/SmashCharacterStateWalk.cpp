@@ -70,14 +70,15 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 	// 	FColor::Green,
 	// 	TEXT("Input Length: %f", *Character->GetInputMoves().GetSafeNormal().Length())
 	// );
-	
-	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) < CharacterSettings->InputMoveXThreshold)
+
+	UE_LOG(LogTemp, Warning, TEXT("InputMove Length: %f, Threshold: %f"), Character->GetInputMoves().Length(), CharacterSettings->InputMoveXThreshold);
+
+	if(FMath::Abs(Character->GetInputMoves().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
 	}else
 	{
-		//Character->SetOrientX(Character->GetInputMoves().Normalize());
-		
+	
 		// Move on Forward Backward
 		Character->AddMovementInput(Character->GetActorRightVector(),  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 

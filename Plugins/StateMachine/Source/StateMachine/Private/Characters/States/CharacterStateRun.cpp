@@ -1,16 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/States/SmashCharacterStateRun.h"
+#include "Characters/States/CharacterStateRun.h"
 
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/StateCharacter.h"
+#include "Characters/StateCharacterSettings.h"
+#include "Characters/CharacterStateMachine.h"
 #include "Characters/PDA/PDA_StateDatas.h"
 
 
 // Sets default values for this component's properties
-USmashCharacterStateRun::USmashCharacterStateRun()
+UCharacterStateRun::UCharacterStateRun()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -20,12 +20,12 @@ USmashCharacterStateRun::USmashCharacterStateRun()
 }
 
 
-ESmashCharacterStateID USmashCharacterStateRun::GetStateID()
+ECharacterStateID UCharacterStateRun::GetStateID()
 {
-	return ESmashCharacterStateID::Run;
+	return ECharacterStateID::Run;
 }
 
-void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
+void UCharacterStateRun::StateEnter(ECharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
@@ -39,7 +39,7 @@ void USmashCharacterStateRun::StateEnter(ESmashCharacterStateID PreviousStateID)
 	);
 }
 
-void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
+void UCharacterStateRun::StateExit(ECharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
@@ -51,7 +51,7 @@ void USmashCharacterStateRun::StateExit(ESmashCharacterStateID NextStateID)
 	 );
 }
 
-void USmashCharacterStateRun::StateTick(float DeltaTime)
+void UCharacterStateRun::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
@@ -64,7 +64,7 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 
 	if(FMath::Abs(Character->GetInputMoves().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+		StateMachine->ChangeState(ECharacterStateID::Idle);
 	}else
 	{
 		//Character->SetOrientX(Character->GetInputMoves().Normalize());

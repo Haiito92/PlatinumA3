@@ -1,16 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/States/SmashCharacterStateWalk.h"
+#include "Characters/States/CharacterStateWalk.h"
 
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/StateCharacter.h"
+#include "Characters/StateCharacterSettings.h"
+#include "Characters/CharacterStateMachine.h"
 #include "Characters/PDA/PDA_StateDatas.h"
 
 
 // Sets default values for this component's properties
-USmashCharacterStateWalk::USmashCharacterStateWalk()
+UCharacterStateWalk::UCharacterStateWalk()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -20,12 +20,12 @@ USmashCharacterStateWalk::USmashCharacterStateWalk()
 }
 
 
-ESmashCharacterStateID USmashCharacterStateWalk::GetStateID()
+ECharacterStateID UCharacterStateWalk::GetStateID()
 {
-	return ESmashCharacterStateID::Walk;
+	return ECharacterStateID::Walk;
 }
 
-void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID)
+void UCharacterStateWalk::StateEnter(ECharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
@@ -40,7 +40,7 @@ void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID
 	
 }
 
-void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
+void UCharacterStateWalk::StateExit(ECharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
@@ -53,7 +53,7 @@ void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 	
 }
 
-void USmashCharacterStateWalk::StateTick(float DeltaTime)
+void UCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
@@ -75,7 +75,7 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 
 	if(FMath::Abs(Character->GetInputMoves().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+		StateMachine->ChangeState(ECharacterStateID::Idle);
 	}else
 	{
 	

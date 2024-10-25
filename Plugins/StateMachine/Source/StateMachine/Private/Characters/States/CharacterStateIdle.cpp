@@ -1,16 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/States/SmashCharacterStateIdle.h"
+#include "Characters/States/CharacterStateIdle.h"
 
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/StateCharacter.h"
+#include "Characters/StateCharacterSettings.h"
+#include "Characters/CharacterStateMachine.h"
 #include "Characters/PDA/PDA_StateDatas.h"
 
 
 // Sets default values for this component's properties
-USmashCharacterStateIdle::USmashCharacterStateIdle()
+UCharacterStateIdle::UCharacterStateIdle()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -19,12 +19,12 @@ USmashCharacterStateIdle::USmashCharacterStateIdle()
 	// ...
 }
 
-ESmashCharacterStateID USmashCharacterStateIdle::GetStateID()
+ECharacterStateID UCharacterStateIdle::GetStateID()
 {
-	return ESmashCharacterStateID::Idle;
+	return ECharacterStateID::Idle;
 }
 
-void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID)
+void UCharacterStateIdle::StateEnter(ECharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
@@ -39,7 +39,7 @@ void USmashCharacterStateIdle::StateEnter(ESmashCharacterStateID PreviousStateID
 	
 }
 
-void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
+void UCharacterStateIdle::StateExit(ECharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
@@ -51,7 +51,7 @@ void USmashCharacterStateIdle::StateExit(ESmashCharacterStateID NextStateID)
 	// );
 }
 
-void USmashCharacterStateIdle::StateTick(float DeltaTime)
+void UCharacterStateIdle::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
@@ -66,7 +66,7 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 
 	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) > CharacterSettings->InputMoveXThreshold)
 	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
+		StateMachine->ChangeState(ECharacterStateID::Walk);
 	}
 	
 }

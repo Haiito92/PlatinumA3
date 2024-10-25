@@ -5,7 +5,7 @@
 
 #include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
-#include "GameFramework/Character.h"
+#include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
@@ -14,7 +14,6 @@
 void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
 	//Spawn Players
 	CreateAndInitPlayers();
 	
@@ -51,10 +50,10 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
 		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
-		TSubclassOf<ACharacter> CharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		TSubclassOf<AStateCharacter> CharacterClass = GetCampaignCharacterClassByInputType(InputType);
 		if(CharacterClass == nullptr) continue;
 		
-		ACharacter* NewCharacter = GetWorld()->SpawnActorDeferred<ACharacter>(
+		AStateCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<AStateCharacter>(
 			CharacterClass,
 			CampaignPlayerStart->GetTransform()
 			);
@@ -77,21 +76,20 @@ void ACampaignGameMode::CreateAndInitPlayers() const
 	LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
 
-TSubclassOf<ACharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(
+TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(
 	EAutoReceiveInput::Type InInputType) const
 {
 	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
 	if(CampaignModeSettings == nullptr) return nullptr;
 
-	return nullptr;
-	// switch (InInputType)
-	// {
-	// case EAutoReceiveInput::Player0:
-	// 	return CampaignModeSettings->CampaignCharacterClassP0;
-	// case EAutoReceiveInput::Player1:
-	// 	return CampaignModeSettings->CampaignCharacterClassP1;
-	// default: return nullptr;
-	// }
+	switch (InInputType)
+	{
+	case EAutoReceiveInput::Player0:
+		return CampaignModeSettings->CampaignCharacterClassP0;
+	case EAutoReceiveInput::Player1:
+		return CampaignModeSettings->CampaignCharacterClassP1;
+	default: return nullptr;
+	}
 }
 
 

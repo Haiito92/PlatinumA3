@@ -1,16 +1,16 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/States/SmashCharacterStateWalk.h"
+#include "Characters/States/CharacterStateRun.h"
 
-#include "Characters/SmashCharacter.h"
-#include "Characters/SmashCharacterSettings.h"
-#include "Characters/SmashCharacterStateMachine.h"
+#include "Characters/StateCharacter.h"
+#include "Characters/StateCharacterSettings.h"
+#include "Characters/CharacterStateMachine.h"
 #include "Characters/PDA/PDA_StateDatas.h"
 
 
 // Sets default values for this component's properties
-USmashCharacterStateWalk::USmashCharacterStateWalk()
+UCharacterStateRun::UCharacterStateRun()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
@@ -20,40 +20,38 @@ USmashCharacterStateWalk::USmashCharacterStateWalk()
 }
 
 
-ESmashCharacterStateID USmashCharacterStateWalk::GetStateID()
+ECharacterStateID UCharacterStateRun::GetStateID()
 {
-	return ESmashCharacterStateID::Walk;
+	return ECharacterStateID::Run;
 }
 
-void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID)
+void UCharacterStateRun::StateEnter(ECharacterStateID PreviousStateID)
 {
 	Super::StateEnter(PreviousStateID);
 
 	Character->PlayAnimMontage(Character->GetStateDatas(GetStateID())->AnimMontage);
 	
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Cyan,
-	// 	TEXT("Enter State Walk")
-	// );
-	
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		3.0f,
+		FColor::Cyan,
+		TEXT("Enter State Run")
+	);
 }
 
-void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
+void UCharacterStateRun::StateExit(ECharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Red,
-	// 	TEXT("Exit State Walk")
-	// );
-	
+	 GEngine->AddOnScreenDebugMessage(
+	 	-1,
+	 	3.0f,
+	 	FColor::Red,
+	 	TEXT("Exit State Run")
+	 );
 }
 
-void USmashCharacterStateWalk::StateTick(float DeltaTime)
+void UCharacterStateRun::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
@@ -61,19 +59,12 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 		-1,
 		0.1f,
 		FColor::Green,
-		TEXT("Tick State Walk")
+		TEXT("Tick State Run")
 	);
 
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	0.1f,
-	// 	FColor::Green,
-	// 	TEXT("Input Length: %f", *Character->GetInputMoves().GetSafeNormal().Length())
-	// );
-	
-	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) < CharacterSettings->InputMoveXThreshold)
+	if(FMath::Abs(Character->GetInputMoves().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
-		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+		StateMachine->ChangeState(ECharacterStateID::Idle);
 	}else
 	{
 		//Character->SetOrientX(Character->GetInputMoves().Normalize());
@@ -83,6 +74,5 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 
 		// Move on Left Right
 		Character->AddMovementInput(Character->GetActorForwardVector(),  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
-
 	}
 }

@@ -64,9 +64,9 @@ void USmashCharacterStateIdle::StateTick(float DeltaTime)
 	);
 
 
-	// if(FMath::Abs(Character->GetInputMoves()) > CharacterSettings->InputMoveXThreshold)
-	// {
-	// 	StateMachine->ChangeState(ESmashCharacterStateID::Walk);
-	// }
+	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) > CharacterSettings->InputMoveXThreshold)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Walk);
+	}
 	
 }

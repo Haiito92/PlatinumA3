@@ -12,6 +12,89 @@
 #include "Kismet/GameplayStatics.h"
 
 
+
+
+
+
+
+
+
+// Sets default values
+ASmashCharacter::ASmashCharacter()
+{
+	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
+	PrimaryActorTick.bCanEverTick = true;
+}
+
+// Called when the game starts or when spawned
+void ASmashCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+
+	// Ensure Enhanced Input Subsystem is used
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(InputMappingContext, 0);
+		}
+	}
+	
+	CreateStateMachine();
+	InitStateMachine();
+}
+
+// Called every frame
+void ASmashCharacter::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	TickStateMachine(DeltaTime);
+	RotateMeshUsingOrientX();
+}
+
+// Called to bind functionality to input
+void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+{
+	Super::SetupPlayerInputComponent(PlayerInputComponent);
+	//SetUpInputMappingContext();
+
+	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
+	if(!EnhancedInputComponent) return;
+
+	//BindInputMoveXAxisAndActions(EnhancedInputComponent);
+
+	if(!InputData) return;
+
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		3.0f,
+		FColor::Blue,
+		TEXT("Input Data Is Valid !")
+	);
+	
+	if(InputData->MoveAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
+	}
+	
+	if(InputData->SprintAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+	}
+	
+	if(InputData->HoldingAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+	}
+}
+
+
+
 void ASmashCharacter::SetUpInputMappingContext() const
 {
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
@@ -45,43 +128,6 @@ void ASmashCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
 
 
 
-
-// Sets default values
-ASmashCharacter::ASmashCharacter()
-{
-	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
-}
-
-// Called when the game starts or when spawned
-void ASmashCharacter::BeginPlay()
-{
-	Super::BeginPlay();
-	CreateStateMachine();
-	InitStateMachine();
-}
-
-// Called every frame
-void ASmashCharacter::Tick(float DeltaTime)
-{
-	Super::Tick(DeltaTime);
-	TickStateMachine(DeltaTime);
-	RotateMeshUsingOrientX();
-}
-
-// Called to bind functionality to input
-void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	SetUpInputMappingContext();
-
-	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-
-	if(!EnhancedInputComponent) return;
-
-	BindInputMoveXAxisAndActions(EnhancedInputComponent);
-}
 
 float ASmashCharacter::GetOrientX() const
 {

@@ -57,19 +57,32 @@ void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		0.1f,
+		FColor::Green,
+		TEXT("Tick State Walk")
+	);
+
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
 	// 	0.1f,
 	// 	FColor::Green,
-	// 	TEXT("Tick State Walk")
+	// 	TEXT("Input Length: %f", *Character->GetInputMoves().GetSafeNormal().Length())
 	// );
 	
-	// if(FMath::Abs(Character->GetInputMoves().Normalize()) < CharacterSettings->InputMoveXThreshold)
-	// {
-	// 	StateMachine->ChangeState(ESmashCharacterStateID::Idle);
-	// }else
-	// {
-	// 	//Character->SetOrientX(Character->GetInputMoves().Normalize());
-	// 	Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX() * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
-	// }
+	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) < CharacterSettings->InputMoveXThreshold)
+	{
+		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
+	}else
+	{
+		//Character->SetOrientX(Character->GetInputMoves().Normalize());
+		
+		// Move on Forward Backward
+		Character->AddMovementInput(FVector::ForwardVector,  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+
+		// Move on Left Right
+		Character->AddMovementInput(FVector::ForwardVector,  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+
+	}
 }

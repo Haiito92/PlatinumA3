@@ -22,26 +22,7 @@ class STATEMACHINE_API ASmashCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-#pragma region Input Data / Mapping Context
-	
-public:
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs", Meta = (DisplayThumbnail = false))
-	TObjectPtr<UInputMappingContext> InputMappingContext;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs")
-	TObjectPtr<USmashCharacterInputData> InputData;
-
-protected:
-	void SetUpInputMappingContext() const;
-
-private:
-	virtual void Input_OnMove(const FInputActionValue& ActionValue);
-
-	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
-
-	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
-
-#pragma endregion
 
 
 
@@ -69,6 +50,33 @@ public:
 #pragma endregion
 
 
+
+#pragma region Input Data / Mapping Context
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputMappingContext> InputMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs")
+	TObjectPtr<USmashCharacterInputData> InputData;
+
+protected:
+	void SetUpInputMappingContext() const;
+
+private:
+	virtual void Input_OnMove(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
+
+#pragma endregion
+
+
+
+
+
+	
 
 	
 #pragma region Orient

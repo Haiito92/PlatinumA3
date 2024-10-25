@@ -63,7 +63,7 @@ void UCharacterStateWalk::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick State Walk")
 	);
-
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
 	// 	0.1f,

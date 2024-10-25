@@ -78,12 +78,15 @@ void UCharacterStateWalk::StateTick(float DeltaTime)
 		StateMachine->ChangeState(ECharacterStateID::Idle);
 	}else
 	{
-	
-		// Move on Forward Backward
-		Character->AddMovementInput(Character->GetActorRightVector(),  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 
-		// Move on Left Right
-		Character->AddMovementInput(Character->GetActorForwardVector(),  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+		Character->Move(Character->GetInputMoves());
+
+		
+		// // Move on Forward Backward
+		// Character->AddMovementInput(Character->GetActorRightVector(),  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+		//
+		// // Move on Left Right
+		// Character->AddMovementInput(Character->GetActorForwardVector(),  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 
 	}
 }

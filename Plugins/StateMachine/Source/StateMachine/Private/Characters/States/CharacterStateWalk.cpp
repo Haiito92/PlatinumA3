@@ -31,12 +31,12 @@ void UCharacterStateWalk::StateEnter(ECharacterStateID PreviousStateID)
 
 	Character->PlayAnimMontage(Character->GetStateDatas(GetStateID())->AnimMontage);
 	
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Cyan,
-	// 	TEXT("Enter State Walk")
-	// );
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		3.0f,
+		FColor::Cyan,
+		TEXT("Enter State Walk")
+	);
 	
 }
 
@@ -44,12 +44,12 @@ void UCharacterStateWalk::StateExit(ECharacterStateID NextStateID)
 {
 	Super::StateExit(NextStateID);
 
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Red,
-	// 	TEXT("Exit State Walk")
-	// );
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		3.0f,
+		FColor::Red,
+		TEXT("Exit State Walk")
+	);
 	
 }
 
@@ -63,7 +63,7 @@ void UCharacterStateWalk::StateTick(float DeltaTime)
 		FColor::Green,
 		TEXT("Tick State Walk")
 	);
-
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
 	// 	0.1f,

@@ -6,7 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "CampaignModeSettings.generated.h"
 
-class APlatinumA3Character;
+class ASmashCharacter;
 /**
  * 
  */
@@ -17,5 +17,8 @@ class PLATINUMA3_API UCampaignModeSettings : public UDeveloperSettings
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category="Characters")
-	TSubclassOf<APlatinumA3Character> CampaignCharacterClass;
+	TSubclassOf<ASmashCharacter> CampaignCharacterClassP0;
+
+	UPROPERTY(Config, EditAnywhere, Category="Characters")
+	TSubclassOf<ASmashCharacter> CampaignCharacterClassP1;
 };

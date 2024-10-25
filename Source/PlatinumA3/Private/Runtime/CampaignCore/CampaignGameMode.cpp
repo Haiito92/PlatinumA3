@@ -5,10 +5,11 @@
 
 #include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
+#include "../../../../../Plugins/StateMachine/Source/StateMachine/Public/Characters/SmashCharacter.h"
 #include "Kismet/GameplayStatics.h"
-#include "Runtime/PlatinumA3Character.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
+
 #pragma region Defaults
 void ACampaignGameMode::BeginPlay()
 {
@@ -45,15 +46,16 @@ void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& In
 
 void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const
 {
-	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
 	
 	
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
-		//EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
-
-		APlatinumA3Character* NewCharacter = GetWorld()->SpawnActorDeferred<APlatinumA3Character>(
-			CampaignModeSettings->CampaignCharacterClass,
+		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
+		TSubclassOf<ASmashCharacter> CharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		if(CharacterClass == nullptr) continue;
+		
+		ASmashCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<ASmashCharacter>(
+			CharacterClass,
 			CampaignPlayerStart->GetTransform()
 			);
 
@@ -74,6 +76,23 @@ void ACampaignGameMode::CreateAndInitPlayers() const
 	
 	LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
 }
+
+TSubclassOf<ASmashCharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(
+	EAutoReceiveInput::Type InInputType) const
+{
+	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
+	if(CampaignModeSettings == nullptr) return nullptr;
+	
+	switch (InInputType)
+	{
+	case EAutoReceiveInput::Player0:
+		return CampaignModeSettings->CampaignCharacterClassP0;
+	case EAutoReceiveInput::Player1:
+		return CampaignModeSettings->CampaignCharacterClassP1;
+	default: return nullptr;
+	}
+}
+
 
 #pragma endregion
 

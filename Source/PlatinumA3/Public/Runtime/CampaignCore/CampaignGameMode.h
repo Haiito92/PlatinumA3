@@ -7,6 +7,7 @@
 #include "CampaignGameMode.generated.h"
 
 class ACampaignPlayerStart;
+class ASmashCharacter;
 /**
  * 
  */
@@ -26,6 +27,8 @@ private:
 	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;
 
 	void CreateAndInitPlayers() const;
+
+	TSubclassOf<ASmashCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
 #pragma endregion 	
 	
 #pragma region Game

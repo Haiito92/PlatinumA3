@@ -1,13 +1,13 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Characters/SmashCharacter.h"
+#include "Characters/StateCharacter.h"
 
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
-#include "Characters/SmashCharacterStateMachine.h"
-#include "Characters/Datas/SmashCharacterInputData.h"
+#include "Characters/CharacterStateMachine.h"
+#include "Characters/Datas/CharacterInputData.h"
 #include "Characters/PDA/PDA_StateDatas.h"
 #include "Kismet/GameplayStatics.h"
 
@@ -20,14 +20,14 @@
 
 
 // Sets default values
-ASmashCharacter::ASmashCharacter()
+AStateCharacter::AStateCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 }
 
 // Called when the game starts or when spawned
-void ASmashCharacter::BeginPlay()
+void AStateCharacter::BeginPlay()
 {
 	Super::BeginPlay();
 
@@ -47,7 +47,7 @@ void ASmashCharacter::BeginPlay()
 }
 
 // Called every frame
-void ASmashCharacter::Tick(float DeltaTime)
+void AStateCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 	TickStateMachine(DeltaTime);
@@ -55,7 +55,7 @@ void ASmashCharacter::Tick(float DeltaTime)
 }
 
 // Called to bind functionality to input
-void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
+void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	//SetUpInputMappingContext();
@@ -77,6 +77,7 @@ void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	if(InputData->MoveAction)
 	{
 		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Completed, this, &ThisClass::Input_OnMove);
 		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
 	}
 	
@@ -95,7 +96,7 @@ void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 
 
 
-void ASmashCharacter::SetUpInputMappingContext() const
+void AStateCharacter::SetUpInputMappingContext() const
 {
 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
 	if(!PlayerController) return;
@@ -109,17 +110,17 @@ void ASmashCharacter::SetUpInputMappingContext() const
 	InputSystem->AddMappingContext(InputMappingContext, 0);
 }
 
-void ASmashCharacter::Input_OnMove(const FInputActionValue& ActionValue)
+void AStateCharacter::Input_OnMove(const FInputActionValue& ActionValue)
 {
 	InputMoves = ActionValue.Get<FVector2D>();
 }
 
-void ASmashCharacter::Input_OnSprint(const FInputActionValue& ActionValue)
+void AStateCharacter::Input_OnSprint(const FInputActionValue& ActionValue)
 {
 	IsSprinting = ActionValue.Get<bool>();
 }
 
-void ASmashCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
+void AStateCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
 {
 	IsHolding = ActionValue.Get<bool>();
 }
@@ -129,17 +130,17 @@ void ASmashCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
 
 
 
-float ASmashCharacter::GetOrientX() const
+float AStateCharacter::GetOrientX() const
 {
 	return OrientX;
 }
 
-void ASmashCharacter::SetOrientX(float NewOrientX)
+void AStateCharacter::SetOrientX(float NewOrientX)
 {
 	OrientX = NewOrientX;
 }
 
-void ASmashCharacter::RotateMeshUsingOrientX() const
+void AStateCharacter::RotateMeshUsingOrientX() const
 {
 	FRotator Rotation = GetMesh()->GetRelativeRotation();
 
@@ -148,17 +149,17 @@ void ASmashCharacter::RotateMeshUsingOrientX() const
 	GetMesh()->SetRelativeRotation(Rotation);
 }
 
-FVector2D ASmashCharacter::GetInputMoves()
+FVector2D AStateCharacter::GetInputMoves()
 {
 	return InputMoves;
 }
 
-bool ASmashCharacter::GetIsSprinting()
+bool AStateCharacter::GetIsSprinting()
 {
 	return IsSprinting;
 }
 
-bool ASmashCharacter::GetIsHolding()
+bool AStateCharacter::GetIsHolding()
 {
 	return IsHolding;
 }
@@ -179,25 +180,25 @@ bool ASmashCharacter::GetIsHolding()
 
 
 
-void ASmashCharacter::CreateStateMachine()
+void AStateCharacter::CreateStateMachine()
 {
-	StateMachine = NewObject<USmashCharacterStateMachine>(this);
+	StateMachine = NewObject<UCharacterStateMachine>(this);
 }
 
-void ASmashCharacter::InitStateMachine()
+void AStateCharacter::InitStateMachine()
 {
 	if (StateMachine == nullptr) return;
 
 	StateMachine->Init(this);
 }
 
-void ASmashCharacter::TickStateMachine(float DeltaTime) const
+void AStateCharacter::TickStateMachine(float DeltaTime) const
 {
 	if(StateMachine == nullptr) return;
 	StateMachine->Tick(DeltaTime);
 }
 
-UPDA_StateDatas* ASmashCharacter::GetStateDatas(ESmashCharacterStateID StateID)
+UPDA_StateDatas* AStateCharacter::GetStateDatas(ECharacterStateID StateID)
 {
 	if(StatesDatas.Contains(StateID))
 	{
@@ -210,7 +211,7 @@ UPDA_StateDatas* ASmashCharacter::GetStateDatas(ESmashCharacterStateID StateID)
 
 
 
-void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
+void AStateCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
 	if(!InputData) return;
 

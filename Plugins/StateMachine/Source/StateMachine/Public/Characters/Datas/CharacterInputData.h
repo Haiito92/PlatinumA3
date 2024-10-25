@@ -4,14 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "SmashCharacterInputData.generated.h"
+#include "CharacterInputData.generated.h"
 
 class UInputAction;
 /**
  * 
  */
 UCLASS()
-class STATEMACHINE_API USmashCharacterInputData : public UDataAsset
+class STATEMACHINE_API UCharacterInputData : public UDataAsset
 {
 	GENERATED_BODY()
 

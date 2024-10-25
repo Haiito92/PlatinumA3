@@ -3,14 +3,14 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SmashCharacterStateID.h"
+#include "CharacterStateID.h"
 #include "GameFramework/Character.h"
-#include "SmashCharacter.generated.h"
+#include "StateCharacter.generated.h"
 
 class UInputMappingContext;
-class USmashCharacterInputData;
+class UCharacterInputData;
 class UPDA_StateDatas;
-class USmashCharacterStateMachine;
+class UCharacterStateMachine;
 struct FInputActionValue;
 class UEnhancedInputComponent;
 
@@ -18,7 +18,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXEvent, float, InputMoveX)
 
 
 UCLASS()
-class STATEMACHINE_API ASmashCharacter : public ACharacter
+class STATEMACHINE_API AStateCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
@@ -33,7 +33,7 @@ class STATEMACHINE_API ASmashCharacter : public ACharacter
 	
 public:
 	// Sets default values for this character's properties
-	ASmashCharacter();
+	AStateCharacter();
 
 protected:
 	// Called when the game starts or when spawned
@@ -58,7 +58,7 @@ public:
 	TObjectPtr<UInputMappingContext> InputMappingContext;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs")
-	TObjectPtr<USmashCharacterInputData> InputData;
+	TObjectPtr<UCharacterInputData> InputData;
 
 protected:
 	void SetUpInputMappingContext() const;
@@ -149,13 +149,13 @@ public:
 
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	TObjectPtr<USmashCharacterStateMachine> StateMachine;
+	TObjectPtr<UCharacterStateMachine> StateMachine;
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly)
-	TMap<ESmashCharacterStateID, TObjectPtr<UPDA_StateDatas>> StatesDatas;
+	TMap<ECharacterStateID, TObjectPtr<UPDA_StateDatas>> StatesDatas;
 
-	UPDA_StateDatas* GetStateDatas(ESmashCharacterStateID StateID);
+	UPDA_StateDatas* GetStateDatas(ECharacterStateID StateID);
 	
 #pragma endregion
 

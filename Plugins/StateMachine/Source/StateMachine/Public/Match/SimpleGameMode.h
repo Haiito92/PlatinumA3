@@ -8,9 +8,9 @@
 #include "SimpleGameMode.generated.h"
 
 class UInputMappingContext;
-class USmashCharacterInputData;
+class UCharacterInputData;
 class AArenaPlayerStart;
-class ASmashCharacter;
+class AStateCharacter;
 /**
  * 
  */

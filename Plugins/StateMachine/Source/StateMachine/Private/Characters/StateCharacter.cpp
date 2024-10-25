@@ -55,15 +55,15 @@ void AStateCharacter::BeginPlay()
 	Super::BeginPlay();
 
 
-	// Ensure Enhanced Input Subsystem is used
-	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
-	{
-		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
-		if (Subsystem)
-		{
-			Subsystem->AddMappingContext(InputMappingContext, 0);
-		}
-	}
+	// // Ensure Enhanced Input Subsystem is used
+	// if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	// {
+	// 	UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+	// 	if (Subsystem)
+	// 	{
+	// 		Subsystem->AddMappingContext(InputMappingContext, 0);
+	// 	}
+	// }
 	
 	CreateStateMachine();
 	InitStateMachine();

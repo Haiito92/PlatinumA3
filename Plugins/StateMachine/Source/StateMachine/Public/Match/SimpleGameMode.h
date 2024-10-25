@@ -19,10 +19,9 @@ class ASmashCharacter;
 UENUM(BlueprintType)
 enum class ECharacterType : uint8
 {
-	CHARACTERA UMETA(DisplayName = "Character A"),
-	CHARACTERB UMETA(DisplayName = "Character B"),
-	CHARACTERC UMETA(DisplayName = "Character C"),
-	CHARACTERD UMETA(DisplayName = "Character D")
+	NONE UMETA(DisplayName = "None"),
+	BERGER UMETA(DisplayName = "Berger"),
+	CHIEN UMETA(DisplayName = "Chien")
 };
 
 UCLASS()

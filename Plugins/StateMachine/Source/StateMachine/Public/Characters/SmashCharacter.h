@@ -22,19 +22,12 @@ class STATEMACHINE_API ASmashCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
-#pragma region Input Data / Mapping Context
-	
-public:
-	UPROPERTY()
-	TObjectPtr<UInputMappingContext> InputMappingContext;
 
-	UPROPERTY()
-	TObjectPtr<USmashCharacterInputData> InputData;
 
-protected:
-	void SetUpInputMappingContext() const;
-	
-#pragma endregion
+
+
+
+
 	
 #pragma region Unreal Default
 	
@@ -58,6 +51,33 @@ public:
 
 
 
+#pragma region Input Data / Mapping Context
+	
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputMappingContext> InputMappingContext;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs")
+	TObjectPtr<USmashCharacterInputData> InputData;
+
+protected:
+	void SetUpInputMappingContext() const;
+
+private:
+	virtual void Input_OnMove(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
+
+#pragma endregion
+
+
+
+
+
+	
+
 	
 #pragma region Orient
 
@@ -71,11 +91,53 @@ protected:
 	UPROPERTY(BlueprintReadWrite)
 	float OrientX = 1.0f;
 
+	UPROPERTY(BlueprintReadWrite)
+	float OrientY = 1.0f;
+	
 	void RotateMeshUsingOrientX() const;
 
 	
 #pragma endregion
 
+
+
+#pragma region Inputs
+
+
+public:
+	UFUNCTION(BlueprintCallable)
+	FVector2D GetInputMoves();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsSprinting();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsHolding();
+	
+protected:
+	UPROPERTY()
+	FVector2D InputMoves;
+
+	UPROPERTY()
+	bool IsSprinting;
+
+	UPROPERTY()
+	bool IsHolding;
+	
+private:
+	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+
+
+#pragma endregion
+
+
+
+
+
+
+
+
+	
 #pragma region State Machine
 
 public:
@@ -97,40 +159,5 @@ public:
 	
 #pragma endregion
 
-#pragma region Input Move X
 
-
-public:
-	float GetInputMoveX();
-	float GetInputMoveY();
-
-	float GetInputMoveZ();
-
-	UPROPERTY()
-	FInputMoveXEvent InputMoveXFastEvent;
-	
-protected:
-	UPROPERTY()
-	float InputMoveX = 0.0f;
-
-	UPROPERTY()
-	float InputMoveY = 0.0f;
-
-	
-	UPROPERTY()
-	float InputMoveZ = 0.0f;
-
-private:
-	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
-
-	void OnInputMoveX(const FInputActionValue& InputActionValue);
-	void OnInputMoveXFast(const FInputActionValue& InputActionValue);
-
-	void OnInputMoveY(const FInputActionValue& InputActionValue);
-	void OnInputMoveYFast(const FInputActionValue& InputActionValue);
-	
-	void OnInputMoveZ(const FInputActionValue& InputActionValue);
-
-
-#pragma endregion
 };

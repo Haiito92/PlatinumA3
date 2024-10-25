@@ -62,12 +62,12 @@ void USmashCharacterStateRun::StateTick(float DeltaTime)
 		TEXT("Tick State Run")
 	);
 
-	if(FMath::Abs(Character->GetInputMoveX()) < CharacterSettings->InputMoveXThreshold)
+	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
 	}else
 	{
-		Character->SetOrientX(Character->GetInputMoveX());
+		//Character->SetOrientX(Character->GetInputMoves().Normalize());
 		Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX() * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
 	}
 }

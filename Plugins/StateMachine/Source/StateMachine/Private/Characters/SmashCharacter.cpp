@@ -12,19 +12,10 @@
 #include "Kismet/GameplayStatics.h"
 
 
-void ASmashCharacter::SetUpInputMappingContext() const
-{
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	if(!PlayerController) return;
 
-	ULocalPlayer* Player = PlayerController->GetLocalPlayer();
-	if(!Player) return;
 
-	UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	if(!InputSystem) return;
 
-	InputSystem->AddMappingContext(InputMappingContext, 0);
-}
+
 
 
 
@@ -39,6 +30,18 @@ ASmashCharacter::ASmashCharacter()
 void ASmashCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+
+	// Ensure Enhanced Input Subsystem is used
+	if (APlayerController* PlayerController = Cast<APlayerController>(GetController()))
+	{
+		UEnhancedInputLocalPlayerSubsystem* Subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(PlayerController->GetLocalPlayer());
+		if (Subsystem)
+		{
+			Subsystem->AddMappingContext(InputMappingContext, 0);
+		}
+	}
+	
 	CreateStateMachine();
 	InitStateMachine();
 }
@@ -55,15 +58,76 @@ void ASmashCharacter::Tick(float DeltaTime)
 void ASmashCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	SetUpInputMappingContext();
+	//SetUpInputMappingContext();
 
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
-
 	if(!EnhancedInputComponent) return;
 
-	BindInputMoveXAxisAndActions(EnhancedInputComponent);
+	//BindInputMoveXAxisAndActions(EnhancedInputComponent);
+
+	if(!InputData) return;
+
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		3.0f,
+		FColor::Blue,
+		TEXT("Input Data Is Valid !")
+	);
+	
+	if(InputData->MoveAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
+	}
+	
+	if(InputData->SprintAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+	}
+	
+	if(InputData->HoldingAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+	}
 }
+
+
+
+void ASmashCharacter::SetUpInputMappingContext() const
+{
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if(!PlayerController) return;
+
+	ULocalPlayer* Player = PlayerController->GetLocalPlayer();
+	if(!Player) return;
+
+	UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+	if(!InputSystem) return;
+
+	InputSystem->AddMappingContext(InputMappingContext, 0);
+}
+
+void ASmashCharacter::Input_OnMove(const FInputActionValue& ActionValue)
+{
+	InputMoves = ActionValue.Get<FVector2D>();
+}
+
+void ASmashCharacter::Input_OnSprint(const FInputActionValue& ActionValue)
+{
+	IsSprinting = ActionValue.Get<bool>();
+}
+
+void ASmashCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
+{
+	IsHolding = ActionValue.Get<bool>();
+}
+
+
+
+
+
 
 float ASmashCharacter::GetOrientX() const
 {
@@ -83,6 +147,37 @@ void ASmashCharacter::RotateMeshUsingOrientX() const
 
 	GetMesh()->SetRelativeRotation(Rotation);
 }
+
+FVector2D ASmashCharacter::GetInputMoves()
+{
+	return InputMoves;
+}
+
+bool ASmashCharacter::GetIsSprinting()
+{
+	return IsSprinting;
+}
+
+bool ASmashCharacter::GetIsHolding()
+{
+	return IsHolding;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 void ASmashCharacter::CreateStateMachine()
 {
@@ -113,129 +208,30 @@ UPDA_StateDatas* ASmashCharacter::GetStateDatas(ESmashCharacterStateID StateID)
 	}
 }
 
-float ASmashCharacter::GetInputMoveX()
-{
-	return InputMoveX;
-}
 
-float ASmashCharacter::GetInputMoveZ()
-{
-	return InputMoveZ;
-}
 
 void ASmashCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
 {
 	if(!InputData) return;
 
-	if(InputData->InputActionMoveX)
+	if(InputData->MoveAction)
 	{
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveX,
-			ETriggerEvent::Started,
-			this,
-			&ASmashCharacter::OnInputMoveX
-		);
-
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveX,
-			ETriggerEvent::Triggered,
-			this,
-			&ASmashCharacter::OnInputMoveX
-		);
-
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveX,
-			ETriggerEvent::Completed,
-			this,
-			&ASmashCharacter::OnInputMoveX
-		);
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
+		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
 	}
 	
-	if(InputData->InputActionMoveXFast)
+	if(InputData->SprintAction)
 	{
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveXFast,
-			ETriggerEvent::Triggered,
-			this,
-			&ASmashCharacter::OnInputMoveXFast
-		);
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
 	}
 
 
-
-
-
-
-	if(InputData->InputActionMoveY)
+	if(InputData->HoldingAction)
 	{
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveY,
-			ETriggerEvent::Started,
-			this,
-			&ASmashCharacter::OnInputMoveY
-		);
-
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveX,
-			ETriggerEvent::Triggered,
-			this,
-			&ASmashCharacter::OnInputMoveY
-		);
-
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveX,
-			ETriggerEvent::Completed,
-			this,
-			&ASmashCharacter::OnInputMoveY
-		);
-	}
-	
-	if(InputData->InputActionMoveYFast)
-	{
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveYFast,
-			ETriggerEvent::Triggered,
-			this,
-			&ASmashCharacter::OnInputMoveYFast
-		);
-	}
-
-	
-
-	if(InputData->InputActionMoveZ)
-	{
-		EnhancedInputComponent->BindAction(
-			InputData->InputActionMoveZ,
-			ETriggerEvent::Triggered,
-			this,
-			&ASmashCharacter::OnInputMoveZ
-		);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
 	}
 }
 
-void ASmashCharacter::OnInputMoveX(const FInputActionValue& InputActionValue)
-{
-	InputMoveX = InputActionValue.Get<float>();
-}
-
-void ASmashCharacter::OnInputMoveXFast(const FInputActionValue& InputActionValue)
-{
-	InputMoveX = InputActionValue.Get<float>();
-	InputMoveXFastEvent.Broadcast(InputMoveX);
-}
-
-void ASmashCharacter::OnInputMoveY(const FInputActionValue& InputActionValue)
-{
-	InputMoveY = InputActionValue.Get<float>();
-}
-
-void ASmashCharacter::OnInputMoveYFast(const FInputActionValue& InputActionValue)
-{
-	InputMoveY = InputActionValue.Get<float>();
-}
-
-void ASmashCharacter::OnInputMoveZ(const FInputActionValue& InputActionValue)
-{
-	InputMoveZ = InputActionValue.Get<float>();
-}
 

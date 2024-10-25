@@ -37,9 +37,7 @@ void USmashCharacterStateWalk::StateEnter(ESmashCharacterStateID PreviousStateID
 	// 	FColor::Cyan,
 	// 	TEXT("Enter State Walk")
 	// );
-
-	Character->InputMoveXFastEvent.AddDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-
+	
 }
 
 void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
@@ -52,34 +50,39 @@ void USmashCharacterStateWalk::StateExit(ESmashCharacterStateID NextStateID)
 	// 	FColor::Red,
 	// 	TEXT("Exit State Walk")
 	// );
-
-	Character->InputMoveXFastEvent.RemoveDynamic(this, &USmashCharacterStateWalk::OnInputMoveXFast);
-
+	
 }
 
 void USmashCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		0.1f,
+		FColor::Green,
+		TEXT("Tick State Walk")
+	);
+
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
 	// 	0.1f,
 	// 	FColor::Green,
-	// 	TEXT("Tick State Walk")
+	// 	TEXT("Input Length: %f", *Character->GetInputMoves().GetSafeNormal().Length())
 	// );
 	
-	if(FMath::Abs(Character->GetInputMoveX()) < CharacterSettings->InputMoveXThreshold)
+	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) < CharacterSettings->InputMoveXThreshold)
 	{
 		StateMachine->ChangeState(ESmashCharacterStateID::Idle);
 	}else
 	{
-		Character->SetOrientX(Character->GetInputMoveX());
-		Character->AddMovementInput(FVector::ForwardVector, Character->GetOrientX() * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+		//Character->SetOrientX(Character->GetInputMoves().Normalize());
+		
+		// Move on Forward Backward
+		Character->AddMovementInput(Character->GetActorRightVector(),  Character->GetInputMoves().X * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+
+		// Move on Left Right
+		Character->AddMovementInput(Character->GetActorForwardVector(),  Character->GetInputMoves().Y * Character->GetStateDatas(GetStateID())->GetFloatVariable("MoveSpeed") * DeltaTime);
+
 	}
-}
-
-
-void USmashCharacterStateWalk::OnInputMoveXFast(float InputMoveX)
-{
-	StateMachine->ChangeState(ESmashCharacterStateID::Run);
 }

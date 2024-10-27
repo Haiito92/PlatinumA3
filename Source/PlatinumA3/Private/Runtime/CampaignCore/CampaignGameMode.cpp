@@ -9,6 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
+#include "Runtime/Sheep/SheepCharacter.h"
 
 #pragma region Defaults
 void ACampaignGameMode::BeginPlay()
@@ -20,7 +21,9 @@ void ACampaignGameMode::BeginPlay()
 	TArray<ACampaignPlayerStart*> PlayerStarts;
 	FindPlayerStartsActors(PlayerStarts);
 	SpawnCharacters(PlayerStarts);
-	
+
+	//Setup Game
+	FindAllSheepsInWorld(AllSheeps);	
 	//Reset GameValue
 	SheepSaved = 0;
 	SetNbSheepToSucceedLevel(1);
@@ -105,6 +108,39 @@ void ACampaignGameMode::AddSavedSheep(int Value)
 {
 	SheepSaved += Value;
 
+	RemoveSheepLeft(Value);
+}
+
+void ACampaignGameMode::FindAllSheepsInWorld(TArray<ASheepCharacter*>& InOutSheeps)
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASheepCharacter::StaticClass(), FoundActors);
+
+	for (AActor* FoundActor : FoundActors)
+	{
+		ASheepCharacter* SheepCharacter = Cast<ASheepCharacter>(FoundActor);
+		if(SheepCharacter == nullptr) continue;
+
+		InOutSheeps.Add(SheepCharacter);
+	}
+}
+
+void ACampaignGameMode::SubscribeToSheepsEvents() const
+{
+	for (ASheepCharacter* Sheep : AllSheeps)
+	{
+		if(Sheep == nullptr) continue;
+		Sheep->KillEvent.AddDynamic(this, OnSheepKillEvent);
+	}
+}
+
+void ACampaignGameMode::OnSheepKillEvent()
+{
+	RemoveSheepLeft(-1);
+}
+
+void ACampaignGameMode::RemoveSheepLeft(int Value)
+{
 	NbSheepLeft -= Value;
 
 	if(NbSheepLeft <= 0) CheckWinOrLose();

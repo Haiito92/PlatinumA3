@@ -11,6 +11,7 @@ class PLATINUMA3_API ASheepCharacter : public ACharacter
 {
 	GENERATED_BODY()
 
+#pragma region Unreal Defaults
 public:
 	// Sets default values for this character's properties
 	ASheepCharacter();
@@ -25,4 +26,14 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+#pragma endregion
+
+public:
+	UFUNCTION(BlueprintCallable)
+	void KillSheep();
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FKillEvent);
+
+	UPROPERTY()
+	FKillEvent KillEvent;
 };

@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+class ASheepCharacter;
 class ACampaignPlayerStart;
 class AStateCharacter;
 /**
@@ -33,9 +34,16 @@ private:
 	
 #pragma region Game
 private:
+	UPROPERTY()
+	TArray<ASheepCharacter*> AllSheeps; 
+
+	UPROPERTY()
 	int NbSheepToSucceedLevel;
 
+	UPROPERTY()
 	int NbSheepLeft;
+	
+	UPROPERTY()
 	int SheepSaved;
 	
 public:
@@ -43,6 +51,15 @@ public:
 	void AddSavedSheep(int Value);
 
 private:
+	
+	void FindAllSheepsInWorld(TArray<ASheepCharacter*>& InOutSheeps);
+	void SubscribeToSheepsEvents() const;
+
+	UFUNCTION()
+	void OnSheepKillEvent();
+	
+	void RemoveSheepLeft(int Value);
+	
 	void CheckWinOrLose() const;
 	bool HasSavedEnoughSheeps() const;
 
@@ -51,6 +68,8 @@ private:
 
 public:
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEndGameEvent, bool, HasWon);
+
+	UPROPERTY()
 	FEndGameEvent EndGameEvent;
 #pragma endregion 
 };

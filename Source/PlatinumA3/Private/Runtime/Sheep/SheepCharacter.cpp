@@ -30,3 +30,8 @@ void ASheepCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void ASheepCharacter::KillSheep()
+{
+	KillEvent.Broadcast();
+}
+

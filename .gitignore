@@ -1,4 +1,4 @@
-# Visual Studio 2015 user specific files
+# Visual Studio user-specific files
 .vs/
 
 # Compiled Object files
@@ -47,13 +47,17 @@ SourceArt/**/*.tga
 
 # Binary Files
 Binaries/*
-!Binaries/Win64
-Binaries/Win64/*
-!Binaries/Win64/PlatinumA3Editor.target
+!Binaries/Win64/
+!Binaries/Win64/*.dll
+!Binaries/Win64/*.target
 !Binaries/Win64/UnrealEditor.modules
-!Binaries/Win64/UnrealEditor-PlatinumA3.dll
 
+# Plugin-specific binaries
 Plugins/**/Binaries/*
+!Plugins/**/Binaries/Win64/
+!Plugins/**/Binaries/Win64/*.dll
+!Plugins/**/Binaries/Win64/*.target
+!Plugins/**/Binaries/Win64/UnrealEditor.modules
 
 # Builds
 Build/*

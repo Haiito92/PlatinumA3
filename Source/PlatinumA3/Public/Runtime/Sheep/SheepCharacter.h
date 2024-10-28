@@ -36,4 +36,13 @@ public:
 
 	UPROPERTY()
 	FKillEvent KillEvent;
+
+private:
+	bool CanMove;
+public:
+	UFUNCTION(BlueprintCallable)
+	bool GetCanMove() const;
+	
+	UFUNCTION(BlueprintCallable)
+	void SetCanMove(bool Value);
 };

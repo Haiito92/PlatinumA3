@@ -15,6 +15,8 @@ ASheepCharacter::ASheepCharacter()
 void ASheepCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	CanMove = true;
 	
 }
 
@@ -33,5 +35,15 @@ void ASheepCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 void ASheepCharacter::KillSheep()
 {
 	KillEvent.Broadcast();
+}
+
+bool ASheepCharacter::GetCanMove() const
+{
+	return CanMove;
+}
+
+void ASheepCharacter::SetCanMove(bool Value)
+{
+	CanMove = Value;
 }
 

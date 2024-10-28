@@ -6242,6 +6242,26 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(ProjectDir)/Plugins/StateMachine/Binaries/Win64/UnrealEditor-StateMachine.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -27545,6 +27565,10 @@
 		},
 		{
 			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/FocusableWidgets.uplugin",
+			"Type": "UFS"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/SkyCreatorPlugin.uplugin",
 			"Type": "UFS"
 		},
 		{

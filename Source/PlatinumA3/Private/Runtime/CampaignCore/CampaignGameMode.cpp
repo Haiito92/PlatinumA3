@@ -130,7 +130,7 @@ void ACampaignGameMode::SubscribeToSheepsEvents() const
 	for (ASheepCharacter* Sheep : AllSheeps)
 	{
 		if(Sheep == nullptr) continue;
-		Sheep->KillEvent.AddDynamic(this, OnSheepKillEvent);
+		Sheep->KillEvent.AddDynamic(this, &ACampaignGameMode::OnSheepKillEvent);
 	}
 }
 

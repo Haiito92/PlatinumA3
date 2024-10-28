@@ -4986,14 +4986,6 @@
 			"Type": "SymbolFile"
 		},
 		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport.dll",
-			"Type": "DynamicLibrary"
-		},
-		{
-			"Path": "$(EngineDir)/Plugins/Marketplace/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderDebuggerSupport.pdb",
-			"Type": "SymbolFile"
-		},
-		{
 			"Path": "$(EngineDir)/Plugins/Marketplace/Developer/RiderLink/Binaries/Win64/UnrealEditor-RiderGameControl.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -6238,23 +6230,15 @@
 			"Type": "RequiredResource"
 		},
 		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin.dll",
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets.dll",
 			"Type": "DynamicLibrary"
 		},
 		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin.pdb",
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets.pdb",
 			"Type": "SymbolFile"
 		},
 		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin.dll",
-			"Type": "DynamicLibrary"
-		},
-		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin.pdb",
-			"Type": "SymbolFile"
-		},
-		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor.modules",
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor.modules",
 			"Type": "RequiredResource"
 		},
 		{
@@ -27560,7 +27544,7 @@
 			"Type": "UFS"
 		},
 		{
-			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/SkyCreatorPlugin.uplugin",
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/FocusableWidgets.uplugin",
 			"Type": "UFS"
 		},
 		{

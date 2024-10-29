@@ -6314,6 +6314,18 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(ProjectDir)/Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -27633,6 +27645,10 @@
 		},
 		{
 			"Path": "$(ProjectDir)/PlatinumA3.uproject",
+			"Type": "UFS"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/FocusableWidgets.uplugin",
 			"Type": "UFS"
 		},
 		{

@@ -26,6 +26,10 @@
 		{
 			"Name": "StateMachine",
 			"Enabled": true
+		},
+		{
+			"Name": "FocusableWidgets",
+			"Enabled": true
 		}
 	]
 }

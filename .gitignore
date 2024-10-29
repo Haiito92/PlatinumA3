@@ -48,6 +48,7 @@ SourceArt/**/*.tga
 # Binary Files
 Binaries/*
 !Binaries/Win64/
+Binaries/Win64/*
 !Binaries/Win64/*.dll
 !Binaries/Win64/*.target
 !Binaries/Win64/UnrealEditor.modules
@@ -55,6 +56,7 @@ Binaries/*
 # Plugin-specific binaries
 Plugins/**/Binaries/*
 !Plugins/**/Binaries/Win64/
+Plugins/**/Binaries/Win64/*
 !Plugins/**/Binaries/Win64/*.dll
 !Plugins/**/Binaries/Win64/*.target
 !Plugins/**/Binaries/Win64/UnrealEditor.modules

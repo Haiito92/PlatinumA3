@@ -214,19 +214,6 @@ bool AStateCharacter::GetIsHolding()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 void AStateCharacter::CreateStateMachine()
 {
 	StateMachine = NewObject<UCharacterStateMachine>(this);

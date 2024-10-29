@@ -69,8 +69,9 @@ private:
 	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
 
 	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
-
 	
+	virtual void Input_OnLaunching(const FInputActionValue& ActionValue);
+
 
 #pragma endregion
 
@@ -128,6 +129,9 @@ protected:
 
 	UPROPERTY()
 	bool IsHolding;
+
+	UPROPERTY()
+	bool IsLaunching;
 	
 private:
 	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);

@@ -115,6 +115,12 @@ void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
 		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
 	}
+
+	if(InputData->LaunchAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->LaunchAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnLaunching);
+		EnhancedInputComponent->BindAction(InputData->LaunchAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnLaunching);
+	}
 }
 
 
@@ -148,6 +154,10 @@ void AStateCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
 	IsHolding = ActionValue.Get<bool>();
 }
 
+void AStateCharacter::Input_OnLaunching(const FInputActionValue& ActionValue)
+{
+	IsLaunching = ActionValue.Get<bool>();
+}
 
 
 

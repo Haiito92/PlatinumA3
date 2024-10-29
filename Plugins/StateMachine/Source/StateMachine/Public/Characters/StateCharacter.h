@@ -137,7 +137,17 @@ private:
 
 
 
+#pragma region Skills
 
+public:
+	UPROPERTY()
+	bool IsHoldingSomething;
+
+	UFUNCTION(BlueprintCallable)
+	AActor* GetSomethingToHold();
+
+
+#pragma endregion
 
 
 

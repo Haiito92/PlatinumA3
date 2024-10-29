@@ -37,7 +37,7 @@ AStateCharacter::AStateCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 225.0f, 0.0f); // ...at this rotation rate
 
 	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
 	// instead of recompiling to adjust them
@@ -212,6 +212,50 @@ bool AStateCharacter::GetIsHolding()
 }
 
 
+AActor* AStateCharacter::GetSomethingToHold()
+{
+	// FVector StartLocation = GetActorLocation();
+	// FVector ForwardVector = GetActorForwardVector();
+	// float CastDistance = 1000.f;
+	// FVector EndLocation = StartLocation + (ForwardVector * CastDistance);
+	// float SphereRadius = 50.f; 
+	//
+	// FCollisionQueryParams QueryParams;
+	// QueryParams.AddIgnoredActor(this);
+	//
+	// TArray<FHitResult> HitResults;
+	// bool bHit = GetWorld()->SweepMultiByChannel(
+	// 	HitResults,
+	// 	StartLocation,
+	// 	EndLocation,
+	// 	FQuat::Identity,
+	// 	ECC_Visibility,
+	// 	FCollisionShape::MakeSphere(SphereRadius),
+	// 	QueryParams
+	// );
+	//
+	// if (bHit)
+	// {
+	// 	for (auto& Hit : HitResults)
+	// 	{
+	//
+	// 		
+	// 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, SphereRadius, 12, FColor::Blue, false, 1.0f);
+	// 		DrawDebugLine(GetWorld(), StartLocation, Hit.ImpactPoint, FColor::Green, false, 1.0f);
+	//
+	// 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *Hit.GetActor()->GetName());
+	// 	
+	// 		return Hit.GetActor();
+	// 		
+	// 		
+	// 	}
+	// }else
+	// {
+	// 	DrawDebugSphere(GetWorld(), EndLocation, SphereRadius, 12, FColor::Blue, false, 1.0f);
+	// 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 1.0f);
+	// }
+	//
+	// return nullptr;
 
 
 
@@ -219,13 +263,39 @@ bool AStateCharacter::GetIsHolding()
 
 
 
+	FVector Center = GetActorLocation();
+    float Radius = 400.0f;
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
 
+	TArray<FOverlapResult> OverlapResults;
+	bool bOverlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECC_WorldDynamic,
+		FCollisionShape::MakeSphere(Radius),
+		QueryParams
+	);
 
+	if (bOverlap)
+	{
+		DrawDebugSphere(GetWorld(), Center, Radius, 12, FColor::Red, false, 1.0f);
 
+		for (auto& Result : OverlapResults)
+		{
+			if (AActor* OverlappedActor = Result.GetActor())
+			{
+				
+				UE_LOG(LogTemp, Warning, TEXT("Found Actor: %s"), *OverlappedActor->GetName());
+			}
+		}
+	}
 
+	return nullptr;
 
-
-
+}
 
 void AStateCharacter::CreateStateMachine()
 {

@@ -5,6 +5,7 @@
 
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
+#include "Runtime/Chien/Biteable.h"
 
 
 // Sets default values
@@ -105,49 +106,6 @@ void AWoolStateCharacter::UpdateHolding()
 
 AActor* AWoolStateCharacter::GetSomethingToHold()
 {
-	// FVector StartLocation = GetActorLocation();
-	// FVector ForwardVector = GetActorForwardVector();
-	// float CastDistance = 1000.f;
-	// FVector EndLocation = StartLocation + (ForwardVector * CastDistance);
-	// float SphereRadius = 50.f; 
-	//
-	// FCollisionQueryParams QueryParams;
-	// QueryParams.AddIgnoredActor(this);
-	//
-	// TArray<FHitResult> HitResults;
-	// bool bHit = GetWorld()->SweepMultiByChannel(
-	// 	HitResults,
-	// 	StartLocation,
-	// 	EndLocation,
-	// 	FQuat::Identity,
-	// 	ECC_Visibility,
-	// 	FCollisionShape::MakeSphere(SphereRadius),
-	// 	QueryParams
-	// );
-	//
-	// if (bHit)
-	// {
-	// 	for (auto& Hit : HitResults)
-	// 	{
-	//
-	// 		
-	// 		DrawDebugSphere(GetWorld(), Hit.ImpactPoint, SphereRadius, 12, FColor::Blue, false, 1.0f);
-	// 		DrawDebugLine(GetWorld(), StartLocation, Hit.ImpactPoint, FColor::Green, false, 1.0f);
-	//
-	// 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *Hit.GetActor()->GetName());
-	// 	
-	// 		return Hit.GetActor();
-	// 		
-	// 		
-	// 	}
-	// }else
-	// {
-	// 	DrawDebugSphere(GetWorld(), EndLocation, SphereRadius, 12, FColor::Blue, false, 1.0f);
-	// 	DrawDebugLine(GetWorld(), StartLocation, EndLocation, FColor::Green, false, 1.0f);
-	// }
-	//
-	// return nullptr;
-
 	
 	FVector Center = GetActorLocation();
 	float Radius = 250.0f;
@@ -178,6 +136,72 @@ AActor* AWoolStateCharacter::GetSomethingToHold()
 				if (OverlappedActor->Implements<UCatchable>())
 				{
 					UE_LOG(LogTemp, Warning, TEXT("Found Actor with catchable interface: %s"), *OverlappedActor->GetName());
+					return OverlappedActor;
+				}
+			}
+		}
+	}
+
+	return nullptr;
+
+}
+
+
+
+
+
+
+
+
+void AWoolStateCharacter::LaunchBite()
+{
+	AActor* ActorToBite = GetSomethingToBite();
+
+	if(IsValid(ActorToBite))
+	{
+		// Check if the actor implements the interface
+		if (ActorToBite->Implements<UBiteable>())
+		{
+			IBiteable::Execute_Bite(ActorToBite);
+		}
+	}
+}
+
+
+
+
+AActor* AWoolStateCharacter::GetSomethingToBite()
+{
+	
+	FVector Center = GetActorLocation();
+	float Radius = 250.0f;
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	TArray<FOverlapResult> OverlapResults;
+	bool bOverlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECC_WorldDynamic,
+		FCollisionShape::MakeSphere(Radius),
+		QueryParams
+	);
+
+	
+	if (bOverlap)
+	{
+		DrawDebugSphere(GetWorld(), Center, Radius, 12, FColor::Purple, false, 1.0f);
+
+		for (auto& Result : OverlapResults)
+		{
+			if (AActor* OverlappedActor = Result.GetActor())
+			{
+				
+				if (OverlappedActor->Implements<UBiteable>())
+				{
+					UE_LOG(LogTemp, Warning, TEXT("Found Actor with biteable interface: %s"), *OverlappedActor->GetName());
 					return OverlappedActor;
 				}
 			}

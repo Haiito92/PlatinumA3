@@ -40,7 +40,7 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 
-#pragma region Skills
+#pragma region Holding Skill
 
 public:
 	UPROPERTY()
@@ -66,6 +66,19 @@ public:
 	UFUNCTION()
 	AActor* GetSomethingToHold();
 
+
+#pragma endregion
+
+
+#pragma region Bite Skill
+
+public:
+
+	UFUNCTION(BlueprintCallable)
+	void LaunchBite();
+
+	UFUNCTION()
+	AActor* GetSomethingToBite();
 
 #pragma endregion
 };

@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "SheepCharacter.generated.h"
 
+class USphereComponent;
+
 UCLASS()
 class PLATINUMA3_API ASheepCharacter : public ACharacter
 {
@@ -38,11 +40,32 @@ public:
 	FKillEvent KillEvent;
 
 private:
+	UPROPERTY()
 	bool CanMove;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<AActor> ActorClassToFleeFrom;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USphereComponent> DetectionCollision;
+	
+	UPROPERTY(VisibleAnywhere)
+	float FleeingDistance = 1000.f;
 public:
+#pragma region Getters/Setters
 	UFUNCTION(BlueprintCallable)
 	bool GetCanMove() const;
-	
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(bool Value);
+
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<AActor> GetActorClassToFleeFrom() const;
+	UFUNCTION(BlueprintCallable)
+	void SetActorClassToFleeFrom(TSubclassOf<AActor> Subclass);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetFleeingDistance() const;
+	UFUNCTION(BlueprintCallable)
+	void SetFleeingDistance(float Value);
+#pragma endregion 
 };

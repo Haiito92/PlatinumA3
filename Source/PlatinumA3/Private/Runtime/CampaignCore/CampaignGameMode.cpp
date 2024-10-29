@@ -30,7 +30,7 @@ void ACampaignGameMode::BeginPlay()
 }
 #pragma endregion
 
-#pragma region Players
+#pragma region LocalPlayers
 void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const
 {
 	TArray<AActor*> FoundActors;

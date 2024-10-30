@@ -36,9 +36,14 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FKillEvent);
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FKillEvent KillEvent;
 
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCanMoveChangedEvent, bool, CanMove);
+
+	UPROPERTY(BlueprintAssignable)
+	FCanMoveChangedEvent CanMoveChangedEvent;
 private:
 	UPROPERTY()
 	bool CanMove;

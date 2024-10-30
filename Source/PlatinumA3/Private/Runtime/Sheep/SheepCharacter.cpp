@@ -68,6 +68,7 @@ bool ASheepCharacter::GetCanMove() const
 void ASheepCharacter::SetCanMove(bool Value)
 {
 	CanMove = Value;
+	CanMoveChangedEvent.Broadcast(CanMove);
 }
 
 TSubclassOf<AActor> ASheepCharacter::GetActorClassToFleeFrom() const

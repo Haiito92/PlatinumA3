@@ -24,4 +24,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
 	TObjectPtr<UInputAction> HoldingAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> LaunchAction;
+
+	
 };

@@ -43,6 +43,12 @@ public:
 #pragma region Holding Skill
 
 public:
+	UPROPERTY(EditAnywhere)
+	float ThrowStrength = 10000;
+
+	UPROPERTY(EditAnywhere)
+	float LaunchTransTime = 2.0f;
+	
 	UPROPERTY()
 	bool IsHoldingSomething;
 
@@ -58,10 +64,13 @@ public:
 	void StartHolding();
 
 	UFUNCTION(BlueprintCallable)
-	void StopHolding();
+	void StopHolding(float TransTime);
 
 	UFUNCTION(BlueprintCallable)
 	void UpdateHolding();
+
+	UFUNCTION(BlueprintCallable)
+	void LaunchSomething();
 	
 	UFUNCTION()
 	AActor* GetSomethingToHold();

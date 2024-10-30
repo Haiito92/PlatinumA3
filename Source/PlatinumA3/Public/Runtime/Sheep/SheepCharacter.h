@@ -64,6 +64,7 @@ public:
 	void SetCanMove(bool Value);
 
 	UFUNCTION(BlueprintCallable)
+	//SUCE BIEN FORT ANOINE OH OUIIIII
 	TSubclassOf<AActor> GetActorClassToFleeFrom() const;
 	UFUNCTION(BlueprintCallable)
 	void SetActorClassToFleeFrom(TSubclassOf<AActor> Subclass);

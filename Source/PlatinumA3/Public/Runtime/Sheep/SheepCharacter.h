@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Runtime/Berger/Rallyable.h"
 #include "SheepCharacter.generated.h"
 
 class USphereComponent;
 
 UCLASS()
-class PLATINUMA3_API ASheepCharacter : public ACharacter
+class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable
 {
 	GENERATED_BODY()
 

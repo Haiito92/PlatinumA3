@@ -104,16 +104,10 @@ void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
 	}
 	
-	if(InputData->SprintAction)
-	{
-		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
-		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
-	}
-	
 	if(InputData->HoldingAction)
 	{
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnHolding);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnHolding);
 	}
 
 	if(InputData->LaunchAction)
@@ -144,10 +138,7 @@ void AStateCharacter::Input_OnMove(const FInputActionValue& ActionValue)
 	InputMoves = ActionValue.Get<FVector2D>();
 }
 
-void AStateCharacter::Input_OnSprint(const FInputActionValue& ActionValue)
-{
-	IsSprinting = ActionValue.Get<bool>();
-}
+
 
 void AStateCharacter::Input_OnHolding(const FInputActionValue& ActionValue)
 {
@@ -211,11 +202,6 @@ FVector2D AStateCharacter::GetInputMoves()
 	return InputMoves;
 }
 
-bool AStateCharacter::GetIsSprinting()
-{
-	return IsSprinting;
-}
-
 bool AStateCharacter::GetIsHolding()
 {
 	return IsHolding;
@@ -264,18 +250,12 @@ void AStateCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* Enha
 		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
 		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
 	}
-	
-	if(InputData->SprintAction)
-	{
-		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
-		EnhancedInputComponent->BindAction(InputData->SprintAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
-	}
 
 
 	if(InputData->HoldingAction)
 	{
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnSprint);
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnSprint);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnHolding);
+		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnHolding);
 	}
 }
 

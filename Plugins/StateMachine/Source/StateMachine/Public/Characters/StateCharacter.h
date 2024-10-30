@@ -65,9 +65,7 @@ protected:
 
 private:
 	virtual void Input_OnMove(const FInputActionValue& ActionValue);
-
-	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
-
+	
 	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
 	
 	virtual void Input_OnLaunching(const FInputActionValue& ActionValue);
@@ -115,17 +113,11 @@ public:
 	FVector2D GetInputMoves();
 
 	UFUNCTION(BlueprintCallable)
-	bool GetIsSprinting();
-
-	UFUNCTION(BlueprintCallable)
 	bool GetIsHolding();
 	
 protected:
 	UPROPERTY()
 	FVector2D InputMoves;
-
-	UPROPERTY()
-	bool IsSprinting;
 
 	UPROPERTY()
 	bool IsHolding;

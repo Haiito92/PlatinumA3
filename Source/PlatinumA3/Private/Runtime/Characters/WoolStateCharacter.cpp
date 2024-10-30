@@ -187,7 +187,7 @@ void AWoolStateCharacter::LaunchBite()
 		// Check if the actor implements the interface
 		if (ActorToBite->Implements<UBiteable>())
 		{
-			IBiteable::Execute_Bite(ActorToBite);
+			IBiteable::Execute_Bite(ActorToBite,1.f);
 		}
 	}
 }

@@ -11,6 +11,8 @@ UINTERFACE(BlueprintType)
 class UBiteable : public UInterface
 {
 	GENERATED_BODY()
+
+	
 };
 
 /**
@@ -22,5 +24,6 @@ class PLATINUMA3_API IBiteable
 
 public:
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Biteable Interface")
-	void Bite();
+	void Bite(float StunTimer);
+	
 };

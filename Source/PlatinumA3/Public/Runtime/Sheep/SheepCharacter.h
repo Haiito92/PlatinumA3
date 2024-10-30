@@ -49,20 +49,42 @@ private:
 	UPROPERTY()
 	bool CanMove;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Rally")
+	float RallyTime;
+
+	UPROPERTY(VisibleAnywhere, Category="Rally")
+	float SheepRallySpeed;
+	
+	UPROPERTY(VisibleAnywhere, Category="Flee")
 	TSubclassOf<AActor> ActorClassToFleeFrom;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> DetectionCollision;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Flee")
 	float FleeingDistance = 1000.f;
+
+	UPROPERTY(VisibleAnywhere, Category="Flee")
+	float SheepFleeSpeed;
+	
+	UPROPERTY(VisibleAnywhere, Category="SheepDefault")
+	float SheepWalkSpeed;
 public:
 #pragma region Getters/Setters
 	UFUNCTION(BlueprintCallable)
 	bool GetCanMove() const;
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(bool Value);
+
+	UFUNCTION(BlueprintCallable)
+	float GetRallyTime() const;
+	UFUNCTION(BlueprintCallable)
+	void SetRallyTime(float Value);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetSheepRallySpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepRallySpeed(float Value);
 	
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<AActor> GetActorClassToFleeFrom() const;
@@ -73,5 +95,15 @@ public:
 	float GetFleeingDistance() const;
 	UFUNCTION(BlueprintCallable)
 	void SetFleeingDistance(float Value);
+
+	UFUNCTION(BlueprintCallable)
+	float GetSheepFleeSpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepFleeSpeed(float Value);
+
+	UFUNCTION(BlueprintCallable)
+	float GetSheepWalkSpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepWalkSpeed(float Value);
 #pragma endregion 
 };

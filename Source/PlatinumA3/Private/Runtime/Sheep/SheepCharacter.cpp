@@ -37,7 +37,13 @@ void ASheepCharacter::BeginPlay()
 	
 	DetectionCollision->SetSphereRadius(SheepCharacterData->DetectionRadius);
 
+	SetRallyTime(SheepCharacterData->RallyTime);
+	SetSheepRallySpeed(SheepCharacterData->SheepRallySpeed);
+	
 	SetFleeingDistance(SheepCharacterData->FleeingDistance);
+	SetSheepFleeSpeed(SheepCharacterData->SheepFleeSpeed);
+
+	SetSheepWalkSpeed(SheepCharacterData->SheepWalkSpeed);
 	GetCharacterMovement()->MaxWalkSpeed = SheepCharacterData->SheepWalkSpeed;
 }
 
@@ -71,6 +77,26 @@ void ASheepCharacter::SetCanMove(bool Value)
 	CanMoveChangedEvent.Broadcast(CanMove);
 }
 
+float ASheepCharacter::GetRallyTime() const
+{
+	return RallyTime;
+}
+
+void ASheepCharacter::SetRallyTime(float Value)
+{
+	RallyTime = FMathf::Max(0.f, Value);
+}
+
+float ASheepCharacter::GetSheepRallySpeed() const
+{
+	return SheepRallySpeed;
+}
+
+void ASheepCharacter::SetSheepRallySpeed(float Value)
+{
+	SheepRallySpeed = FMathf::Max(50.f, Value);
+}
+
 TSubclassOf<AActor> ASheepCharacter::GetActorClassToFleeFrom() const
 {
 	return ActorClassToFleeFrom;
@@ -91,5 +117,25 @@ float ASheepCharacter::GetFleeingDistance() const
 void ASheepCharacter::SetFleeingDistance(float Value)
 {
 	FleeingDistance = FMathf::Max(0.f, Value);
+}
+
+float ASheepCharacter::GetSheepFleeSpeed() const
+{
+	return SheepFleeSpeed;
+}
+
+void ASheepCharacter::SetSheepFleeSpeed(float Value)
+{
+	SheepFleeSpeed = FMathf::Max(50.f, Value);
+}
+
+float ASheepCharacter::GetSheepWalkSpeed() const
+{
+	return SheepWalkSpeed;
+}
+
+void ASheepCharacter::SetSheepWalkSpeed(float Value)
+{
+	SheepWalkSpeed = FMathf::Max(50.f, Value);
 }
 #pragma endregion 

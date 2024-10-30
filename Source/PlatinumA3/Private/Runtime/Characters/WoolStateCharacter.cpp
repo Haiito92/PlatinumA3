@@ -5,6 +5,7 @@
 
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
+#include "Runtime/Berger/Rallyable.h"
 #include "Runtime/Chien/Biteable.h"
 
 
@@ -235,4 +236,58 @@ AActor* AWoolStateCharacter::GetSomethingToBite()
 
 	return nullptr;
 
+}
+
+void AWoolStateCharacter::LaunchRally()
+{
+	TArray<AActor*> ActorsToRally = GetSomethingToRally();
+
+	for (auto& ActorToRally : ActorsToRally)
+	{
+		if (ActorToRally->Implements<URallyable>())
+		{
+			IRallyable::Execute_Rally(ActorToRally, GetActorLocation());
+		}
+	}
+	
+}
+
+TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
+{
+	FVector Center = GetActorLocation();
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	TArray<FOverlapResult> OverlapResults;
+	bool bOverlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECC_WorldDynamic,
+		FCollisionShape::MakeSphere(RallyRadius),
+		QueryParams
+	);
+
+	TArray<AActor*> ActorsToRally;
+	
+	if (bOverlap)
+	{
+		DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
+
+		for (auto& Result : OverlapResults)
+		{	
+			if (AActor* OverlappedActor = Result.GetActor())
+			{
+				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
+				
+				if (OverlappedActor->Implements<URallyable>())
+				{
+					ActorsToRally.Add(OverlappedActor);
+				}
+			}
+		}
+	}
+
+	return ActorsToRally;
 }

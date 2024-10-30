@@ -219,9 +219,10 @@ AActor* AWoolStateCharacter::GetSomethingToBite()
 		DrawDebugSphere(GetWorld(), Center, Radius, 12, FColor::Purple, false, 1.0f);
 
 		for (auto& Result : OverlapResults)
-		{
+		{	
 			if (AActor* OverlappedActor = Result.GetActor())
 			{
+				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
 				
 				if (OverlappedActor->Implements<UBiteable>())
 				{

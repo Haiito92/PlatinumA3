@@ -4,10 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "Runtime/Berger/Rallyable.h"
 #include "SheepCharacter.generated.h"
 
+class USphereComponent;
+
 UCLASS()
-class PLATINUMA3_API ASheepCharacter : public ACharacter
+class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable
 {
 	GENERATED_BODY()
 
@@ -34,15 +37,41 @@ public:
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FKillEvent);
 
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FKillEvent KillEvent;
 
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCanMoveChangedEvent, bool, CanMove);
+
+	UPROPERTY(BlueprintAssignable)
+	FCanMoveChangedEvent CanMoveChangedEvent;
 private:
+	UPROPERTY()
 	bool CanMove;
+
+	UPROPERTY(VisibleAnywhere)
+	TSubclassOf<AActor> ActorClassToFleeFrom;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USphereComponent> DetectionCollision;
+	
+	UPROPERTY(VisibleAnywhere)
+	float FleeingDistance = 1000.f;
 public:
+#pragma region Getters/Setters
 	UFUNCTION(BlueprintCallable)
 	bool GetCanMove() const;
-	
 	UFUNCTION(BlueprintCallable)
 	void SetCanMove(bool Value);
+	
+	UFUNCTION(BlueprintCallable)
+	TSubclassOf<AActor> GetActorClassToFleeFrom() const;
+	UFUNCTION(BlueprintCallable)
+	void SetActorClassToFleeFrom(TSubclassOf<AActor> Subclass);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetFleeingDistance() const;
+	UFUNCTION(BlueprintCallable)
+	void SetFleeingDistance(float Value);
+#pragma endregion 
 };

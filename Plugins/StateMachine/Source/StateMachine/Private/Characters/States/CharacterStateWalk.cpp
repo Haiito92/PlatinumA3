@@ -57,12 +57,12 @@ void UCharacterStateWalk::StateTick(float DeltaTime)
 {
 	Super::StateTick(DeltaTime);
 
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		0.1f,
-		FColor::Green,
-		TEXT("Tick State Walk")
-	);
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	0.1f,
+	// 	FColor::Green,
+	// 	TEXT("Tick State Walk")
+	// );
 	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
@@ -71,7 +71,7 @@ void UCharacterStateWalk::StateTick(float DeltaTime)
 	// 	TEXT("Input Length: %f", *Character->GetInputMoves().GetSafeNormal().Length())
 	// );
 
-	UE_LOG(LogTemp, Warning, TEXT("InputMove Length: %f, Threshold: %f"), Character->GetInputMoves().Length(), CharacterSettings->InputMoveXThreshold);
+	//UE_LOG(LogTemp, Warning, TEXT("InputMove Length: %f, Threshold: %f"), Character->GetInputMoves().Length(), CharacterSettings->InputMoveXThreshold);
 
 	if(FMath::Abs(Character->GetInputMoves().Length()) < CharacterSettings->InputMoveXThreshold)
 	{

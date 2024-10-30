@@ -273,7 +273,7 @@ TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
 	
 	if (bOverlap)
 	{
-		DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
+		//DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
 
 		for (auto& Result : OverlapResults)
 		{	

@@ -35,22 +35,18 @@ void ASplineCameraScroller::Tick(float DeltaTime)
 	UpdateSplineCamera();
 }
 
-void ASplineCameraScroller::InitializedSplineCameraScroller(AWoolStateCharacter* InBerger, AWoolStateCharacter* InChien)
+void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharacter*> Characters)
 {
-	if(!InBerger || !InChien) return;
+	if(!Characters[0] || !Characters[1]) return;
 	
-	m_Berger = InBerger;
-	m_Chien = InChien;
+	m_Berger = Cast<AWoolStateCharacter>(Characters[0]);
+	m_Chien = Cast<AWoolStateCharacter>(Characters[1]);
 	
 
-	m_CameraActor = Cast<ACameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), TSubclassOf<ACameraActor>()));
 
-	if(m_CameraActor)
+	if(!m_CameraActor)
 	{
-		
-	}else
-	{
-		
+		m_CameraActor = Cast<ACameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass()));
 	}
 }
 
@@ -62,6 +58,21 @@ void ASplineCameraScroller::UpdateSplineCamera()
 
 	FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
 
-	m_CameraActor->SetActorLocation(CameraTargetLocation);
+	FVector LerpedLocation = FMath::Lerp(m_CameraActor->GetActorLocation(), CameraTargetLocation, m_CameraMoveSpeed * GetWorld()->GetDeltaSeconds());
+	
+	m_CameraActor->SetActorLocation(LerpedLocation);
+
+	LookAtTargetSmooth(InterpolatedLocation);
+}
+
+void ASplineCameraScroller::LookAtTargetSmooth(FVector TargetLocation)
+{
+	FVector MyLocation = m_CameraActor->GetActorLocation();
+	FVector Direction = (TargetLocation - MyLocation).GetSafeNormal();
+	FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+
+	FRotator NewRotation = FMath::RInterpTo(m_CameraActor->GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), m_CameraRotationSpeed);
+	
+	m_CameraActor->SetActorRotation(NewRotation);
 }
 

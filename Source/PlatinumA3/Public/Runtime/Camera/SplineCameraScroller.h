@@ -21,8 +21,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
 	TObjectPtr<USplineComponent> m_SplineComponent;
 
-	UPROPERTY(BlueprintReadWrite, Category = "SplineCameraScroller")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
 	TObjectPtr<ACameraActor> m_CameraActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
+	float m_CameraMoveSpeed = 2.0f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
+	float m_CameraRotationSpeed = 2.0f;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "SplineCameraScroller")
 	TObjectPtr<AWoolStateCharacter> m_Berger;
@@ -40,8 +46,9 @@ public:
 
 
 	UFUNCTION()
-	void InitializedSplineCameraScroller(AWoolStateCharacter* InBerger, AWoolStateCharacter* InChien);
+	void InitializedSplineCameraScroller(TArray<AStateCharacter*> Characters);
 
 	UFUNCTION()
 	void UpdateSplineCamera();
+	void LookAtTargetSmooth(FVector TargetLocation);
 };

@@ -21,13 +21,11 @@
 
 
 
-// Sets default values
 AStateCharacter::AStateCharacter()
 {
 	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Set size for collision capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 	
 	// Don't rotate when the controller rotates. Let that just affect the camera.
@@ -36,11 +34,10 @@ AStateCharacter::AStateCharacter()
 	bUseControllerRotationRoll = false;
 
 	// Configure character movement
-	GetCharacterMovement()->bOrientRotationToMovement = true; // Character moves in the direction of input...	
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f); // ...at this rotation rate
+	GetCharacterMovement()->bOrientRotationToMovement = true; 
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
 
-	// Note: For faster iteration times these variables, and many more, can be tweaked in the Character Blueprint
-	// instead of recompiling to adjust them
+
 	GetCharacterMovement()->JumpZVelocity = 700.f;
 	GetCharacterMovement()->AirControl = 0.35f;
 	GetCharacterMovement()->MaxWalkSpeed = 500.f;
@@ -49,7 +46,6 @@ AStateCharacter::AStateCharacter()
 	GetCharacterMovement()->BrakingDecelerationFalling = 1500.0f;
 }
 
-// Called when the game starts or when spawned
 void AStateCharacter::BeginPlay()
 {
 	Super::BeginPlay();
@@ -77,16 +73,13 @@ void AStateCharacter::Tick(float DeltaTime)
 	RotateMeshUsingOrientX();
 }
 
-// Called to bind functionality to input
 void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-	//SetUpInputMappingContext();
 
 	UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent);
 	if(!EnhancedInputComponent) return;
 
-	//BindInputMoveXAxisAndActions(EnhancedInputComponent);
 
 	if(!InputData) return;
 
@@ -115,23 +108,29 @@ void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 		EnhancedInputComponent->BindAction(InputData->LaunchAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnLaunching);
 		EnhancedInputComponent->BindAction(InputData->LaunchAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnLaunching);
 	}
+
+	if(InputData->RallyAction)
+	{
+		EnhancedInputComponent->BindAction(InputData->RallyAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnRallying);
+		EnhancedInputComponent->BindAction(InputData->RallyAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnRallying);
+	}
 }
 
 
 
-void AStateCharacter::SetUpInputMappingContext() const
-{
-	APlayerController* PlayerController = Cast<APlayerController>(Controller);
-	if(!PlayerController) return;
-
-	ULocalPlayer* Player = PlayerController->GetLocalPlayer();
-	if(!Player) return;
-
-	UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	if(!InputSystem) return;
-
-	InputSystem->AddMappingContext(InputMappingContext, 0);
-}
+// void AStateCharacter::SetUpInputMappingContext() const
+// {
+// 	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+// 	if(!PlayerController) return;
+//
+// 	ULocalPlayer* Player = PlayerController->GetLocalPlayer();
+// 	if(!Player) return;
+//
+// 	UEnhancedInputLocalPlayerSubsystem* InputSystem = Player->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+// 	if(!InputSystem) return;
+//
+// 	InputSystem->AddMappingContext(InputMappingContext, 0);
+// }
 
 void AStateCharacter::Input_OnMove(const FInputActionValue& ActionValue)
 {
@@ -150,28 +149,25 @@ void AStateCharacter::Input_OnLaunching(const FInputActionValue& ActionValue)
 	IsLaunching = ActionValue.Get<bool>();
 }
 
-
-
+void AStateCharacter::Input_OnRallying(const FInputActionValue& ActionValue)
+{
+	IsRallying = ActionValue.Get<bool>();
+}
 
 
 void AStateCharacter::Move(FVector2D MovementsValues)
 {
-	// input is a Vector2D
 	FVector2D MovementVector = MovementsValues;
 
 	if (Controller != nullptr)
 	{
-		// find out which way is forward
 		const FRotator Rotation = Controller->GetControlRotation();
 		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		// get forward vector
 		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
 	
-		// get right vector 
 		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		// add movement 
 		AddMovementInput(ForwardDirection, MovementVector.Y);
 		AddMovementInput(RightDirection, MovementVector.X);
 	}
@@ -207,6 +203,10 @@ bool AStateCharacter::GetIsHolding()
 	return IsHolding;
 }
 
+bool AStateCharacter::GetIsRallying()
+{
+	return IsRallying;
+}
 
 
 
@@ -238,25 +238,3 @@ UPDA_StateDatas* AStateCharacter::GetStateDatas(ECharacterStateID StateID)
 		return nullptr;
 	}
 }
-
-
-
-void AStateCharacter::BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent)
-{
-	if(!InputData) return;
-
-	if(InputData->MoveAction)
-	{
-		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnMove);
-		EnhancedInputComponent->BindAction(InputData->MoveAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnMove);
-	}
-
-
-	if(InputData->HoldingAction)
-	{
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Triggered, this, &ThisClass::Input_OnHolding);
-		EnhancedInputComponent->BindAction(InputData->HoldingAction, ETriggerEvent::Canceled, this, &ThisClass::Input_OnHolding);
-	}
-}
-
-

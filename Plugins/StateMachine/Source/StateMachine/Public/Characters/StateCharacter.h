@@ -61,7 +61,7 @@ public:
 	TObjectPtr<UCharacterInputData> InputData;
 
 protected:
-	void SetUpInputMappingContext() const;
+	//void SetUpInputMappingContext() const;
 
 private:
 	virtual void Input_OnMove(const FInputActionValue& ActionValue);
@@ -69,6 +69,9 @@ private:
 	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
 	
 	virtual void Input_OnLaunching(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnRallying(const FInputActionValue& ActionValue);
+
 
 
 #pragma endregion
@@ -114,6 +117,9 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsHolding();
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsRallying();
 	
 protected:
 	UPROPERTY()
@@ -124,9 +130,9 @@ protected:
 
 	UPROPERTY()
 	bool IsLaunching;
-	
-private:
-	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+
+	UPROPERTY()
+	bool IsRallying;
 
 
 #pragma endregion

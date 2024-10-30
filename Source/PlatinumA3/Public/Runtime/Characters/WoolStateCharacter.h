@@ -90,4 +90,20 @@ public:
 	AActor* GetSomethingToBite();
 
 #pragma endregion
+
+
+#pragma region Rally Skill
+
+public:
+
+	UPROPERTY(EditAnywhere)
+	float RallyRadius = 350.0f;
+	
+	UFUNCTION(BlueprintCallable)
+	void LaunchRally();
+
+	UFUNCTION()
+	TArray<AActor*> GetSomethingToRally();
+
+#pragma endregion
 };

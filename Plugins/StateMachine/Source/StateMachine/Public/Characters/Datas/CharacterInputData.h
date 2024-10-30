@@ -25,5 +25,8 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
 	TObjectPtr<UInputAction> LaunchAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> RallyAction;
+
 	
 };

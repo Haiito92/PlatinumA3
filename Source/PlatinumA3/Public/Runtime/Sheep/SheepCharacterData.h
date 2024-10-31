@@ -15,6 +15,9 @@ class PLATINUMA3_API USheepCharacterData : public UDataAsset
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(EditAnywhere, Category="SheepDefault")
+	float SheepWalkSpeed;
+	
 	UPROPERTY(EditAnywhere, Category="Rally")
 	float RallyTime;
 
@@ -32,7 +35,4 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Flee")
 	float SheepFleeSpeed;
-
-	UPROPERTY(EditAnywhere, Category="SheepDefault")
-	float SheepWalkSpeed;
 };

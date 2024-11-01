@@ -56,12 +56,12 @@ void UCharacterStateIdle::StateTick(float DeltaTime)
 	Super::StateTick(DeltaTime);
 
 
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		0.1f,
-		FColor::Green,
-		TEXT("Tick State Idle")
-	);
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	0.1f,
+	// 	FColor::Green,
+	// 	TEXT("Tick State Idle")
+	// );
 
 
 	if(FMath::Abs(Character->GetInputMoves().GetSafeNormal().Length()) > CharacterSettings->InputMoveXThreshold)

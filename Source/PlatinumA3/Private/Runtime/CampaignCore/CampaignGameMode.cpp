@@ -7,6 +7,7 @@
 #include "LocalMultiplayerSubsystem.h"
 #include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
 #include "Runtime/Sheep/SheepCharacter.h"
@@ -17,11 +18,16 @@ void ACampaignGameMode::BeginPlay()
 	Super::BeginPlay();
 	//Spawn Players
 	CreateAndInitPlayers();
-	
+
+	TArray<AStateCharacter*> Characters;
+
 	TArray<ACampaignPlayerStart*> PlayerStarts;
 	FindPlayerStartsActors(PlayerStarts);
-	SpawnCharacters(PlayerStarts);
+	Characters = SpawnCharacters(PlayerStarts);
 
+	
+	FindAndInitSplineCamera(Characters);
+	
 	//Setup Game
 	FindAllSheepsInWorld(AllSheeps);	
 	//Reset GameValue
@@ -46,9 +52,10 @@ void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& In
 	}
 }
 
-void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const
+TArray<AStateCharacter*> ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const
 {
 	
+	TArray<AStateCharacter*> Characters;
 	
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
@@ -61,11 +68,16 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 			CampaignPlayerStart->GetTransform()
 			);
 
+		
 		if(NewCharacter == nullptr) continue;
 
 		NewCharacter->AutoPossessPlayer = CampaignPlayerStart->AutoReceiveInput;
 		NewCharacter->FinishSpawning(CampaignPlayerStart->GetTransform());
+
+		Characters.Add(NewCharacter);
 	}
+
+	return Characters;
 }
 
 void ACampaignGameMode::CreateAndInitPlayers() const
@@ -77,6 +89,14 @@ void ACampaignGameMode::CreateAndInitPlayers() const
 	if(LocalMultiplayerSubsystem == nullptr) return;
 	
 	LocalMultiplayerSubsystem->CreateAndInitPlayers(ELocalMultiplayerInputMappingType::InGame);
+}
+
+void ACampaignGameMode::FindAndInitSplineCamera(TArray<AStateCharacter*>& Characters) const
+{
+	ASplineCameraScroller* SplineCamera = Cast<ASplineCameraScroller>(UGameplayStatics::GetActorOfClass(GetWorld(), ASplineCameraScroller::StaticClass()));
+	if(SplineCamera == nullptr) return;
+	
+	SplineCamera->InitializedSplineCameraScroller(Characters);
 }
 
 TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(

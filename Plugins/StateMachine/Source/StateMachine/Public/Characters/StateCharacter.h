@@ -61,16 +61,18 @@ public:
 	TObjectPtr<UCharacterInputData> InputData;
 
 protected:
-	void SetUpInputMappingContext() const;
+	//void SetUpInputMappingContext() const;
 
 private:
 	virtual void Input_OnMove(const FInputActionValue& ActionValue);
-
-	virtual void Input_OnSprint(const FInputActionValue& ActionValue);
-
-	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
-
 	
+	virtual void Input_OnHolding(const FInputActionValue& ActionValue);
+	
+	virtual void Input_OnLaunching(const FInputActionValue& ActionValue);
+
+	virtual void Input_OnRallying(const FInputActionValue& ActionValue);
+
+
 
 #pragma endregion
 
@@ -114,23 +116,23 @@ public:
 	FVector2D GetInputMoves();
 
 	UFUNCTION(BlueprintCallable)
-	bool GetIsSprinting();
+	bool GetIsHolding();
 
 	UFUNCTION(BlueprintCallable)
-	bool GetIsHolding();
+	bool GetIsRallying();
 	
 protected:
 	UPROPERTY()
 	FVector2D InputMoves;
 
 	UPROPERTY()
-	bool IsSprinting;
+	bool IsHolding;
 
 	UPROPERTY()
-	bool IsHolding;
-	
-private:
-	void BindInputMoveXAxisAndActions(UEnhancedInputComponent* EnhancedInputComponent);
+	bool IsLaunching;
+
+	UPROPERTY()
+	bool IsRallying;
 
 
 #pragma endregion

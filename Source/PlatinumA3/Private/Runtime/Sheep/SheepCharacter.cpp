@@ -7,9 +7,11 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Runtime/WoolsomeCharactersSettings.h"
 #include "Runtime/Sheep/SheepCharacterData.h"
+#include "Runtime/Sheep/SheepStateID.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
 
 
+#pragma region Unreal Defaults
 // Sets default values
 ASheepCharacter::ASheepCharacter()
 {
@@ -33,18 +35,18 @@ void ASheepCharacter::BeginPlay()
 	const USheepCharacterData* SheepCharacterData = WCSettings->SheepCharacterData.LoadSynchronous();
 	if(SheepCharacterData == nullptr) return;
 
-	SetActorClassToFleeFrom(SheepCharacterData->ActorClassToFleeFrom);
-	
 	DetectionCollision->SetSphereRadius(SheepCharacterData->DetectionRadius);
+
+	// SetSheepStateID(ESheepStateID::IdleWalk);
+	SetSheepWalkSpeed(SheepCharacterData->SheepWalkSpeed);
+	GetCharacterMovement()->MaxWalkSpeed = SheepCharacterData->SheepWalkSpeed;
 
 	SetRallyTime(SheepCharacterData->RallyTime);
 	SetSheepRallySpeed(SheepCharacterData->SheepRallySpeed);
 	
+	SetActorClassToFleeFrom(SheepCharacterData->ActorClassToFleeFrom);
 	SetFleeingDistance(SheepCharacterData->FleeingDistance);
 	SetSheepFleeSpeed(SheepCharacterData->SheepFleeSpeed);
-
-	SetSheepWalkSpeed(SheepCharacterData->SheepWalkSpeed);
-	GetCharacterMovement()->MaxWalkSpeed = SheepCharacterData->SheepWalkSpeed;
 }
 
 // Called every frame
@@ -58,14 +60,13 @@ void ASheepCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComp
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+#pragma endregion 
 
+#pragma region Sheep Defaults
 void ASheepCharacter::KillSheep()
 {
 	KillEvent.Broadcast();
 }
-
-#pragma region Getters/Setters
-
 bool ASheepCharacter::GetCanMove() const
 {
 	return CanMove;
@@ -77,6 +78,34 @@ void ASheepCharacter::SetCanMove(bool Value)
 	CanMoveChangedEvent.Broadcast(CanMove);
 }
 
+void ASheepCharacter::UpdateWalkSpeed(float Value) const
+{
+	GetCharacterMovement()->MaxWalkSpeed = FMathf::Max(MIN_WALK_SPEED, Value);
+}
+
+// ESheepStateID ASheepCharacter::GetSheepStateID() const
+// {
+// 	return SheepStateID;
+// }
+//
+// void ASheepCharacter::SetSheepStateID(ESheepStateID ID)
+// {
+// 	if(ID == ESheepStateID::None) return;
+// 	SheepStateID = ID;
+// }
+
+float ASheepCharacter::GetSheepWalkSpeed() const
+{
+	return SheepWalkSpeed;
+}
+
+void ASheepCharacter::SetSheepWalkSpeed(float Value)
+{
+	SheepWalkSpeed = FMathf::Max(50.f, Value);
+}
+#pragma endregion 
+
+#pragma region Rally
 float ASheepCharacter::GetRallyTime() const
 {
 	return RallyTime;
@@ -94,9 +123,11 @@ float ASheepCharacter::GetSheepRallySpeed() const
 
 void ASheepCharacter::SetSheepRallySpeed(float Value)
 {
-	SheepRallySpeed = FMathf::Max(50.f, Value);
+	SheepRallySpeed = FMathf::Max(MIN_WALK_SPEED, Value);
 }
+#pragma endregion
 
+#pragma region Flee
 TSubclassOf<AActor> ASheepCharacter::GetActorClassToFleeFrom() const
 {
 	return ActorClassToFleeFrom;
@@ -126,16 +157,48 @@ float ASheepCharacter::GetSheepFleeSpeed() const
 
 void ASheepCharacter::SetSheepFleeSpeed(float Value)
 {
-	SheepFleeSpeed = FMathf::Max(50.f, Value);
+	SheepFleeSpeed = FMathf::Max(MIN_WALK_SPEED, Value);
 }
 
-float ASheepCharacter::GetSheepWalkSpeed() const
-{
-	return SheepWalkSpeed;
-}
+#pragma endregion
 
-void ASheepCharacter::SetSheepWalkSpeed(float Value)
-{
-	SheepWalkSpeed = FMathf::Max(50.f, Value);
-}
+#pragma region SheepStates
+
+// void ASheepCharacter::ChangeState(ESheepStateID StateID)
+// {
+// 	switch (StateID)
+// 	{
+// 	case ESheepStateID::IdleWalk:
+// 		ToIdleWalkState();
+// 		break;
+// 	case ESheepStateID::Rally:
+// 		ToRallyState();
+// 		break;
+// 	case ESheepStateID::Flee:
+// 		ToFleeState();
+// 		break;
+// 	default:
+// 		break;
+// 	}
+// }
+//
+// void ASheepCharacter::ToIdleWalkState()
+// {
+// 	SheepStateID = ESheepStateID::IdleWalk;
+// 	UpdateWalkSpeed(SheepWalkSpeed);
+// }
+//
+// void ASheepCharacter::ToRallyState()
+// {
+// 	SheepStateID = ESheepStateID::Rally;
+// 	UpdateWalkSpeed(SheepRallySpeed);
+//
+// }
+//
+// void ASheepCharacter::ToFleeState()
+// {
+// 	SheepStateID = ESheepStateID::Flee;
+// 	UpdateWalkSpeed(SheepFleeSpeed);
+// }
+
 #pragma endregion 

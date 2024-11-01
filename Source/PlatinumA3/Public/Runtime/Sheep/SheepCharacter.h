@@ -34,7 +34,7 @@ public:
 #pragma endregion
 
 #pragma region Sheep Defaults
-	const float MIN_WALK_SPEED = 50.f;
+	const float MIN_WALK_SPEED = 0.f;
 	
 public:
 	UFUNCTION(BlueprintCallable)
@@ -54,8 +54,8 @@ private:
 	UPROPERTY()
 	bool CanMove;
 
-	UPROPERTY(VisibleAnywhere)
-	ESheepStateID SheepStateID;
+	// UPROPERTY(VisibleAnywhere)
+	// ESheepStateID SheepStateID;
 	
 	UPROPERTY(VisibleAnywhere, Category="SheepDefault")
 	float SheepWalkSpeed;
@@ -69,10 +69,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void UpdateWalkSpeed(float Value) const;
 	
-	UFUNCTION(BlueprintCallable)
-	ESheepStateID GetSheepStateID() const;
-	UFUNCTION(BlueprintCallable)
-	void SetSheepStateID(ESheepStateID ID);
+	// UFUNCTION(BlueprintCallable)
+	// ESheepStateID GetSheepStateID() const;
+	// UFUNCTION(BlueprintCallable)
+	// void SetSheepStateID(ESheepStateID ID);
 
 	UFUNCTION(BlueprintCallable)
 	float GetSheepWalkSpeed() const;
@@ -132,11 +132,18 @@ public:
 #pragma endregion
 
 #pragma region SheepStates
-	
-	UFUNCTION(BlueprintCallable)
-	void ChangeState(ESheepStateID StateID);
-	
-	UFUNCTION(BlueprintCallable)
-	void ToFleeState();
+public:
+	// UFUNCTION(BlueprintCallable)
+	// void ChangeState(ESheepStateID StateID);
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToIdleWalkState();
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToRallyState();
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToFleeState();
+
 #pragma endregion 
 };

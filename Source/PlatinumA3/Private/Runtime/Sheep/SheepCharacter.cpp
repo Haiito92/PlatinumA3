@@ -37,7 +37,7 @@ void ASheepCharacter::BeginPlay()
 
 	DetectionCollision->SetSphereRadius(SheepCharacterData->DetectionRadius);
 
-	SetSheepStateID(ESheepStateID::IdleWalk);
+	// SetSheepStateID(ESheepStateID::IdleWalk);
 	SetSheepWalkSpeed(SheepCharacterData->SheepWalkSpeed);
 	GetCharacterMovement()->MaxWalkSpeed = SheepCharacterData->SheepWalkSpeed;
 
@@ -83,16 +83,16 @@ void ASheepCharacter::UpdateWalkSpeed(float Value) const
 	GetCharacterMovement()->MaxWalkSpeed = FMathf::Max(MIN_WALK_SPEED, Value);
 }
 
-ESheepStateID ASheepCharacter::GetSheepStateID() const
-{
-	return SheepStateID;
-}
-
-void ASheepCharacter::SetSheepStateID(ESheepStateID ID)
-{
-	if(ID == ESheepStateID::None) return;
-	SheepStateID = ID;
-}
+// ESheepStateID ASheepCharacter::GetSheepStateID() const
+// {
+// 	return SheepStateID;
+// }
+//
+// void ASheepCharacter::SetSheepStateID(ESheepStateID ID)
+// {
+// 	if(ID == ESheepStateID::None) return;
+// 	SheepStateID = ID;
+// }
 
 float ASheepCharacter::GetSheepWalkSpeed() const
 {
@@ -164,25 +164,41 @@ void ASheepCharacter::SetSheepFleeSpeed(float Value)
 
 #pragma region SheepStates
 
-void ASheepCharacter::ChangeState(ESheepStateID StateID)
-{
-	switch (StateID)
-	{
-	case ESheepStateID::IdleWalk:
-		break;
-	case ESheepStateID::Rally:
-		break;
-	case ESheepStateID::Flee:
-		break;
-	default:
-		break;
-	}
-}
-
-void ASheepCharacter::ToFleeState()
-{
-	
-	GetCharacterMovement()->MaxWalkSpeed = SheepFleeSpeed;
-}
+// void ASheepCharacter::ChangeState(ESheepStateID StateID)
+// {
+// 	switch (StateID)
+// 	{
+// 	case ESheepStateID::IdleWalk:
+// 		ToIdleWalkState();
+// 		break;
+// 	case ESheepStateID::Rally:
+// 		ToRallyState();
+// 		break;
+// 	case ESheepStateID::Flee:
+// 		ToFleeState();
+// 		break;
+// 	default:
+// 		break;
+// 	}
+// }
+//
+// void ASheepCharacter::ToIdleWalkState()
+// {
+// 	SheepStateID = ESheepStateID::IdleWalk;
+// 	UpdateWalkSpeed(SheepWalkSpeed);
+// }
+//
+// void ASheepCharacter::ToRallyState()
+// {
+// 	SheepStateID = ESheepStateID::Rally;
+// 	UpdateWalkSpeed(SheepRallySpeed);
+//
+// }
+//
+// void ASheepCharacter::ToFleeState()
+// {
+// 	SheepStateID = ESheepStateID::Flee;
+// 	UpdateWalkSpeed(SheepFleeSpeed);
+// }
 
 #pragma endregion 

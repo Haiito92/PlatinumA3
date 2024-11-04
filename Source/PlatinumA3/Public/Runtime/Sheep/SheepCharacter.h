@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Scarable.h"
 #include "GameFramework/Character.h"
 #include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
@@ -12,7 +13,7 @@ enum class ESheepStateID : uint8;
 class USphereComponent;
 
 UCLASS()
-class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable
+class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable, public IScarable
 {
 	GENERATED_BODY()
 

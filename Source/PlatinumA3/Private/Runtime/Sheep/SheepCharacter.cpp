@@ -6,6 +6,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Runtime/WoolsomeCharactersSettings.h"
+#include "Runtime/Scarable/IScary.h"
+#include "Runtime/Scarable/ScarableComponent.h"
 #include "Runtime/Sheep/SheepCharacterData.h"
 #include "Runtime/Sheep/SheepStateID.h"
 #include "Windows/AllowWindowsPlatformTypes.h"
@@ -22,6 +24,9 @@ ASheepCharacter::ASheepCharacter()
 	DetectionCollision->SetupAttachment(RootComponent);
 	
 	CanMove = true;
+
+
+	ScarableComponent = CreateDefaultSubobject<UScarableComponent>("Scarable Component");
 }
 
 // Called when the game starts or when spawned
@@ -37,7 +42,6 @@ void ASheepCharacter::BeginPlay()
 
 	DetectionCollision->SetSphereRadius(SheepCharacterData->DetectionRadius);
 
-	// SetSheepStateID(ESheepStateID::IdleWalk);
 	SetSheepWalkSpeed(SheepCharacterData->SheepWalkSpeed);
 	GetCharacterMovement()->MaxWalkSpeed = SheepCharacterData->SheepWalkSpeed;
 
@@ -47,6 +51,10 @@ void ASheepCharacter::BeginPlay()
 	SetActorClassToFleeFrom(SheepCharacterData->ActorClassToFleeFrom);
 	SetFleeingDistance(SheepCharacterData->FleeingDistance);
 	SetSheepFleeSpeed(SheepCharacterData->SheepFleeSpeed);
+
+	//Bind to Events
+	DetectionCollision->OnComponentBeginOverlap.AddDynamic(this, &ASheepCharacter::OnDetectionCollisionBeginOverlap);
+	DetectionCollision->OnComponentEndOverlap.AddDynamic(this, &ASheepCharacter::OnDetectionCollisionEndOverlap);
 }
 
 // Called every frame
@@ -160,45 +168,45 @@ void ASheepCharacter::SetSheepFleeSpeed(float Value)
 	SheepFleeSpeed = FMathf::Max(MIN_WALK_SPEED, Value);
 }
 
+void ASheepCharacter::OnDetectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->Implements<UScary>())
+	{
+		Scare_Implementation(OtherActor);
+	}
+}
+
+void ASheepCharacter::OnDetectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
+{
+	if(OtherActor->Implements<UScary>())
+	{
+		UnScare_Implementation();
+	}
+}
+
 #pragma endregion
 
-#pragma region SheepStates
+#pragma region IScarable
+void ASheepCharacter::Scare_Implementation(const AActor* ScaryActor)
+{
+	IScarable::Scare_Implementation(ScaryActor);
 
-// void ASheepCharacter::ChangeState(ESheepStateID StateID)
-// {
-// 	switch (StateID)
-// 	{
-// 	case ESheepStateID::IdleWalk:
-// 		ToIdleWalkState();
-// 		break;
-// 	case ESheepStateID::Rally:
-// 		ToRallyState();
-// 		break;
-// 	case ESheepStateID::Flee:
-// 		ToFleeState();
-// 		break;
-// 	default:
-// 		break;
-// 	}
-// }
-//
-// void ASheepCharacter::ToIdleWalkState()
-// {
-// 	SheepStateID = ESheepStateID::IdleWalk;
-// 	UpdateWalkSpeed(SheepWalkSpeed);
-// }
-//
-// void ASheepCharacter::ToRallyState()
-// {
-// 	SheepStateID = ESheepStateID::Rally;
-// 	UpdateWalkSpeed(SheepRallySpeed);
-//
-// }
-//
-// void ASheepCharacter::ToFleeState()
-// {
-// 	SheepStateID = ESheepStateID::Flee;
-// 	UpdateWalkSpeed(SheepFleeSpeed);
-// }
+	ScarableComponent->Scare_Implementation(ScaryActor);
+}
 
+void ASheepCharacter::UnScare_Implementation()
+{
+	IScarable::UnScare_Implementation();
+
+	ScarableComponent->UnScare_Implementation();
+}
+
+void ASheepCharacter::LowScare_Implementation(FVector LowFleeDirection, float SignalRadius)
+{
+	IScarable::LowScare_Implementation(LowFleeDirection, SignalRadius);
+
+	ScarableComponent->LowScare_Implementation(LowFleeDirection, SignalRadius);
+}
 #pragma endregion 

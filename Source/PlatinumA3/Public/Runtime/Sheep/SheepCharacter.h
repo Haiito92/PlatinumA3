@@ -3,12 +3,12 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Scarable.h"
 #include "GameFramework/Character.h"
-#include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
+#include "Runtime/Scarable/IScarable.h"
 #include "SheepCharacter.generated.h"
 
+class UScarableComponent;
 enum class ESheepStateID : uint8;
 class USphereComponent;
 
@@ -36,7 +36,7 @@ public:
 
 #pragma region Sheep Defaults
 	const float MIN_WALK_SPEED = 0.f;
-	
+
 public:
 	UFUNCTION(BlueprintCallable)
 	void KillSheep();
@@ -81,7 +81,9 @@ public:
 	void SetSheepWalkSpeed(float Value);
 
 #pragma endregion 
+
 	
+
 #pragma region Rally
 private:
 	UPROPERTY(VisibleAnywhere, Category="Rally")
@@ -110,6 +112,7 @@ private:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> DetectionCollision;
 	
+	
 	UPROPERTY(VisibleAnywhere, Category="Flee")
 	float FleeingDistance = 1000.f;
 
@@ -130,21 +133,22 @@ public:
 	float GetSheepFleeSpeed() const;
 	UFUNCTION(BlueprintCallable)
 	void SetSheepFleeSpeed(float Value);
+private:
+	UFUNCTION()
+	void OnDetectionCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+										  const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnDetectionCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 #pragma endregion
 
-#pragma region SheepStates
+#pragma region IScarable
 public:
-	// UFUNCTION(BlueprintCallable)
-	// void ChangeState(ESheepStateID StateID);
-	//
-	// UFUNCTION(BlueprintCallable)
-	// void ToIdleWalkState();
-	//
-	// UFUNCTION(BlueprintCallable)
-	// void ToRallyState();
-	//
-	// UFUNCTION(BlueprintCallable)
-	// void ToFleeState();
-
+	UPROPERTY(BlueprintReadOnly)
+	TObjectPtr<UScarableComponent> ScarableComponent;
+private:
+	virtual void Scare_Implementation(const AActor* ScaryActor) override;
+	virtual void UnScare_Implementation() override;
+	virtual void LowScare_Implementation(FVector LowFleeDirection, float SignalRadius) override;
 #pragma endregion 
 };
+

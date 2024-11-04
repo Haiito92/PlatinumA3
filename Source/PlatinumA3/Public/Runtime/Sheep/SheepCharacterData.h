@@ -15,15 +15,24 @@ class PLATINUMA3_API USheepCharacterData : public UDataAsset
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="SheepDefault")
+	float SheepWalkSpeed;
+	
+	UPROPERTY(EditAnywhere, Category="Rally")
+	float RallyTime;
+
+	UPROPERTY(EditAnywhere, Category="Rally")
+	float SheepRallySpeed;
+	
+	UPROPERTY(EditAnywhere, Category="Flee")
 	TSubclassOf<AActor> ActorClassToFleeFrom;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Flee")
 	float DetectionRadius;
 	
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Flee")
 	float FleeingDistance;
 
-	UPROPERTY(EditAnywhere)
-	float SheepWalkSpeed;
+	UPROPERTY(EditAnywhere, Category="Flee")
+	float SheepFleeSpeed;
 };

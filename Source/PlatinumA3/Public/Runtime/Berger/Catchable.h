@@ -25,5 +25,8 @@ public:
 	UPrimitiveComponent* Catch();
 
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Catchable Interface")
+	void Drop();
+	
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Catchable Interface")
 	void Launch(bool IsSimulatingPhysic, FName CollisionProfilName, float TransTime);
 };

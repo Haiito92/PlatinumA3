@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Scarable.h"
 #include "GameFramework/Character.h"
+#include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
 #include "SheepCharacter.generated.h"
 
+enum class ESheepStateID : uint8;
 class USphereComponent;
 
 UCLASS()
-class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable
+class PLATINUMA3_API ASheepCharacter : public ACharacter, public IRallyable, public IScarable
 {
 	GENERATED_BODY()
 
@@ -31,6 +34,9 @@ public:
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 #pragma endregion
 
+#pragma region Sheep Defaults
+	const float MIN_WALK_SPEED = 0.f;
+	
 public:
 	UFUNCTION(BlueprintCallable)
 	void KillSheep();
@@ -49,21 +55,67 @@ private:
 	UPROPERTY()
 	bool CanMove;
 
-	UPROPERTY(VisibleAnywhere)
+	// UPROPERTY(VisibleAnywhere)
+	// ESheepStateID SheepStateID;
+	
+	UPROPERTY(VisibleAnywhere, Category="SheepDefault")
+	float SheepWalkSpeed;
+	
+public:
+	UFUNCTION(BlueprintCallable)
+	bool GetCanMove() const;
+	UFUNCTION(BlueprintCallable)
+	void SetCanMove(bool Value);
+
+	UFUNCTION(BlueprintCallable)
+	void UpdateWalkSpeed(float Value) const;
+	
+	// UFUNCTION(BlueprintCallable)
+	// ESheepStateID GetSheepStateID() const;
+	// UFUNCTION(BlueprintCallable)
+	// void SetSheepStateID(ESheepStateID ID);
+
+	UFUNCTION(BlueprintCallable)
+	float GetSheepWalkSpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepWalkSpeed(float Value);
+
+#pragma endregion 
+	
+#pragma region Rally
+private:
+	UPROPERTY(VisibleAnywhere, Category="Rally")
+	float RallyTime;
+
+	UPROPERTY(VisibleAnywhere, Category="Rally")
+	float SheepRallySpeed;
+	
+public:
+	UFUNCTION(BlueprintCallable)
+	float GetRallyTime() const;
+	UFUNCTION(BlueprintCallable)
+	void SetRallyTime(float Value);
+	
+	UFUNCTION(BlueprintCallable)
+	float GetSheepRallySpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepRallySpeed(float Value);
+#pragma endregion
+
+#pragma region Flee
+private:
+	UPROPERTY(VisibleAnywhere, Category="Flee")
 	TSubclassOf<AActor> ActorClassToFleeFrom;
 
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<USphereComponent> DetectionCollision;
 	
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category="Flee")
 	float FleeingDistance = 1000.f;
+
+	UPROPERTY(VisibleAnywhere, Category="Flee")
+	float SheepFleeSpeed;
 public:
-#pragma region Getters/Setters
-	UFUNCTION(BlueprintCallable)
-	bool GetCanMove() const;
-	UFUNCTION(BlueprintCallable)
-	void SetCanMove(bool Value);
-	
 	UFUNCTION(BlueprintCallable)
 	TSubclassOf<AActor> GetActorClassToFleeFrom() const;
 	UFUNCTION(BlueprintCallable)
@@ -73,5 +125,26 @@ public:
 	float GetFleeingDistance() const;
 	UFUNCTION(BlueprintCallable)
 	void SetFleeingDistance(float Value);
+
+	UFUNCTION(BlueprintCallable)
+	float GetSheepFleeSpeed() const;
+	UFUNCTION(BlueprintCallable)
+	void SetSheepFleeSpeed(float Value);
+#pragma endregion
+
+#pragma region SheepStates
+public:
+	// UFUNCTION(BlueprintCallable)
+	// void ChangeState(ESheepStateID StateID);
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToIdleWalkState();
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToRallyState();
+	//
+	// UFUNCTION(BlueprintCallable)
+	// void ToFleeState();
+
 #pragma endregion 
 };

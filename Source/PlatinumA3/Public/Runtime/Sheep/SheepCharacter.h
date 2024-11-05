@@ -142,9 +142,11 @@ private:
 #pragma endregion
 
 #pragma region IScarable
-public:
-	UPROPERTY(BlueprintReadOnly)
+private:
+	UPROPERTY()
 	TObjectPtr<UScarableComponent> ScarableComponent;
+public:
+	UScarableComponent* GetScarableComponent() const;
 private:
 	virtual void Scare_Implementation(const AActor* ScaryActor) override;
 	virtual void UnScare_Implementation() override;

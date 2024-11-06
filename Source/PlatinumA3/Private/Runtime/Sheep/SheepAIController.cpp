@@ -26,9 +26,9 @@ void ASheepAIController::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-void ASheepAIController::Destroyed()
+void ASheepAIController::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
-	Super::Destroyed();
+	Super::EndPlay(EndPlayReason);
 	if(SheepControlled != nullptr)
 	{
 		SheepControlled->CanMoveChangedEvent.RemoveDynamic(this, &ASheepAIController::OnCanMoveChangeEvent);
@@ -43,6 +43,12 @@ void ASheepAIController::Destroyed()
 	}
 }
 
+void ASheepAIController::Destroyed()
+{
+	Super::Destroyed();
+	
+}
+
 #pragma endregion
 
 void ASheepAIController::OnPossess(APawn* InPawn)
@@ -52,8 +58,6 @@ void ASheepAIController::OnPossess(APawn* InPawn)
 	SheepControlled = Cast<ASheepCharacter>(InPawn);
 
 	BindToSheepEvents();
-
-	
 }
 
 void ASheepAIController::BindToSheepEvents()

@@ -143,7 +143,7 @@ private:
 
 #pragma region IScarable
 private:
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, meta=(AllowPrivateAccess="true"))
 	TObjectPtr<UScarableComponent> ScarableComponent;
 public:
 	UScarableComponent* GetScarableComponent() const;

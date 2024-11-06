@@ -11,20 +11,32 @@ bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 void UAIIdleBehaviour::BehaviourEntry(AAIGroupPawn* Pawn) const
 {
 	Super::BehaviourEntry(Pawn);
+	
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("IDLE ENTRY"));
 }
 
 void UAIIdleBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
 {
 	Super::BehaviourUpdate(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("IDLE"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("IDLE"));
 }
 
 void UAIIdleBehaviour::BehaviourExit(AAIGroupPawn* Pawn) const
 {
 	Super::BehaviourExit(Pawn);
+	
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("IDLE EXIT"));
 }

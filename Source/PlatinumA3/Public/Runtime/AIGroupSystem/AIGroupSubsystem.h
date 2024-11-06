@@ -6,18 +6,21 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "AIGroupSubsystem.generated.h"
 
+
+class AAIGroupPawn;
+class UAIBehaviour;
+
 USTRUCT()
 struct FAIGroupPawnData
 {
 	GENERATED_BODY()
 public:
 	UPROPERTY()
-	class UAIBehaviour* CurrentBehaviour;
+	TObjectPtr<UAIBehaviour> CurrentBehaviour;
 };
 
 
-class AAIGroupPawn;
-class UAIBehaviour;
+
 /**
  * 
  */
@@ -27,9 +30,12 @@ class PLATINUMA3_API UAIGroupSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
+	UPROPERTY()
 	TArray<AAIGroupPawn*> Pawns;
+	UPROPERTY()
 	TArray<FAIGroupPawnData> PawnDatas;
-	
+
+	UPROPERTY()
 	TArray<UAIBehaviour*> Behaviours;
 	//Ajouter un default behavior ??
 
@@ -47,6 +53,7 @@ private:
 #pragma region System Update
 
 private:
+	UPROPERTY()
 	FTimerHandle GroupUpdateTimerHandle;
 	void GroupUpdate();
 	

@@ -14,6 +14,7 @@ class PLATINUMA3_API UAIIdleBehaviour : public UAIBehaviour
 {
 	GENERATED_BODY()
 
+public:
 	virtual bool CheckBehaviourValidity(AAIGroupPawn* Pawn) const override;
 
 	virtual void BehaviourEntry(AAIGroupPawn* Pawn) const override;

@@ -3,6 +3,10 @@
 
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 
+void UAIBehaviour::InitBehaviour()
+{
+}
+
 bool UAIBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 {
 	return false;

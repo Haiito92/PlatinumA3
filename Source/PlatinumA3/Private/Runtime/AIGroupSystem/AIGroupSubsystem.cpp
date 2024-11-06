@@ -20,8 +20,10 @@ void UAIGroupSubsystem::InitSubsystem()
 	InitBehaviours();
 
 	FindAllPawns();
-	InitAllPawns();
 	InitPawnDatas();
+	InitAllPawns();
+
+	
 
 	GetWorld()->GetTimerManager().SetTimer(
 		GroupUpdateTimerHandle,
@@ -43,6 +45,8 @@ void UAIGroupSubsystem::InitBehaviours()
 		UAIBehaviour* Behaviour = NewObject<UAIBehaviour>(this, BehaviorClass);
 
 		if(Behaviour == nullptr) continue;
+		
+		Behaviour->InitBehaviour();
 		Behaviours.Add(Behaviour);
 	}
 }
@@ -62,9 +66,16 @@ void UAIGroupSubsystem::FindAllPawns()
 
 void UAIGroupSubsystem::InitAllPawns()
 {
-	for (AAIGroupPawn* Pawn : Pawns)
+	for (int i = 0; i < Pawns.Num(); ++i)
 	{
-		//Call Init function of pawn
+		AAIGroupPawn* Pawn = Pawns[i];
+		if(Pawn == nullptr) continue;
+		
+		const FAIGroupPawnData& Data = PawnDatas[i];
+		const UAIBehaviour* StartBehaviour = Data.CurrentBehaviour;
+		if(StartBehaviour == nullptr) continue;
+
+		StartBehaviour->BehaviourEntry(Pawn);
 	}
 }
 
@@ -91,28 +102,27 @@ void UAIGroupSubsystem::GroupUpdate()
 		if(Pawn == nullptr) continue;
 
 		//Get first valid behaviour
-		const UAIBehaviour* NewBehaviour = FindFirstValidBehaviour(Pawn);
+		UAIBehaviour* NewBehaviour = FindFirstValidBehaviour(Pawn);
 		if(NewBehaviour == nullptr) continue;
 
-		const FAIGroupPawnData& Data = PawnDatas[i];
-		const UAIBehaviour* CurrentBehaviour = Data.CurrentBehaviour;
-		if(CurrentBehaviour == nullptr) continue;
+		FAIGroupPawnData& Data = PawnDatas[i];
+		if(Data.CurrentBehaviour == nullptr) continue;
 			
 		//Compare New Behavior with current one
-		if(NewBehaviour != CurrentBehaviour)
+		if(NewBehaviour != Data.CurrentBehaviour)
 		{
 			//Exit Previous Behaviour
-			CurrentBehaviour->BehaviourExit(Pawn);
+			Data.CurrentBehaviour->BehaviourExit(Pawn);
 
 			//Update CurrentState
-			CurrentBehaviour = NewBehaviour;
+			Data.CurrentBehaviour = NewBehaviour;
 
 			//Entry NewBehaviour
-			CurrentBehaviour->BehaviourEntry(Pawn);
+			Data.CurrentBehaviour->BehaviourEntry(Pawn);
 		}
 		
 		//Update current Behavior
-		CurrentBehaviour->BehaviourUpdate(Pawn);
+		Data.CurrentBehaviour->BehaviourUpdate(Pawn);
 	}
 }
 

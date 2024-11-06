@@ -3,11 +3,19 @@
 
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 
-bool UAIBehaviour::CheckBehaviourValidity() const
+bool UAIBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 {
 	return false;
 }
 
-void UAIBehaviour::ApplyBehaviour(AAIGroupPawn* Character) const
+void UAIBehaviour::BehaviourEntry(AAIGroupPawn* Pawn) const
+{
+}
+
+void UAIBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
+{
+}
+
+void UAIBehaviour::BehaviourExit(AAIGroupPawn* Pawn) const
 {
 }

@@ -7,6 +7,7 @@
 #include "LocalMultiplayerSubsystem.h"
 #include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/AIGroupSystem/AIGroupSubsystem.h"
 #include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
@@ -26,7 +27,15 @@ void ACampaignGameMode::BeginPlay()
 	Characters = SpawnCharacters(PlayerStarts);
 
 	
+	//Init Camera
 	FindAndInitSplineCamera(Characters);
+
+	//Init AIGroupSubsystem
+	UAIGroupSubsystem* UAIGroupSubsystem = GetWorld()->GetSubsystem<class UAIGroupSubsystem>();
+	if(UAIGroupSubsystem != nullptr)
+	{
+		UAIGroupSubsystem->InitSubsystem();
+	}
 	
 	//Setup Game
 	FindAllSheepsInWorld(AllSheeps);	

@@ -4,19 +4,31 @@
 #include "Runtime/AIGroupSystem/AIBehaviours/AIFleeBehaviour.h"
 
 #include "GameFramework/Character.h"
+#include "Runtime/AIGroupSystem/AIGroupPawn.h"
 
-bool UAIFleeBehaviour::CheckBehaviourValidity() const
+bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 {
-	return true;
+	return false;
 }
 
-void UAIFleeBehaviour::ApplyBehaviour(AAIGroupPawn* Character) const
+void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn) const
 {
-	Super::ApplyBehaviour(Character);
+	Super::BehaviourEntry(Pawn);
+}
 
+void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
+{
+	Super::BehaviourUpdate(Pawn);
+
+	Pawn->AddMovementInput(FVector::ForwardVector, 100);
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		4.0f,
 		FColor::Orange,
-		TEXT("Character"));
+		TEXT("FLEE"));
+}
+
+void UAIFleeBehaviour::BehaviourExit(AAIGroupPawn* Pawn) const
+{
+	Super::BehaviourExit(Pawn);
 }

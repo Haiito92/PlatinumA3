@@ -18,7 +18,7 @@ class PLATINUMA3_API UAIFleeBehaviour : public UAIBehaviour
 
 private:
 	UPROPERTY()
-	TArray<AActor*> ActorToFleeFrom;
+	TArray<AActor*> ActorsToFleeFrom;
 	
 public:
 	virtual void InitBehaviour() override;

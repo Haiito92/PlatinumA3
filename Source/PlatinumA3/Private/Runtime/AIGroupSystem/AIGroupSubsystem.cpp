@@ -64,6 +64,16 @@ void UAIGroupSubsystem::FindAllPawns()
 	}
 }
 
+
+void UAIGroupSubsystem::InitPawnDatas()
+{
+	for (AAIGroupPawn* Pawn : Pawns)
+	{
+		FAIGroupPawnData PawnData = {Behaviours.Last()};
+		PawnDatas.Add(PawnData);
+	}
+}
+
 void UAIGroupSubsystem::InitAllPawns()
 {
 	for (int i = 0; i < Pawns.Num(); ++i)
@@ -76,15 +86,6 @@ void UAIGroupSubsystem::InitAllPawns()
 		if(StartBehaviour == nullptr) continue;
 
 		StartBehaviour->BehaviourEntry(Pawn);
-	}
-}
-
-void UAIGroupSubsystem::InitPawnDatas()
-{
-	for (AAIGroupPawn* Pawn : Pawns)
-	{
-		FAIGroupPawnData PawnData = {Behaviours.Last()};
-		PawnDatas.Add(PawnData);
 	}
 }
 #pragma endregion 

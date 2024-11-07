@@ -20,14 +20,14 @@ void UAIFleeBehaviour::InitBehaviour()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), Tag, FoundActors);
 
-	ActorToFleeFrom = FoundActors;
+	ActorsToFleeFrom = FoundActors;
 }
 
 bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 {
 	bool valid = false;
 
-	for (AActor* Actor : ActorToFleeFrom)
+	for (AActor* Actor : ActorsToFleeFrom)
 	{
 		if(FVector::Distance(Pawn->GetActorLocation(), Actor->GetActorLocation()) < 300.0f)
 		{
@@ -53,7 +53,21 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
 {
 	Super::BehaviourUpdate(Pawn);
 
-	Pawn->AddMovementInput(FVector::ForwardVector, 100);
+	FVector direction = FVector::Zero();
+
+	for (AActor* ActorToFleeFrom : ActorsToFleeFrom)
+	{
+		FVector AtoP = Pawn->GetActorLocation() - ActorToFleeFrom->GetActorLocation();
+		if(AtoP.Length() < 300.0f)
+		{
+			direction += AtoP;
+		}
+	}
+
+	direction.Normalize();
+	direction.Z = 0;
+	
+	Pawn->AddMovementInput(direction, 100);
 	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,

@@ -4,13 +4,14 @@
 #include "Runtime/AIGroupSystem/AIBehaviours/AIFleeBehaviour.h"
 
 #include "GameFramework/Character.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/AIGroupSystem/AIBehaviourSettings.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 
-void UAIFleeBehaviour::InitBehaviour()
+void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 {
-	Super::InitBehaviour();
+	Super::InitBehaviour(Pawns);
 
 
 	const UAIBehaviourSettings* BehaviourSettings = GetDefault<UAIBehaviourSettings>();
@@ -38,9 +39,15 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 	return valid;
 }
 
-void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn) const
+void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
+
+	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	if(MovementComponent != nullptr)
+	{
+		MovementComponent->MaxSpeed = 600.0f;
+	}
 
 	GEngine->AddOnScreenDebugMessage(
 	-1,
@@ -49,9 +56,9 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn) const
 	TEXT("FLEE ENTRY"));
 }
 
-void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
+void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
 {
-	Super::BehaviourUpdate(Pawn);
+	Super::BehaviourUpdate(Pawn, DeltaTime);
 
 	FVector direction = FVector::Zero();
 
@@ -66,8 +73,8 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
 
 	direction.Normalize();
 	direction.Z = 0;
-	
-	Pawn->AddMovementInput(direction, 100);
+
+	Pawn->AddMovementInput(direction);
 	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
@@ -76,10 +83,10 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn) const
 	// 	TEXT("FLEE"));
 }
 
-void UAIFleeBehaviour::BehaviourExit(AAIGroupPawn* Pawn) const
+void UAIFleeBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourExit(Pawn);
-	
+
 	GEngine->AddOnScreenDebugMessage(
 	-1,
 	4.0f,

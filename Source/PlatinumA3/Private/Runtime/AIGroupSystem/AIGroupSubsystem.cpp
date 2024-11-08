@@ -17,19 +17,19 @@ void UAIGroupSubsystem::InitSubsystem()
 	// 	FColor::Yellow,
 	// 	TEXT("INIT AIGROUP SUBSYSTEM"));
 	
-	InitBehaviours();
-
 	FindAllPawns();
-	InitPawnDatas();
 	InitAllPawns();
-
 	
+	InitBehaviours();
+	InitPawnDatas();
+
+	StartFirstPawnsBehavior();
 
 	GetWorld()->GetTimerManager().SetTimer(
 		GroupUpdateTimerHandle,
 		this,
 		&UAIGroupSubsystem::GroupUpdate,
-		0.02f,
+		SYSTEM_UPDATE_RATE,
 		true);
 }
 
@@ -46,7 +46,7 @@ void UAIGroupSubsystem::InitBehaviours()
 
 		if(Behaviour == nullptr) continue;
 		
-		Behaviour->InitBehaviour();
+		Behaviour->InitBehaviour(Pawns);
 		Behaviours.Add(Behaviour);
 	}
 }
@@ -74,18 +74,29 @@ void UAIGroupSubsystem::InitPawnDatas()
 	}
 }
 
+void UAIGroupSubsystem::StartFirstPawnsBehavior()
+{
+	for (int i = 0; i < Pawns.Num(); ++i)
+	{
+		AAIGroupPawn* Pawn = Pawns[i];
+		if(Pawn == nullptr) continue;
+
+		const FAIGroupPawnData& Data = PawnDatas[i];
+		UAIBehaviour* StartBehaviour = Data.CurrentBehaviour;
+		if(StartBehaviour == nullptr) continue;
+
+		StartBehaviour->BehaviourEntry(Pawn);
+	}
+}
+
 void UAIGroupSubsystem::InitAllPawns()
 {
 	for (int i = 0; i < Pawns.Num(); ++i)
 	{
 		AAIGroupPawn* Pawn = Pawns[i];
 		if(Pawn == nullptr) continue;
-		
-		const FAIGroupPawnData& Data = PawnDatas[i];
-		const UAIBehaviour* StartBehaviour = Data.CurrentBehaviour;
-		if(StartBehaviour == nullptr) continue;
 
-		StartBehaviour->BehaviourEntry(Pawn);
+		Pawn->InitGroupPawn(i);
 	}
 }
 #pragma endregion 
@@ -123,7 +134,7 @@ void UAIGroupSubsystem::GroupUpdate()
 		}
 		
 		//Update current Behavior
-		Data.CurrentBehaviour->BehaviourUpdate(Pawn);
+		Data.CurrentBehaviour->BehaviourUpdate(Pawn, SYSTEM_UPDATE_RATE);
 	}
 }
 

@@ -30,6 +30,8 @@ class PLATINUMA3_API UAIGroupSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
+	const float SYSTEM_UPDATE_RATE = 0.02f;
+private:
 	UPROPERTY()
 	TArray<AAIGroupPawn*> Pawns;
 	UPROPERTY()
@@ -48,6 +50,7 @@ private:
 	void FindAllPawns();
 	void InitAllPawns();
 	void InitPawnDatas();
+	void StartFirstPawnsBehavior();
 #pragma endregion
 
 #pragma region System Update

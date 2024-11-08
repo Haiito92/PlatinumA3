@@ -21,11 +21,11 @@ private:
 	TArray<AActor*> ActorsToFleeFrom;
 	
 public:
-	virtual void InitBehaviour() override;
+	virtual void InitBehaviour(const TArray<AAIGroupPawn*>& Pawns) override;
 	
 	virtual bool CheckBehaviourValidity(AAIGroupPawn* Pawn) const override;
 
-	virtual void BehaviourEntry(AAIGroupPawn* Pawn) const override;
-	virtual void BehaviourUpdate(AAIGroupPawn* Pawn) const override;
-	virtual void BehaviourExit(AAIGroupPawn* Pawn) const override;
+	virtual void BehaviourEntry(AAIGroupPawn* Pawn) override;
+	virtual void BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime) override;
+	virtual void BehaviourExit(AAIGroupPawn* Pawn) override;
 };

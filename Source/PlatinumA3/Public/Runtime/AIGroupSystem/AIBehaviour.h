@@ -18,11 +18,11 @@ class PLATINUMA3_API UAIBehaviour : public UObject
 	GENERATED_BODY()
 	
 public:
-	virtual void InitBehaviour();
+	virtual void InitBehaviour(const TArray<AAIGroupPawn*>& Pawns);
 	
 	virtual bool CheckBehaviourValidity(AAIGroupPawn* Pawn) const;
 
-	virtual void BehaviourEntry(AAIGroupPawn* Pawn) const;
-	virtual void BehaviourUpdate(AAIGroupPawn* Pawn) const;
-	virtual void BehaviourExit(AAIGroupPawn* Pawn) const;
+	virtual void BehaviourEntry(AAIGroupPawn* Pawn);
+	virtual void BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime);
+	virtual void BehaviourExit(AAIGroupPawn* Pawn);
 };

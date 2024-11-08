@@ -10,7 +10,7 @@ UCLASS()
 class PLATINUMA3_API AAIGroupPawn : public APawn
 {
 	GENERATED_BODY()
-
+#pragma region Unreal Defaults
 public:
 	// Sets default values for this pawn's properties
 	AAIGroupPawn();
@@ -25,4 +25,18 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+#pragma endregion
+
+private:
+	UPROPERTY()
+	int Index;
+
+public:
+	UFUNCTION()
+	void SetIndex(int NewIndex);
+	UFUNCTION()
+	int GetIndex() const;
+
+public:
+	void InitGroupPawn(int NewIndex);
 };

@@ -40,6 +40,7 @@ public:
 	const FVector& GetDestination() const;
 	
 	void Notify(const FVector& NewDestination);
+	void UnNotify();
 	void OnNotifyTimeOut();
 #pragma endregion 
 };

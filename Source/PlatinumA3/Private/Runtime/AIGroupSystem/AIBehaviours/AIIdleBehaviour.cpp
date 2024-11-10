@@ -54,11 +54,11 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 		MovementComponent->MaxSpeed = 50.0f;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("IDLE ENTRY"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("IDLE ENTRY"));
 }
 
 void UAIIdleBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
@@ -93,11 +93,11 @@ void UAIIdleBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
 	//FIdlePawnData& Data = IdlingPawnDatas[Index];
 	//Data.TimerHandle.Invalidate();
 	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("IDLE EXIT"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("IDLE EXIT"));
 }
 
 #pragma endregion

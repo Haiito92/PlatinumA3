@@ -3,6 +3,7 @@
 
 #include "Runtime/RallySystem/AIRallyBehaviour.h"
 
+#include "GameFramework/FloatingPawnMovement.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 
@@ -28,6 +29,12 @@ bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 void UAIRallyBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
+
+	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	if(MovementComponent != nullptr)
+	{
+		MovementComponent->MaxSpeed = 200.0f;
+	}
 	
 	GEngine->AddOnScreenDebugMessage(
 	-1,

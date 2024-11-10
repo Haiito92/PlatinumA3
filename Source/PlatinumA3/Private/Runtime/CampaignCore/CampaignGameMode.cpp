@@ -11,6 +11,7 @@
 #include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
+#include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/Sheep/SheepCharacter.h"
 
 #pragma region Defaults
@@ -35,6 +36,12 @@ void ACampaignGameMode::BeginPlay()
 	if(UAIGroupSubsystem != nullptr)
 	{
 		UAIGroupSubsystem->InitSubsystem();
+	}
+	//Init WorldSubsystem working around the AIGroupSubsystem
+	UFleeSubsystem* FleeSubsystem = GetWorld()->GetSubsystem<UFleeSubsystem>();
+	if(FleeSubsystem != nullptr)
+	{
+		FleeSubsystem->InitSubsystem();
 	}
 	
 	//Setup Game

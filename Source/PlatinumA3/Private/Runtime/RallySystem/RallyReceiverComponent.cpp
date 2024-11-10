@@ -31,7 +31,13 @@ void URallyReceiverComponent::TickComponent(float DeltaTime, ELevelTick TickType
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	if(bIsNotified)
+	{
+		if(FVector::Distance(Destination, GetOwner()->GetActorLocation()) <= 50)
+		{
+			UnNotify();
+		}
+	}
 }
 #pragma endregion 
 
@@ -57,9 +63,14 @@ void URallyReceiverComponent::Notify(const FVector& NewDestination)
 		false);
 }
 
-void URallyReceiverComponent::OnNotifyTimeOut()
+void URallyReceiverComponent::UnNotify()
 {
 	bIsNotified = false;
 	IsNotifiedTimerHandle.Invalidate();
+}
+
+void URallyReceiverComponent::OnNotifyTimeOut()
+{
+	UnNotify();
 }
 

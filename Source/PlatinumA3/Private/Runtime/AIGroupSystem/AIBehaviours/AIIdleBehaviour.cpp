@@ -4,6 +4,7 @@
 #include "Runtime/AIGroupSystem/AIBehaviours/AIIdleBehaviour.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Runtime/AIGroupSystem/AIDefaultBehavioursSettings.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 
@@ -56,7 +57,11 @@ void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 		Data.Timer = 3.0f;
 		GivePawnNewDirection(Data);
 	}
-	
+
+	Pawn->SetActorRotation(
+		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+			Pawn->GetActorLocation() + Data.IdlingDirection)
+			);
 	Pawn->AddMovementInput(Data.IdlingDirection);
 	
 	// GEngine->AddOnScreenDebugMessage(

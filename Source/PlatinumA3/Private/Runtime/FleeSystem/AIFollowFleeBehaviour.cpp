@@ -3,15 +3,15 @@
 
 #include "Runtime/FleeSystem/AIFollowFleeBehaviour.h"
 
-#include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 #pragma region Unreal Defaults
-void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
+void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
 
@@ -22,7 +22,7 @@ void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 	}
 }
 
-bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
+bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
 	bool Valid = false;
 	for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
@@ -41,17 +41,17 @@ bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 	return Valid;
 }
 
-void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
+void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
 	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
-	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = FleeSystemSettings->FleeSpeed;
+		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FleeSpeed;
 	}
 	
 	GEngine->AddOnScreenDebugMessage(
@@ -61,7 +61,7 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 	TEXT("FOLLOW FLEE ENTRY"));
 }
 
-void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
+void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
@@ -87,7 +87,7 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime
 	Pawn->AddMovementInput(Direction);
 }
 
-void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
+void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 

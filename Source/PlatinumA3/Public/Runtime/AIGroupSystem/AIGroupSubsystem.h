@@ -8,6 +8,7 @@
 
 
 class AAIGroupPawn;
+class AAIGroupCharacter;
 class UAIBehaviour;
 
 USTRUCT()
@@ -33,7 +34,7 @@ private:
 	const float SYSTEM_UPDATE_RATE = 0.02f;
 private:
 	UPROPERTY()
-	TArray<AAIGroupPawn*> Pawns;
+	TArray<AAIGroupCharacter*> Pawns;
 	UPROPERTY()
 	TArray<FAIGroupPawnData> PawnDatas;
 
@@ -60,6 +61,6 @@ private:
 	FTimerHandle GroupUpdateTimerHandle;
 	void GroupUpdate();
 	
-	UAIBehaviour* FindFirstValidBehaviour(AAIGroupPawn* Pawn)const;
+	UAIBehaviour* FindFirstValidBehaviour(AAIGroupCharacter* Pawn)const;
 #pragma endregion 
 };

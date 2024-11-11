@@ -3,7 +3,7 @@
 
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 
-
+#pragma region Unreal Defaults
 // Sets default values
 AAIGroupPawn::AAIGroupPawn()
 {
@@ -29,6 +29,7 @@ void AAIGroupPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+#pragma endregion 
 
 void AAIGroupPawn::InitGroupPawn(int NewIndex)
 {

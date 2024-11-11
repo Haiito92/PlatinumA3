@@ -3,7 +3,7 @@
 
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 
-
+#pragma region Unreal Defaults
 // Sets default values
 AAIGroupCharacter::AAIGroupCharacter()
 {
@@ -29,4 +29,19 @@ void AAIGroupCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
+#pragma endregion 
 
+void AAIGroupCharacter::InitGroupPawn(int NewIndex)
+{
+	Index = NewIndex;
+}
+
+void AAIGroupCharacter::SetIndex(int NewIndex)
+{
+	Index = NewIndex;
+}
+
+int AAIGroupCharacter::GetIndex() const
+{
+	return Index;
+}

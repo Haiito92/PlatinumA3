@@ -3,12 +3,12 @@
 
 #include "Runtime/RallySystem/AIRallyBehaviour.h"
 
-#include "GameFramework/FloatingPawnMovement.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 #include "Runtime/RallySystem/RallySystemSettings.h"
 
-void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
+void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
 	RallyReceiverComponents.Init(nullptr, Pawns.Num());
@@ -22,22 +22,22 @@ void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 	}
 }
 
-bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
+bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
 	return RallyReceiverComponents[Pawn->GetIndex()]->GetIsNotified();
 }
 
-void UAIRallyBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
+void UAIRallyBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
 	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();
 	if(RallySystemSettings == nullptr) return;
 	
-	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = RallySystemSettings->RallySpeed;
+		MovementComponent->MaxWalkSpeed = RallySystemSettings->RallySpeed;
 	}
 	
 	GEngine->AddOnScreenDebugMessage(
@@ -47,7 +47,7 @@ void UAIRallyBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 	TEXT("RALLY ENTRY"));
 }
 
-void UAIRallyBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
+void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
@@ -58,7 +58,7 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
 	Pawn->AddMovementInput(Direction);
 }
 
-void UAIRallyBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
+void UAIRallyBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 

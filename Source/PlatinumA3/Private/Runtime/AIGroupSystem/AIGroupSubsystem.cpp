@@ -2,6 +2,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystemSettings.h"
 
@@ -54,11 +55,11 @@ void UAIGroupSubsystem::InitBehaviours()
 void UAIGroupSubsystem::FindAllPawns()
 {
 	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIGroupPawn::StaticClass(), FoundActors);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIGroupCharacter::StaticClass(), FoundActors);
 
 	for (AActor* FoundActor : FoundActors)
 	{
-		AAIGroupPawn* Pawn = Cast<AAIGroupPawn>(FoundActor);
+		AAIGroupCharacter* Pawn = Cast<AAIGroupCharacter>(FoundActor);
 		if(Pawn == nullptr) return;
 		Pawns.Add(Pawn);
 	}
@@ -67,7 +68,7 @@ void UAIGroupSubsystem::FindAllPawns()
 
 void UAIGroupSubsystem::InitPawnDatas()
 {
-	for (AAIGroupPawn* Pawn : Pawns)
+	for (AAIGroupCharacter* Pawn : Pawns)
 	{
 		FAIGroupPawnData PawnData = {Behaviours.Last()};
 		PawnDatas.Add(PawnData);
@@ -78,7 +79,7 @@ void UAIGroupSubsystem::StartFirstPawnsBehavior()
 {
 	for (int i = 0; i < Pawns.Num(); ++i)
 	{
-		AAIGroupPawn* Pawn = Pawns[i];
+		AAIGroupCharacter* Pawn = Pawns[i];
 		if(Pawn == nullptr) continue;
 
 		const FAIGroupPawnData& Data = PawnDatas[i];
@@ -93,7 +94,7 @@ void UAIGroupSubsystem::InitAllPawns()
 {
 	for (int i = 0; i < Pawns.Num(); ++i)
 	{
-		AAIGroupPawn* Pawn = Pawns[i];
+		AAIGroupCharacter* Pawn = Pawns[i];
 		if(Pawn == nullptr) continue;
 
 		Pawn->InitGroupPawn(i);
@@ -110,7 +111,7 @@ void UAIGroupSubsystem::GroupUpdate()
 
 	for (int i = 0; i < Pawns.Num(); ++i)
 	{
-		AAIGroupPawn* Pawn = Pawns[i];
+		AAIGroupCharacter* Pawn = Pawns[i];
 		if(Pawn == nullptr) continue;
 
 		//Get first valid behaviour
@@ -138,7 +139,7 @@ void UAIGroupSubsystem::GroupUpdate()
 	}
 }
 
-UAIBehaviour* UAIGroupSubsystem::FindFirstValidBehaviour(AAIGroupPawn* Pawn) const
+UAIBehaviour* UAIGroupSubsystem::FindFirstValidBehaviour(AAIGroupCharacter* Pawn) const
 {
 	for (UAIBehaviour* Behaviour : Behaviours)
 	{

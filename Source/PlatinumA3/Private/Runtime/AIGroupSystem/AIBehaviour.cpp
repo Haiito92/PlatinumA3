@@ -3,23 +3,23 @@
 
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 
-void UAIBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
+void UAIBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 }
 
-bool UAIBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
+bool UAIBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
 	return false;
 }
 
-void UAIBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
+void UAIBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 }
 
-void UAIBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
+void UAIBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 }
 
-void UAIBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
+void UAIBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 }

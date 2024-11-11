@@ -5,7 +5,7 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 #include "Runtime/RallySystem/RallySystemSettings.h"
 
@@ -58,7 +58,7 @@ void URallyEmitterComponent::EmitSignal() const
 	TArray<AActor*> FoundActors;
 	
 	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), Location, RallySystemSettings->SignalRadius,
-		ObjectTypes, AAIGroupPawn::StaticClass(), ActorsToIgnore,FoundActors);
+		ObjectTypes, AAIGroupCharacter::StaticClass(), ActorsToIgnore,FoundActors);
 
 	for (const AActor* FoundActor : FoundActors)
 	{

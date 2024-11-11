@@ -29,13 +29,13 @@ class PLATINUMA3_API UAIIdleBehaviour : public UAIBehaviour
 #pragma region Behaviour Defaults
 	
 public:
-	virtual void InitBehaviour(const TArray<AAIGroupPawn*>& Pawns) override;
+	virtual void InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns) override;
 	
-	virtual bool CheckBehaviourValidity(AAIGroupPawn* Pawn) const override;
+	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) const override;
 
-	virtual void BehaviourEntry(AAIGroupPawn* Pawn) override;
-	virtual void BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime) override;
-	virtual void BehaviourExit(AAIGroupPawn* Pawn) override;
+	virtual void BehaviourEntry(AAIGroupCharacter* Pawn) override;
+	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime) override;
+	virtual void BehaviourExit(AAIGroupCharacter* Pawn) override;
 #pragma endregion 
 	
 private:

@@ -4,15 +4,15 @@
 #include "Runtime/FleeSystem/AIFleeBehaviour.h"
 
 #include "GameFramework/Character.h"
-#include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/FleeSystem/FleeSystemSettings.h"
 
-void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
+void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
 
@@ -49,7 +49,7 @@ void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 	
 }
 
-bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
+bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
 	bool valid = false;
 
@@ -67,7 +67,7 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 	return valid;
 }
 
-void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
+void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 	
@@ -78,10 +78,10 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
-	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = FleeSystemSettings->FleeSpeed;
+		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FleeSpeed;
 	}
 	
 	
@@ -92,7 +92,7 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 	// TEXT("FLEE ENTRY"));
 }
 
-void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
+void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
@@ -124,7 +124,7 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
 	// 	FColor::Orange,
 	// 	TEXT("FLEE"));
 }
-void UAIFleeBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
+void UAIFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 	

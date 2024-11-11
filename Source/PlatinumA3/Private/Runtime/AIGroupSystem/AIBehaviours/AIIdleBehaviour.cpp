@@ -3,26 +3,25 @@
 
 #include "Runtime/AIGroupSystem/AIBehaviours/AIIdleBehaviour.h"
 
-#include "EditorMetadataOverrides.h"
-#include "GameFramework/FloatingPawnMovement.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Runtime/AIGroupSystem/AIDefaultBehavioursSettings.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 
 #pragma region Behaviour Defaults
 
-void UAIIdleBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
+void UAIIdleBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
 
 	IdlingPawnDatas.Init({},Pawns.Num());
 }
 
-bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
+bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
 	return true;
 }
 
-void UAIIdleBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
+void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 	int Index = Pawn->GetIndex();
@@ -36,14 +35,14 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 
 	
 
-	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = AIDefaultBehavioursSettings->WalkSpeed;
+		MovementComponent->MaxWalkSpeed = AIDefaultBehavioursSettings->WalkSpeed;
 	}
 }
 
-void UAIIdleBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
+void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
@@ -67,7 +66,7 @@ void UAIIdleBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
 	// TEXT("IDLE"));
 }
 
-void UAIIdleBehaviour::BehaviourExit(AAIGroupPawn* Pawn)
+void UAIIdleBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 

@@ -34,6 +34,7 @@ void AAIGroupCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 void AAIGroupCharacter::InitGroupPawn(int NewIndex)
 {
 	Index = NewIndex;
+	bIsActivated = true;
 }
 
 void AAIGroupCharacter::SetIndex(int NewIndex)

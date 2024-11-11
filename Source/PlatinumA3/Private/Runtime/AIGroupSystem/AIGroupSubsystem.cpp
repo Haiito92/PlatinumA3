@@ -114,6 +114,9 @@ void UAIGroupSubsystem::GroupUpdate()
 		AAIGroupCharacter* Pawn = Pawns[i];
 		if(Pawn == nullptr) continue;
 
+		//Check That pawn is activated
+		if(!Pawn->GetIsActivated()) continue;
+		
 		//Get first valid behaviour
 		UAIBehaviour* NewBehaviour = FindFirstValidBehaviour(Pawn);
 		if(NewBehaviour == nullptr) continue;

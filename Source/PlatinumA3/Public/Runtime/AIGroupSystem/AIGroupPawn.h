@@ -31,12 +31,18 @@ private:
 	UPROPERTY()
 	int Index;
 
+	UPROPERTY()
+	bool bIsActivated = true;
 public:
 	UFUNCTION()
 	void SetIndex(int NewIndex);
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	int GetIndex() const;
 
+	UFUNCTION(BlueprintCallable)
+	void SetIsActivated(bool IsActivated);
+	UFUNCTION(BlueprintCallable)
+	bool GetIsActivated() const;
 public:
 	void InitGroupPawn(int NewIndex);
 };

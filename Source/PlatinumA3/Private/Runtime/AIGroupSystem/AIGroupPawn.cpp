@@ -34,6 +34,7 @@ void AAIGroupPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AAIGroupPawn::InitGroupPawn(int NewIndex)
 {
 	Index = NewIndex;
+	bIsActivated = true;
 }
 
 void AAIGroupPawn::SetIndex(int NewIndex)
@@ -46,3 +47,12 @@ int AAIGroupPawn::GetIndex() const
 	return Index;
 }
 
+void AAIGroupPawn::SetIsActivated(bool IsActivated)
+{
+	bIsActivated = IsActivated;
+}
+
+bool AAIGroupPawn::GetIsActivated() const
+{
+	return bIsActivated;
+}

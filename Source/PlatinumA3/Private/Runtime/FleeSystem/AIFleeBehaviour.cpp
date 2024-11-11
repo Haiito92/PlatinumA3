@@ -7,10 +7,10 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
-#include "Runtime/AIGroupSystem/AIBehaviourSettings.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 {
@@ -28,9 +28,9 @@ void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 		// TEXT("Get FLEE Subsystem"));
 	}
 	
-	const UAIBehaviourSettings* BehaviourSettings = GetDefault<UAIBehaviourSettings>();
-	if(BehaviourSettings == nullptr) return;
-	const FName& Tag = BehaviourSettings->TagToFleeFrom;
+	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	if(FleeSystemSettings == nullptr) return;
+	const FName& Tag = FleeSystemSettings->TagToFleeFrom;
 	
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(), Tag, FoundActors);
@@ -53,9 +53,12 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 {
 	bool valid = false;
 
+	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	if(FleeSystemSettings == nullptr) return false;
+	
 	for (AActor* Actor : ActorsToFleeFrom)
 	{
-		if(FVector::Distance(Pawn->GetActorLocation(), Actor->GetActorLocation()) < 400.0f)
+		if(FVector::Distance(Pawn->GetActorLocation(), Actor->GetActorLocation()) < FleeSystemSettings->FleeDetectionRadius)
 		{
 			valid = true;
 		}
@@ -67,16 +70,21 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupPawn* Pawn) const
 void UAIFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
-
-	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
-	if(MovementComponent != nullptr)
-	{
-		MovementComponent->MaxSpeed = 250.0f;
-	}
 	
 	UFleeLeaderComponent* LeaderComponent = FleeLeaderComponents[Pawn->GetIndex()];
 	if(FleeSubsystem == nullptr || LeaderComponent == nullptr) return;
 	FleeSubsystem->GetCurrentFleeLeaders().Add(Pawn->GetIndex(),LeaderComponent);
+	
+	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	if(FleeSystemSettings == nullptr) return;
+	
+	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
+	if(MovementComponent != nullptr)
+	{
+		MovementComponent->MaxSpeed = FleeSystemSettings->FleeSpeed;
+	}
+	
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,
@@ -91,11 +99,14 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)
 	FVector Direction = FVector::Zero();
 
 	const FVector PawnLocation = Pawn->GetActorLocation();
+
+	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	if(FleeSystemSettings == nullptr) return;
 	
 	for (AActor* ActorToFleeFrom : ActorsToFleeFrom)
 	{
 		FVector AtoP = PawnLocation - ActorToFleeFrom->GetActorLocation();
-		if(AtoP.Length() < 400.0f)
+		if(AtoP.Length() < FleeSystemSettings->FleeDetectionRadius)
 		{
 			Direction += AtoP;
 		}

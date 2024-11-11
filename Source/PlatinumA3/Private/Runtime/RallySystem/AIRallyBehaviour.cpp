@@ -6,6 +6,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
+#include "Runtime/RallySystem/RallySystemSettings.h"
 
 void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
 {
@@ -30,10 +31,13 @@ void UAIRallyBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
+	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();
+	if(RallySystemSettings == nullptr) return;
+	
 	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = 200.0f;
+		MovementComponent->MaxSpeed = RallySystemSettings->RallySpeed;
 	}
 	
 	GEngine->AddOnScreenDebugMessage(

@@ -5,6 +5,7 @@
 
 #include "EditorMetadataOverrides.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Runtime/AIGroupSystem/AIDefaultBehavioursSettings.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 
 #pragma region Behaviour Defaults
@@ -26,39 +27,20 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 	Super::BehaviourEntry(Pawn);
 	int Index = Pawn->GetIndex();
 	FIdlePawnData& Data = IdlingPawnDatas[Index];
+
+	const UAIDefaultBehavioursSettings* AIDefaultBehavioursSettings = GetDefault<UAIDefaultBehavioursSettings>();
+	if(AIDefaultBehavioursSettings == nullptr) return;
 	
-	Data.Timer = 3.0f;
+	Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 	GivePawnNewDirection(Data);
 
-	// GetWorld()->GetTimerManager().SetTimer(
-	// 	Data.TimerHandle,
-	// 	FTimerDelegate::CreateLambda([Data]
-	// 	{
-	// 		FVector randDir = FMath::VRand();
-	// 		randDir.Z = 0;
-	// 		randDir.Normalize();
-	// 		//Data.IdlingDirection = randDir;
-	// 	}),
-	// 	3.0f,
-	// 	true);
-
 	
-	// FVector randDir = FMath::VRand();
-	// randDir.Z = 0;
-	// randDir.Normalize();
-	// Data.IdlingDirection = randDir;
 
 	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = 50.0f;
+		MovementComponent->MaxSpeed = AIDefaultBehavioursSettings->WalkSpeed;
 	}
-	
-	// GEngine->AddOnScreenDebugMessage(
-	// -1,
-	// 4.0f,
-	// FColor::Orange,
-	// TEXT("IDLE ENTRY"));
 }
 
 void UAIIdleBehaviour::BehaviourUpdate(AAIGroupPawn* Pawn, float DeltaTime)

@@ -7,6 +7,7 @@
 #include "Kismet/KismetSystemLibrary.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
+#include "Runtime/RallySystem/RallySystemSettings.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -44,22 +45,19 @@ void URallyEmitterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void URallyEmitterComponent::EmitSignal() const
 {
 	const FVector Location = GetOwner()->GetActorLocation();
+
+	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();
+	if(RallySystemSettings == nullptr) return;
+	
 	TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes;
 	ObjectTypes.Add(UEngineTypes::ConvertToObjectType(ECC_Pawn));
+	
 	TArray<AActor*> ActorsToIgnore;
 	ActorsToIgnore.Add(GetOwner());
-	//TArray<UPrimitiveComponent*> FoundComponents;
+	
 	TArray<AActor*> FoundActors;
-	// UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIGroupPawn::StaticClass(),FoundActors);
-	//
-	// for (AActor* FoundActor : FoundActors)
-	// {
-	// 	URallyReceiverComponent* RallyReceiverComponent = FoundActor->FindComponentByClass<URallyReceiverComponent>();
-	// 	if(RallyReceiverComponent == nullptr) continue;
-	//
-	// 	RallyReceiverComponent->Notify(GetOwner()->GetActorLocation());
-	// }
-	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), GetOwner()->GetActorLocation(), 400.0f,
+	
+	UKismetSystemLibrary::SphereOverlapActors(GetWorld(), Location, RallySystemSettings->SignalRadius,
 		ObjectTypes, AAIGroupPawn::StaticClass(), ActorsToIgnore,FoundActors);
 
 	for (const AActor* FoundActor : FoundActors)
@@ -69,17 +67,6 @@ void URallyEmitterComponent::EmitSignal() const
 
 		RallyReceiverComponent->Notify(Location);
 	}
-	
-	// UKismetSystemLibrary::SphereOverlapComponents(GetWorld(), GetOwner()->GetActorLocation(), 2000.0f,
-	// 	ObjectTypes, NULL, ActorsToIgnore,FoundComponents);
-	//
-	// for (UPrimitiveComponent* Component : FoundComponents)
-	// {
-	// 	URallyReceiverComponent* RallyReceiverComponent = Cast<URallyReceiverComponent>(Component);
-	// 	if(RallyReceiverComponent == nullptr) continue;
-	//
-	// 	RallyReceiverComponent->Notify(GetOwner()->GetActorLocation());
-	// }
 }
 
 #pragma endregion 

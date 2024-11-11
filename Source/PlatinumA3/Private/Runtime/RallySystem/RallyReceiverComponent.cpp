@@ -3,6 +3,8 @@
 
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 
+#include "Runtime/RallySystem/RallySystemSettings.h"
+
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
 URallyReceiverComponent::URallyReceiverComponent()
@@ -53,13 +55,16 @@ const FVector& URallyReceiverComponent::GetDestination() const
 
 void URallyReceiverComponent::Notify(const FVector& NewDestination)
 {
+	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();
+	if(RallySystemSettings == nullptr) return;
+	
 	bIsNotified = true;
 	Destination = NewDestination;
 	GetWorld()->GetTimerManager().SetTimer(
 		IsNotifiedTimerHandle,
 		this,
 		&URallyReceiverComponent::OnNotifyTimeOut,
-		3.0f,
+		RallySystemSettings->RallyTime,
 		false);
 }
 

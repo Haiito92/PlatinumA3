@@ -8,6 +8,7 @@
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 #pragma region Unreal Defaults
 void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupPawn*>& Pawns)
@@ -44,10 +45,13 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupPawn* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
+	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	if(FleeSystemSettings == nullptr) return;
+	
 	UFloatingPawnMovement* MovementComponent = Cast<UFloatingPawnMovement>(Pawn->GetMovementComponent());
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxSpeed = 250.0f;
+		MovementComponent->MaxSpeed = FleeSystemSettings->FleeSpeed;
 	}
 	
 	GEngine->AddOnScreenDebugMessage(

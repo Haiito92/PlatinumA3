@@ -46,3 +46,12 @@ int AAIGroupPawn::GetIndex() const
 	return Index;
 }
 
+void AAIGroupPawn::SetIsActivated(bool IsActivated)
+{
+	bIsActivated = IsActivated;
+}
+
+bool AAIGroupPawn::GetIsActivated() const
+{
+	return bIsActivated;
+}

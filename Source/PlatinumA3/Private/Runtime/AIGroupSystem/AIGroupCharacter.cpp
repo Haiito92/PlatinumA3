@@ -45,3 +45,13 @@ int AAIGroupCharacter::GetIndex() const
 {
 	return Index;
 }
+
+void AAIGroupCharacter::SetIsActivated(bool IsActivated)
+{
+	bIsActivated = IsActivated;
+}
+
+bool AAIGroupCharacter::GetIsActivated() const
+{
+	return bIsActivated;
+}

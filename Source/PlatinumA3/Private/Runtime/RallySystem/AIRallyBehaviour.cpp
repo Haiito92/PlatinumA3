@@ -62,7 +62,7 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime
 		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
 			Pawn->GetActorLocation() + Direction)
 			);
-	Pawn->AddMovementInput(Direction);
+	Pawn->AddMovementInput(Direction, 1.0f);
 }
 
 void UAIRallyBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)

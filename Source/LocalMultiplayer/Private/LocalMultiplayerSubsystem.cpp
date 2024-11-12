@@ -74,7 +74,7 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int De
 int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 {
 	LastAssignedPlayerIndex++;
-	PlayerIndexFromKeyboardProfileIndex.Add(DeviceID, LastAssignedPlayerIndex);
+	PlayerIndexFromGamepadProfileIndex.Add(DeviceID, LastAssignedPlayerIndex);
 	return LastAssignedPlayerIndex;
 }
 

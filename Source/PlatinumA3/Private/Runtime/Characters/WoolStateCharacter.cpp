@@ -67,6 +67,7 @@ void AWoolStateCharacter::StartHolding()
 
 	if(PrimitiveComponent)
 	{
+		
 		Original_SimulatePhysics = PrimitiveComponent->IsSimulatingPhysics();
 		Original_CollisionProfileName = PrimitiveComponent->GetCollisionProfileName();
 
@@ -133,7 +134,7 @@ AActor* AWoolStateCharacter::GetSomethingToHold()
 {
 	
 	FVector Center = GetActorLocation();
-	float Radius = 250.0f;
+	float Radius = 150.0f;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -273,7 +274,7 @@ TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
 	
 	if (bOverlap)
 	{
-		DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
+		//DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
 
 		for (auto& Result : OverlapResults)
 		{	

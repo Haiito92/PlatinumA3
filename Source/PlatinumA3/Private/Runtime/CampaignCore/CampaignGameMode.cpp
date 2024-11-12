@@ -7,9 +7,11 @@
 #include "LocalMultiplayerSubsystem.h"
 #include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/AIGroupSystem/AIGroupSubsystem.h"
 #include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
+#include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/Sheep/SheepCharacter.h"
 
 #pragma region Defaults
@@ -26,7 +28,21 @@ void ACampaignGameMode::BeginPlay()
 	Characters = SpawnCharacters(PlayerStarts);
 
 	
+	//Init Camera
 	FindAndInitSplineCamera(Characters);
+
+	//Init AIGroupSubsystem
+	UAIGroupSubsystem* UAIGroupSubsystem = GetWorld()->GetSubsystem<class UAIGroupSubsystem>();
+	if(UAIGroupSubsystem != nullptr)
+	{
+		UAIGroupSubsystem->InitSubsystem();
+	}
+	//Init WorldSubsystem working around the AIGroupSubsystem
+	UFleeSubsystem* FleeSubsystem = GetWorld()->GetSubsystem<UFleeSubsystem>();
+	if(FleeSubsystem != nullptr)
+	{
+		FleeSubsystem->InitSubsystem();
+	}
 	
 	//Setup Game
 	FindAllSheepsInWorld(AllSheeps);	

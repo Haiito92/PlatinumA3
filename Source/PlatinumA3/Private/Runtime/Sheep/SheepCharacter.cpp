@@ -189,6 +189,11 @@ void ASheepCharacter::OnDetectionCollisionEndOverlap(UPrimitiveComponent* Overla
 #pragma endregion
 
 #pragma region IScarable
+UScarableComponent* ASheepCharacter::GetScarableComponent() const
+{
+	return ScarableComponent;
+}
+
 void ASheepCharacter::Scare_Implementation(const AActor* ScaryActor)
 {
 	IScarable::Scare_Implementation(ScaryActor);

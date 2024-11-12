@@ -84,7 +84,7 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 	const FVector PawnLocation = Pawn->GetActorLocation();
 	
 	Pawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction));
-	Pawn->AddMovementInput(Direction);
+	Pawn->AddMovementInput(Direction,1.0f);
 }
 
 void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)

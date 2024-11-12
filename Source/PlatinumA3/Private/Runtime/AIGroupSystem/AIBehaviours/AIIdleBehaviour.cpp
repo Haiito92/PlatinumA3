@@ -62,7 +62,7 @@ void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
 			Pawn->GetActorLocation() + Data.IdlingDirection)
 			);
-	Pawn->AddMovementInput(Data.IdlingDirection);
+	Pawn->AddMovementInput(Data.IdlingDirection,1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,

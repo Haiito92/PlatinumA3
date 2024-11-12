@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Characters/StateCharacter.h"
 #include "GameFramework/Actor.h"
 #include "SplineCameraScroller.generated.h"
 

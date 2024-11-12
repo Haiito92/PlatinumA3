@@ -8,7 +8,6 @@
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/Characters/WoolStateCharacter.h"
 
-
 // Sets default values
 ASplineCameraScroller::ASplineCameraScroller()
 {
@@ -22,9 +21,6 @@ ASplineCameraScroller::ASplineCameraScroller()
 void ASplineCameraScroller::BeginPlay()
 {
 	Super::BeginPlay();
-
-
-	
 }
 
 // Called every frame
@@ -42,11 +38,13 @@ void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharact
 	m_Berger = Cast<AWoolStateCharacter>(Characters[0]);
 	m_Chien = Cast<AWoolStateCharacter>(Characters[1]);
 	
-
-
+	
 	if(!m_CameraActor)
 	{
 		m_CameraActor = Cast<ACameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass()));
+
+		m_Berger->m_CameraActor = m_CameraActor;
+		m_Chien->m_CameraActor = m_CameraActor;
 	}
 }
 

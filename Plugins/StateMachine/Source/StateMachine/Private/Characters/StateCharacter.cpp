@@ -3,6 +3,7 @@
 
 #include "Characters/StateCharacter.h"
 
+#include "DetailLayoutBuilder.h"
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"
@@ -35,7 +36,7 @@ AStateCharacter::AStateCharacter()
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; 
-	GetCharacterMovement()->RotationRate = FRotator(0.0f, 500.0f, 0.0f);
+	//GetCharacterMovement()->RotationRate = FRotator(0.0f, m_RotationRate, 0.0f);
 
 
 	GetCharacterMovement()->JumpZVelocity = 700.f;
@@ -49,6 +50,8 @@ AStateCharacter::AStateCharacter()
 void AStateCharacter::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetCharacterMovement()->RotationRate = FRotator(0.0f, m_RotationRate, 0.0f);
 
 
 	// // Ensure Enhanced Input Subsystem is used
@@ -157,19 +160,189 @@ void AStateCharacter::Input_OnRallying(const FInputActionValue& ActionValue)
 
 void AStateCharacter::Move(FVector2D MovementsValues)
 {
-	FVector2D MovementVector = MovementsValues;
 
-	if (Controller != nullptr)
-	{
-		const FRotator Rotation = Controller->GetControlRotation();
-		const FRotator YawRotation(0, Rotation.Yaw, 0);
 
-		const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+
+	// FVector2D MovementVector = MovementsValues;
+	//
+	// if (m_CameraActor != nullptr && m_CameraActor != nullptr)
+	// {
+	// 	// Get the Camera's rotation and isolate the Yaw
+	// 	const FRotator CameraRotation = m_CameraActor->GetActorRotation();
+	// 	const FRotator YawRotation(0, CameraRotation.Yaw, 0);
+	//
+	// 	// Get Forward and Right direction vectors based on camera's yaw rotation
+	// 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	// 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	//
+	// 	// Add movement inputs relative to the camera direction
+	// 	AddMovementInput(ForwardDirection, MovementVector.Y);
+	// 	AddMovementInput(RightDirection, MovementVector.X);
+	// }
+
+
+
 	
-		const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
 
-		AddMovementInput(ForwardDirection, MovementVector.Y);
-		AddMovementInput(RightDirection, MovementVector.X);
+	
+	// FVector2D MovementVector = MovementsValues;
+	// FVector NextPosition;
+	//
+	// FVector ForwardDirection;
+	// FVector RightDirection;
+	// if (m_CameraActor != nullptr && m_CameraActor != nullptr)
+	// {
+	// 	const FRotator CameraRotation = m_CameraActor->GetActorRotation();
+	// 	const FRotator YawRotation(0, CameraRotation.Yaw, 0);
+	//
+	// 	ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+	// 	RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	//
+	// 	// Add movement inputs relative to the camera direction
+	// 	NextPosition = GetActorLocation();
+	// 	NextPosition += ForwardDirection * MovementVector.Y;
+	// 	NextPosition += RightDirection * MovementVector.X;
+	// }
+	//
+	//
+	//
+	// APlayerController* PlayerController = Cast<APlayerController>(Controller);
+ //        
+	// if (PlayerController)
+	// {
+	// 	FVector PlayerWorldPosition = NextPosition;
+	// 	FVector2D ScreenPosition;
+	//
+	// 	bool bIsOnScreen = PlayerController->ProjectWorldLocationToScreen(PlayerWorldPosition, ScreenPosition);
+	//
+	// 	if (bIsOnScreen)
+	// 	{
+	// 		// Get viewport size
+	// 		int32 ScreenWidth, ScreenHeight;
+	// 		PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
+	//
+	// 		float Margin = 0.1f;
+	// 		float MinX = ScreenWidth * Margin;
+	// 		float MaxX = ScreenWidth * (1.0f - Margin);
+	// 		float MinY = ScreenHeight * Margin;
+	// 		float MaxY = ScreenHeight * (1.0f - Margin);
+	//
+	// 		// Check if the position is within the screen boundaries
+	// 		if (ScreenPosition.X < MinX || ScreenPosition.X > MaxX || ScreenPosition.Y < MinY || ScreenPosition.Y > MaxY)
+	// 		{
+	// 			
+	// 		}else
+	// 		{
+	// 			AddMovementInput(ForwardDirection, MovementVector.Y);
+	// 			AddMovementInput(RightDirection, MovementVector.X);
+	// 		}
+	// 	}
+	// }
+
+
+
+	
+
+
+
+
+
+	FVector2D MovementVector = MovementsValues;
+	FVector NextPosition;
+	
+	FVector ForwardDirection;
+	FVector RightDirection;
+	
+	if (m_CameraActor)
+	{
+		const FRotator CameraRotation = m_CameraActor->GetActorRotation();
+		const FRotator YawRotation(0, CameraRotation.Yaw, 0);
+	
+		ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
+		RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
+	
+		NextPosition = GetActorLocation() + ForwardDirection * MovementVector.Y + RightDirection * MovementVector.X;
+	}
+	
+	APlayerController* PlayerController = Cast<APlayerController>(Controller);
+	if (PlayerController)
+	{
+		if(PlayerController->GetLocalPlayer()->ViewportClient)
+		{
+			// GEngine->AddOnScreenDebugMessage(
+			// 	-1,
+			// 	3.0f,
+			// 	FColor::Cyan,
+			// 	PlayerController->GetLocalPlayer()->ViewportClient->View
+			// 	);
+		}
+		// GEngine->AddOnScreenDebugMessage(
+		//  -1,
+		//  3.0f,
+		//  FColor::Cyan,
+		//  FString::FromInt(NextPosition.X) + ", " + FString::FromInt(NextPosition.Y) + ", " + FString::FromInt(NextPosition.Z)
+		//  );
+				
+		float Radius = 100.0f;
+		FColor SphereColor = FColor::Blue;
+		int32 Segments = 12; 
+		float LifeTime = 2.0f; 
+		bool bPersistentLines = false;
+
+		// Draw the debug sphere
+		DrawDebugSphere(GetWorld(), PlayerController->GetPawn()->GetActorLocation(), Radius, Segments, SphereColor, bPersistentLines, LifeTime);
+
+		
+		FVector2D ScreenPosition;
+		if (PlayerController->ProjectWorldLocationToScreen(NextPosition, ScreenPosition))
+		{
+			int32 ScreenWidth, ScreenHeight;
+			PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
+
+			GEngine->AddOnScreenDebugMessage(
+				-1,
+				3.0f,
+				FColor::Cyan,
+				FString::FromInt(ScreenWidth)
+				);
+			
+			float Margin = 0.05f;
+			float MinX = ScreenWidth * Margin;
+			float MaxX = ScreenWidth * (1.0f - Margin);
+			float MinY = ScreenHeight * Margin;
+			float MaxY = ScreenHeight * (1.0f - Margin);
+			
+			//Check if the position is within the screen boundaries
+	 		if (ScreenPosition.X < MinX || ScreenPosition.X > MaxX || ScreenPosition.Y < MinY || ScreenPosition.Y > MaxY)
+	 		{
+	 				GEngine->AddOnScreenDebugMessage(
+				-1,
+				3.0f,
+				FColor::Cyan,
+				TEXT("Is in screen space")
+				);
+	 			
+	 			AddMovementInput(ForwardDirection, MovementVector.Y);
+	 			AddMovementInput(RightDirection, MovementVector.X);
+	 			
+	 		}else
+	 		{
+	 		 	GEngine->AddOnScreenDebugMessage(
+				-1,
+				3.0f,
+				FColor::Cyan,
+				TEXT("Is not in screen space")
+				);
+	 			float ScaleFactorX = FMath::Clamp((ScreenPosition.X - MinX) / (MaxX - MinX), 0.0f, 1.0f);
+	 			float ScaleFactorY = FMath::Clamp((ScreenPosition.Y - MinY) / (MaxY - MinY), 0.0f, 1.0f);
+			 
+	 			float FinalScale = FMath::Min(ScaleFactorX, ScaleFactorY);
+	 			AddMovementInput(ForwardDirection, MovementVector.Y * FinalScale);
+	 			AddMovementInput(RightDirection, MovementVector.X * FinalScale);
+	 		}
+			
+			
+		}
 	}
 }
 

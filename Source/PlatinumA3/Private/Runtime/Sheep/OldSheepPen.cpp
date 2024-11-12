@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Runtime/Sheep/SheepPen.h"
+#include "Runtime/Sheep/OldSheepPen.h"
 
 #include "Components/BoxComponent.h"
 #include "Runtime/CampaignCore/CampaignGameMode.h"
@@ -9,29 +9,29 @@
 
 
 // Sets default values
-ASheepPen::ASheepPen()
+AOldSheepPen::AOldSheepPen()
 {
 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = false;
 
 	SheepDetectionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("SheepDetectionBox"));
-	SheepDetectionBox->OnComponentBeginOverlap.AddDynamic(this, &ASheepPen::OnSheepDetectionOverlapBegin);
+	SheepDetectionBox->OnComponentBeginOverlap.AddDynamic(this, &AOldSheepPen::OnSheepDetectionOverlapBegin);
 }
 
 // Called when the game starts or when spawned
-void ASheepPen::BeginPlay()
+void AOldSheepPen::BeginPlay()
 {
 	Super::BeginPlay();
 	
 }
 
 // Called every frame
-void ASheepPen::Tick(float DeltaTime)
+void AOldSheepPen::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 }
 
-void ASheepPen::OnSheepDetectionOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+void AOldSheepPen::OnSheepDetectionOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor->IsA(ASheepCharacter::StaticClass()))

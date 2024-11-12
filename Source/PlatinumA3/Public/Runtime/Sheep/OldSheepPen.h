@@ -4,19 +4,19 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "SheepPen.generated.h"
+#include "OldSheepPen.generated.h"
 
 class UBoxComponent;
 
 UCLASS()
-class PLATINUMA3_API ASheepPen : public AActor
+class PLATINUMA3_API AOldSheepPen : public AActor
 {
 	GENERATED_BODY()
 	
 #pragma region Defaults
 
 	// Sets default values for this actor's properties
-	ASheepPen();
+	AOldSheepPen();
 
 protected:
 	// Called when the game starts or when spawned

@@ -4,6 +4,7 @@
 #include "Runtime/RallySystem/AIRallyBehaviour.h"
 
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 #include "Runtime/RallySystem/RallySystemSettings.h"
@@ -55,6 +56,11 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime
 	FVector Direction = RallyReceiverComponent->GetDestination() - Pawn->GetActorLocation();
 	Direction.Z = 0;
 	Direction.Normalize();
+
+	Pawn->SetActorRotation(
+		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+			Pawn->GetActorLocation() + Direction)
+			);
 	Pawn->AddMovementInput(Direction);
 }
 

@@ -57,6 +57,7 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime
 	Direction.Z = 0;
 	Direction.Normalize();
 
+	//Set Sheep Rotation
 	Pawn->SetActorRotation(
 		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
 			Pawn->GetActorLocation() + Direction)

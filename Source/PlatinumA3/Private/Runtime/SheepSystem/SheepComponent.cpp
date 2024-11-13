@@ -35,29 +35,33 @@ void USheepComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 
-
-
 #pragma endregion 
 #pragma region Sheep
 
-// void USheepComponent::CaptureSheep()
-// {
-// 	bIsCaptured = true;
-//
-// 	GEngine->AddOnScreenDebugMessage(
-// 		-1,
-// 		4.0f,
-// 		FColor::Red,
-// 		TEXT("Sheep Captured !!"));
-// }
+
+void USheepComponent::Capture()
+{
+	bIsCaptured = true;
+	
+}
 
 bool USheepComponent::GetIsCaptured() const
 {
 	return bIsCaptured;	
 }
-void USheepComponent::SetIsCaptured(bool IsCaptured)
+void USheepComponent::SetIsCaptured(const bool IsCaptured)
 {
 	bIsCaptured = IsCaptured;
+}
+
+const FVector& USheepComponent::GetCapturedRoamingLocation() const
+{
+	return CapturedRoamingLocation;
+}
+
+void USheepComponent::SetCapturedRoamingLocation(const FVector& NewValue)
+{
+	CapturedRoamingLocation = NewValue;
 }
 
 

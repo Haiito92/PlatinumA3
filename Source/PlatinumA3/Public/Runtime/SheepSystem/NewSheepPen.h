@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "NewSheepPen.generated.h"
 
+class USphereComponent;
+class USheepSubsystem;
 class USheepComponent;
 class USplineComponent;
 class USplineMeshComponent;
@@ -45,6 +47,9 @@ private:
 	UPROPERTY(EditAnywhere, Category="Pen: Entry")
 	TObjectPtr<UBoxComponent> PenEntryCollision;
 
+	UPROPERTY()
+	TObjectPtr<USheepSubsystem> SheepSubsystem;
+	
 	UFUNCTION()
 	void OnEntryCollisionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
 									  const FHitResult& SweepResult);
@@ -52,7 +57,20 @@ private:
 	void OnEntryCollisionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 	UFUNCTION()
-	void CaptureSheep(USheepComponent* SheepComponent) const;
+	void CaptureSheep(USheepComponent* SheepComponent);
 	
+#pragma endregion
+
+#pragma region CapturedSheeps
+public:
+	UFUNCTION()
+	void UpdateRoamingTimers(float DeltaTime);
+	UFUNCTION()
+	void GiveSheepNewRoamingLocation(USheepComponent* SheepComponent) const;
+private:
+	UPROPERTY()
+	TMap<USheepComponent*, float> CapturedSheeps;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USphereComponent> PenInsideSphere;
 #pragma endregion 
 };

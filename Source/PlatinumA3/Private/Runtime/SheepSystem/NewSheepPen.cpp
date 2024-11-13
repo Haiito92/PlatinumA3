@@ -4,9 +4,11 @@
 #include "Runtime/SheepSystem/NewSheepPen.h"
 
 #include "Components/BoxComponent.h"
+#include "Components/SphereComponent.h"
 #include "Components/SplineComponent.h"
 #include "Components/SplineMeshComponent.h"
 #include "Runtime/SheepSystem/SheepComponent.h"
+#include "Runtime/SheepSystem/SheepSubsystem.h"
 
 #pragma region Unreal Defaults
 
@@ -22,7 +24,10 @@ ANewSheepPen::ANewSheepPen()
 	// PenFence = CreateDefaultSubobject<USplineMeshComponent>("PenFence");
 	
 	PenEntryCollision = CreateDefaultSubobject<UBoxComponent>("PenEntryCollision");
-	PenEntryCollision->SetupAttachment(PenFenceSpline);
+	PenEntryCollision->SetupAttachment(RootComponent);
+
+	PenInsideSphere = CreateDefaultSubobject<USphereComponent>("PenInsideSphere");
+	PenInsideSphere->SetupAttachment(RootComponent);
 }
 
 // Called when the game starts or when spawned
@@ -32,13 +37,15 @@ void ANewSheepPen::BeginPlay()
 
 	PenEntryCollision->OnComponentBeginOverlap.AddDynamic(this, &ANewSheepPen::OnEntryCollisionBeginOverlap);
 	PenEntryCollision->OnComponentEndOverlap.AddDynamic(this, &ANewSheepPen::OnEntryCollisionEndOverlap);
-	
+
+	SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
 }
 
 // Called every frame
 void ANewSheepPen::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	UpdateRoamingTimers(DeltaTime);
 }
 
 void ANewSheepPen::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -73,14 +80,62 @@ void ANewSheepPen::OnEntryCollisionEndOverlap(UPrimitiveComponent* OverlappedCom
 {
 }
 
-void ANewSheepPen::CaptureSheep(USheepComponent* SheepComponent) const
+void ANewSheepPen::CaptureSheep(USheepComponent* SheepComponent)
 {
-	SheepComponent->SetIsCaptured(true);
+	SheepComponent->Capture();
+	
+	SheepSubsystem->AddCapturedSheep(1);
 
+	CapturedSheeps.Add(SheepComponent, 0.0f);
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		4.0f,
-		FColor::Red,
+		FColor::Magenta,
 		TEXT("SHEEP CAPTURED !!"));
+}
+
+
+#pragma endregion 
+#pragma region CapturedSheeps
+void ANewSheepPen::UpdateRoamingTimers(float DeltaTime)
+{
+	for (TTuple<USheepComponent*, float>& SheepTimerPair : CapturedSheeps)
+	{
+		SheepTimerPair.Value -= DeltaTime;
+		if(SheepTimerPair.Value <= 0.0f)
+		{
+			SheepTimerPair.Value = 3.0f;
+			GEngine->AddOnScreenDebugMessage(
+		-1,
+		4.0f,
+		FColor::Magenta,
+		TEXT("UDPATE SHEEP TIMER"));
+			//Calculate next roaming location
+			GiveSheepNewRoamingLocation(SheepTimerPair.Key);
+			
+		}
+	}
+}
+
+void ANewSheepPen::GiveSheepNewRoamingLocation(USheepComponent* SheepComponent) const
+{
+	if(PenInsideSphere == nullptr) return;
+	
+	const float InsidePenRadius = PenInsideSphere->GetScaledSphereRadius();
+	if(InsidePenRadius <= 0.0f) return;
+	const FVector Center = PenInsideSphere->GetComponentLocation();
+
+	FVector NewLocation = FVector::ZeroVector;
+	
+	NewLocation.X = Center.X
+	+ FMath::FRandRange(-InsidePenRadius, InsidePenRadius);
+
+	NewLocation.Y = Center.Y
+	+ FMath::FRandRange(-InsidePenRadius, InsidePenRadius);
+
+	NewLocation.Z = Center.Z;
+	
+	SheepComponent->SetCapturedRoamingLocation(NewLocation);
 }
 #pragma endregion 

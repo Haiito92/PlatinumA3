@@ -3,6 +3,7 @@
 
 #include "Runtime/SheepSystem/AISheepInPenBehaviour.h"
 
+#include "Kismet/KismetMathLibrary.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/SheepSystem/SheepComponent.h"
 
@@ -48,6 +49,21 @@ void UAISheepInPenBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
+	const USheepComponent* SheepComponent = SheepComponents[Pawn->GetIndex()];
+	if(SheepComponent == nullptr) return;
+
+	FVector NextLocation = SheepComponent->GetCapturedRoamingLocation();
+
+	FVector Direction = NextLocation - Pawn->GetActorLocation();
+	Direction.Z = 0;
+	Direction.Normalize();
+
+	Pawn->SetActorRotation(
+		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+			Pawn->GetActorLocation() + Direction)
+			);
+	Pawn->AddMovementInput(Direction, 1.0f);
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

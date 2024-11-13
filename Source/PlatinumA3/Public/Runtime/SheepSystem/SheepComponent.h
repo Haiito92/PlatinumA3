@@ -30,17 +30,24 @@ public:
 
 #pragma region Sheep
 public:
-	// UFUNCTION(BlueprintCallable)
-	// void CaptureSheep();
+	UFUNCTION(BlueprintCallable)
+	void Capture();
 public:
 	UFUNCTION(BlueprintCallable)
 	bool GetIsCaptured() const;
-	
 	UFUNCTION(BlueprintCallable)
-	void SetIsCaptured(bool IsCaptured);
+	void SetIsCaptured(const bool IsCaptured);
+
+	UFUNCTION(BlueprintCallable)
+	const FVector& GetCapturedRoamingLocation() const;
+	UFUNCTION(BlueprintCallable)
+	void SetCapturedRoamingLocation(const FVector& NewValue);
 private:
 	UPROPERTY()
 	bool bIsCaptured;
+
+	UPROPERTY()
+	FVector CapturedRoamingLocation;
 	
 #pragma endregion 
 };

@@ -10,22 +10,33 @@ void USheepCountUI::NativeConstruct()
 {
 	Super::NativeConstruct();
 
-	USheepSubsystem* SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
-	if(SheepSubsystem == nullptr) return;
+	USheepSubsystem* tSheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
+	if(tSheepSubsystem == nullptr) return;
+	SheepSubsystem = tSheepSubsystem;
 
+	//SheepSubsystem->SheepSystemInitEvent.AddDynamic(this, &USheepCountUI::InitSheepCountUI);
+	
 	SheepSubsystem->SheepCapturedCountChangedEvent.AddDynamic(
 		this, &USheepCountUI::OnSheepCapturedCountChangedEvent);
+
 }
 
 void USheepCountUI::NativeDestruct()
 {
 	Super::NativeDestruct();
 
-	USheepSubsystem* SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
 	if(SheepSubsystem == nullptr) return;
 
+	//SheepSubsystem->SheepSystemInitEvent.RemoveDynamic(this, &USheepCountUI::InitSheepCountUI);
+	
 	SheepSubsystem->SheepCapturedCountChangedEvent.RemoveDynamic(
 		this, &USheepCountUI::OnSheepCapturedCountChangedEvent);
+}
+
+void USheepCountUI::InitSheepCountUI()
+{
+	UpdateSheepAmountRequiredUI(SheepSubsystem->GetSheepAmountRequired());
+	UpdateSheepCapturedCountUI(SheepSubsystem->GetSheepCapturedCount());
 }
 
 void USheepCountUI::OnSheepCapturedCountChangedEvent(unsigned InSheepCapturedCount)
@@ -33,7 +44,12 @@ void USheepCountUI::OnSheepCapturedCountChangedEvent(unsigned InSheepCapturedCou
 	UpdateSheepCapturedCountUI(InSheepCapturedCount);
 }
 
-void USheepCountUI::UpdateSheepCapturedCountUI(unsigned InSheepCapturedCount)
+void USheepCountUI::UpdateSheepAmountRequiredUI(const unsigned InAmount)
+{
+	SheepAmountRequired = InAmount;
+}
+
+void USheepCountUI::UpdateSheepCapturedCountUI(const unsigned InSheepCapturedCount)
 {
 	SheepCapturedCount = InSheepCapturedCount;
 }

@@ -15,6 +15,9 @@ class PLATINUMA3_API USheepSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 public:
 	void InitSubsystem();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSheepSystemInitEvent);
+	UPROPERTY()
+	FSheepSystemInitEvent SheepSystemInitEvent;
 	
 #pragma region SheepCounting
 
@@ -27,6 +30,11 @@ public:
 	FAddCapturedSheepEvent AddCapturedSheepEvent;
 	
 	UFUNCTION()
+	unsigned int GetSheepAmountRequired() const;
+	UFUNCTION()
+	void SetSheepAmountRequired(const unsigned int NewAmount);
+	
+	UFUNCTION()
 	unsigned int GetSheepCapturedCount() const;
 	UFUNCTION()
 	void SetSheepCapturedCount(const unsigned int NewValue);
@@ -36,6 +44,8 @@ public:
 private:
 	UPROPERTY()
 	unsigned int SheepCapturedCount;
+	UPROPERTY()
+	unsigned int SheepAmountRequired;
 	
 	
 #pragma endregion 

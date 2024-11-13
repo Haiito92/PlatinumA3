@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "SheepCountUI.generated.h"
 
+class USheepSubsystem;
 /**
  * 
  */
@@ -20,13 +21,23 @@ protected:
 	virtual void NativeDestruct() override;
 #pragma endregion
 protected:
+	UFUNCTION(BlueprintCallable)
+	void InitSheepCountUI();
+
+	UPROPERTY(BlueprintReadOnly)
+	int SheepAmountRequired;
 	UPROPERTY(BlueprintReadOnly)
 	int SheepCapturedCount;
 
 	UFUNCTION()
 	void OnSheepCapturedCountChangedEvent(unsigned int InSheepCapturedCount);
-	
+
 	UFUNCTION()
-	void UpdateSheepCapturedCountUI(unsigned InSheepCapturedCount);
-	
+	void UpdateSheepAmountRequiredUI(const unsigned InAmount);
+	UFUNCTION()
+	void UpdateSheepCapturedCountUI(const unsigned InSheepCapturedCount);
+
+private:
+	UPROPERTY()
+	USheepSubsystem* SheepSubsystem;
 };

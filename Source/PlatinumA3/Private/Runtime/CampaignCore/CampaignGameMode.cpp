@@ -38,7 +38,8 @@ void ACampaignGameMode::BeginPlay()
 	
 	//Init GameMode subsystems
 	InitGameInstanceSubsystems();
-	
+
+
 	//Setup Game
 	// FindAllSheepsInWorld(AllSheeps);	
 	// //Reset GameValue

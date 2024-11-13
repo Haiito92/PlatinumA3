@@ -23,6 +23,7 @@ public:
 	UFUNCTION()
 	void AddCapturedSheep(const unsigned int Amount);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FAddCapturedSheepEvent, unsigned int, AmountAdded);
+	UPROPERTY()
 	FAddCapturedSheepEvent AddCapturedSheepEvent;
 	
 	UFUNCTION()
@@ -30,6 +31,7 @@ public:
 	UFUNCTION()
 	void SetSheepCapturedCount(const unsigned int NewValue);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSheepCapturedCountChangedEvent, unsigned int, SheepCapturedCount);
+	UPROPERTY()
 	FSheepCapturedCountChangedEvent SheepCapturedCountChangedEvent;
 private:
 	UPROPERTY()

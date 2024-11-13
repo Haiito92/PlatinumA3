@@ -28,6 +28,7 @@ ANewSheepPen::ANewSheepPen()
 
 	PenInsideSphere = CreateDefaultSubobject<USphereComponent>("PenInsideSphere");
 	PenInsideSphere->SetupAttachment(RootComponent);
+	PenInsideSphere->SetGenerateOverlapEvents(false);
 }
 
 // Called when the game starts or when spawned

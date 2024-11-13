@@ -22,7 +22,7 @@ private:
 	virtual void BeginPlay() override;
 #pragma endregion
 
-#pragma region Players
+#pragma region LocalPlayers
 	void FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const;
 
 	TArray<AStateCharacter*> SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;

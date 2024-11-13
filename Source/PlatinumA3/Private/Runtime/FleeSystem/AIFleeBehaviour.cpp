@@ -116,7 +116,7 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 	Direction.Normalize();
 	
 	Pawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction));
-	Pawn->AddMovementInput(Direction);
+	Pawn->AddMovementInput(Direction,1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,

@@ -3,7 +3,10 @@
 
 #include "Characters/StateCharacter.h"
 
+#if WITH_EDITOR
 #include "DetailLayoutBuilder.h"
+#endif
+
 #include "EnhancedInputSubsystems.h"
 #include "EnhancedInputComponent.h"
 #include "InputMappingContext.h"

@@ -14,7 +14,11 @@ class PLATINUMA3_API AMainMenuGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
 
+virtual void BeginPlay() override;
+	
 #pragma region LocalPlayers
+
+	
 void CreateAndInitPlayers() const;
 #pragma endregion 
 };

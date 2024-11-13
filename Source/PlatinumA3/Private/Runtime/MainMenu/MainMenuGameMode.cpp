@@ -7,6 +7,13 @@
 #include "LocalMultiplayerSubsystem.h"
 
 #pragma region LocalPlayers
+void AMainMenuGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CreateAndInitPlayers();
+}
+
 void AMainMenuGameMode::CreateAndInitPlayers() const
 {
 	UGameInstance* GameInstance = GetGameInstance();

@@ -6,6 +6,7 @@
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "AISheepInPenBehaviour.generated.h"
 
+class USheepPenSystemSettings;
 class USheepComponent;
 /**
  * 
@@ -25,6 +26,8 @@ class PLATINUMA3_API UAISheepInPenBehaviour : public UAIBehaviour
 #pragma endregion
 
 private:
+	UPROPERTY()
+	const USheepPenSystemSettings* SheepPenSystemSettings;
 	UPROPERTY()
 	TArray<USheepComponent*> SheepComponents;
 };

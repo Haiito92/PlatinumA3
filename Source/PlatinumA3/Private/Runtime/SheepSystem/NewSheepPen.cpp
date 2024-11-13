@@ -103,8 +103,8 @@ void ANewSheepPen::UpdateRoamingTimers(float DeltaTime)
 	for (TTuple<USheepComponent*, float>& SheepTimerPair : CapturedSheeps)
 	{
 		SheepTimerPair.Value -= DeltaTime;
-		float Distance = FVector::Distance(SheepTimerPair.Key->GetOwner()->GetActorLocation(),
-			SheepTimerPair.Key->GetCapturedRoamingLocation());
+		const float Distance = FVector::Distance(SheepTimerPair.Key->GetOwner()->GetActorLocation(),
+		                                         SheepTimerPair.Key->GetCapturedRoamingLocation());
 		
 		if(SheepTimerPair.Value <= 0.0f || Distance <= 50.f)
 		{

@@ -30,6 +30,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
 	float m_CameraRotationSpeed = 2.0f;
+
+	UPROPERTY(BlueprintReadWrite, Category = "SplineCameraScroller")
+	FVector Direction;
 	
 	UPROPERTY(BlueprintReadWrite, Category = "SplineCameraScroller")
 	TObjectPtr<AWoolStateCharacter> m_Berger;
@@ -51,5 +54,9 @@ public:
 
 	UFUNCTION()
 	void UpdateSplineCamera();
+
+	UFUNCTION()
+	void UpdateCharactersInFrustrum(ACharacter* Character);
+	
 	void LookAtTargetSmooth(FVector TargetLocation);
 };

@@ -139,6 +139,7 @@ protected:
 	UPROPERTY()
 	bool IsRallying;
 
+	
 
 #pragma endregion
 

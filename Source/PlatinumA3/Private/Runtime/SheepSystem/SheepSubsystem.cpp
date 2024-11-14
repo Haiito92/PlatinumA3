@@ -6,6 +6,8 @@
 void USheepSubsystem::InitSubsystem()
 {
 	SetSheepCapturedCount(0);
+	SetSheepAmountRequired(4);
+	SheepSystemInitEvent.Broadcast();
 }
 
 #pragma region SheepCounting
@@ -13,6 +15,21 @@ void USheepSubsystem::AddCapturedSheep(const unsigned int Amount)
 {
 	SetSheepCapturedCount(SheepCapturedCount + Amount);
 	AddCapturedSheepEvent.Broadcast(Amount);
+
+	if(SheepCapturedCount >= SheepAmountRequired)
+	{
+		ReachedRequiredSheepAmountEvent.Broadcast();
+	}
+}
+
+unsigned USheepSubsystem::GetSheepAmountRequired() const
+{
+	return SheepAmountRequired;
+}
+
+void USheepSubsystem::SetSheepAmountRequired(const unsigned NewAmount)
+{
+	SheepAmountRequired = NewAmount;
 }
 
 unsigned USheepSubsystem::GetSheepCapturedCount() const

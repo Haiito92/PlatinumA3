@@ -35,6 +35,8 @@ void USheepCountUI::NativeDestruct()
 
 void USheepCountUI::InitSheepCountUI()
 {
+	if(SheepSubsystem == nullptr) return;
+	
 	UpdateSheepAmountRequiredUI(SheepSubsystem->GetSheepAmountRequired());
 	UpdateSheepCapturedCountUI(SheepSubsystem->GetSheepCapturedCount());
 }

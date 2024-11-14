@@ -15,6 +15,11 @@ void USheepSubsystem::AddCapturedSheep(const unsigned int Amount)
 {
 	SetSheepCapturedCount(SheepCapturedCount + Amount);
 	AddCapturedSheepEvent.Broadcast(Amount);
+
+	if(SheepCapturedCount >= SheepAmountRequired)
+	{
+		SheepCapturedCountOverRequiredAmountEvent.Broadcast();
+	}
 }
 
 unsigned USheepSubsystem::GetSheepAmountRequired() const

@@ -29,6 +29,10 @@ public:
 	UPROPERTY()
 	FAddCapturedSheepEvent AddCapturedSheepEvent;
 	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSheepCapturedCountOverRequiredAmountEvent);
+	UPROPERTY()
+	FSheepCapturedCountOverRequiredAmountEvent SheepCapturedCountOverRequiredAmountEvent;
+	
 	UFUNCTION()
 	unsigned int GetSheepAmountRequired() const;
 	UFUNCTION()

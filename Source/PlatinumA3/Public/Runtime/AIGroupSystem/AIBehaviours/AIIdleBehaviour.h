@@ -13,11 +13,11 @@ struct FIdlePawnData
 
 public:
 	UPROPERTY()
-	float Timer;
+	float Timer = 0.0f;
 	// UPROPERTY()
 	// FTimerHandle TimerHandle;
 	UPROPERTY()
-	FVector IdlingDirection;
+	FVector IdlingDirection = FVector::Zero();
 };
 /**
  * 

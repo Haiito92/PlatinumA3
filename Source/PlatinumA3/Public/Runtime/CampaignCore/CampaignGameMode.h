@@ -20,11 +20,20 @@ class PLATINUMA3_API ACampaignGameMode : public AGameModeBase
 #pragma region Defaults
 private:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 #pragma endregion
 
 #pragma region Initialization
 	void InitWorldSubsystems() const;
+	void BindToWorldSubsystemsEvents() const;
+	
 	void InitGameInstanceSubsystems() const;
+#pragma endregion
+
+
+#pragma region OnEndPlay
+private:
+	void UnbindToWorldSubsystemsEvents() const;
 #pragma endregion 
 	
 #pragma region Players
@@ -38,6 +47,13 @@ private:
 
 	TSubclassOf<AStateCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
 #pragma endregion 	
+
+
+#pragma region GameLoop
+	UFUNCTION()
+	void OnReachedSheepAmountEvent();
+
+#pragma endregion 
 	
 // #pragma region Game
 // private:

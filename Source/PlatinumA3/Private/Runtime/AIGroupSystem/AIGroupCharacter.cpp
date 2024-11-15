@@ -18,6 +18,13 @@ void AAIGroupCharacter::BeginPlay()
 	
 }
 
+void AAIGroupCharacter::Landed(const FHitResult& Hit)
+{
+	Super::Landed(Hit);
+
+	OnLanded.Broadcast();
+}
+
 // Called every frame
 void AAIGroupCharacter::Tick(float DeltaTime)
 {

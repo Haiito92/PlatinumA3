@@ -16,9 +16,17 @@ class PLATINUMA3_API UCampaignModeSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
-	UPROPERTY(Config, EditAnywhere, Category="Characters")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
 	TSubclassOf<AStateCharacter> CampaignCharacterClassP0;
 	
-	UPROPERTY(Config, EditAnywhere, Category="Characters")
+	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
 	TSubclassOf<AStateCharacter> CampaignCharacterClassP1;
+
+	UFUNCTION(BlueprintCallable)
+	static const UCampaignModeSettings* GetCampaignModeSettings();
 };
+
+inline const UCampaignModeSettings* UCampaignModeSettings::GetCampaignModeSettings()
+{
+	return GetDefault<UCampaignModeSettings>();
+}

@@ -13,6 +13,7 @@
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/Sheep/SheepCharacter.h"
+#include "Runtime/SheepSystem/SheepSubsystem.h"
 
 #pragma region Defaults
 void ACampaignGameMode::BeginPlay()
@@ -31,6 +32,27 @@ void ACampaignGameMode::BeginPlay()
 	//Init Camera
 	FindAndInitSplineCamera(Characters);
 
+	
+	//Init World subsystems
+	InitWorldSubsystems();
+	
+	//Init GameMode subsystems
+	InitGameInstanceSubsystems();
+
+
+	//Setup Game
+	// FindAllSheepsInWorld(AllSheeps);	
+	// //Reset GameValue
+	// SheepSaved = 0;
+	// SetNbSheepToSucceedLevel(1);
+}
+
+
+#pragma endregion
+
+#pragma region Initialization
+void ACampaignGameMode::InitWorldSubsystems() const
+{
 	//Init AIGroupSubsystem
 	UAIGroupSubsystem* UAIGroupSubsystem = GetWorld()->GetSubsystem<class UAIGroupSubsystem>();
 	if(UAIGroupSubsystem != nullptr)
@@ -43,16 +65,23 @@ void ACampaignGameMode::BeginPlay()
 	{
 		FleeSubsystem->InitSubsystem();
 	}
-	
-	//Setup Game
-	FindAllSheepsInWorld(AllSheeps);	
-	//Reset GameValue
-	SheepSaved = 0;
-	SetNbSheepToSucceedLevel(1);
-}
-#pragma endregion
 
-#pragma region Players
+	//Init Sheep Counting subsystem
+	USheepSubsystem* SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
+	if(SheepSubsystem != nullptr)
+	{
+		SheepSubsystem->InitSubsystem();
+	}
+}
+
+void ACampaignGameMode::InitGameInstanceSubsystems() const
+{
+	
+}
+
+#pragma endregion 
+
+#pragma region LocalPlayers
 void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const
 {
 	TArray<AActor*> FoundActors;
@@ -134,83 +163,83 @@ TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInput
 
 #pragma endregion
 
-#pragma region Game
-void ACampaignGameMode::SetNbSheepToSucceedLevel(int Amount)
-{
-	NbSheepToSucceedLevel = Amount;
-}
-
-void ACampaignGameMode::AddSavedSheep(int Value)
-{
-	SheepSaved += Value;
-
-	RemoveSheepLeft(Value);
-}
-
-void ACampaignGameMode::FindAllSheepsInWorld(TArray<ASheepCharacter*>& InOutSheeps)
-{
-	TArray<AActor*> FoundActors;
-	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASheepCharacter::StaticClass(), FoundActors);
-
-	for (AActor* FoundActor : FoundActors)
-	{
-		ASheepCharacter* SheepCharacter = Cast<ASheepCharacter>(FoundActor);
-		if(SheepCharacter == nullptr) continue;
-
-		InOutSheeps.Add(SheepCharacter);
-	}
-}
-
-void ACampaignGameMode::SubscribeToSheepsEvents() const
-{
-	for (ASheepCharacter* Sheep : AllSheeps)
-	{
-		if(Sheep == nullptr) continue;
-		Sheep->KillEvent.AddDynamic(this, &ACampaignGameMode::OnSheepKillEvent);
-	}
-}
-
-void ACampaignGameMode::OnSheepKillEvent()
-{
-	RemoveSheepLeft(-1);
-}
-
-void ACampaignGameMode::RemoveSheepLeft(int Value)
-{
-	NbSheepLeft -= Value;
-
-	if(NbSheepLeft <= 0) CheckWinOrLose();
-}
-
-void ACampaignGameMode::CheckWinOrLose() const
-{
-	HasSavedEnoughSheeps() ? Win() : Lose();
-}
-
-bool ACampaignGameMode::HasSavedEnoughSheeps() const
-{
-	return SheepSaved > NbSheepToSucceedLevel;
-}
-
-void ACampaignGameMode::Win() const
-{
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		4.0f,
-		FColor::Emerald,
-		TEXT("Win"));
-
-	EndGameEvent.Broadcast(true);
-}
-
-void ACampaignGameMode::Lose() const
-{
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		4.0f,
-		FColor::Emerald,
-		TEXT("Win"));
-
-	EndGameEvent.Broadcast(false);
-}
-#pragma endregion 
+// #pragma region Game
+// void ACampaignGameMode::SetNbSheepToSucceedLevel(int Amount)
+// {
+// 	NbSheepToSucceedLevel = Amount;
+// }
+//
+// void ACampaignGameMode::AddSavedSheep(int Value)
+// {
+// 	SheepSaved += Value;
+//
+// 	RemoveSheepLeft(Value);
+// }
+//
+// void ACampaignGameMode::FindAllSheepsInWorld(TArray<ASheepCharacter*>& InOutSheeps)
+// {
+// 	TArray<AActor*> FoundActors;
+// 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ASheepCharacter::StaticClass(), FoundActors);
+//
+// 	for (AActor* FoundActor : FoundActors)
+// 	{
+// 		ASheepCharacter* SheepCharacter = Cast<ASheepCharacter>(FoundActor);
+// 		if(SheepCharacter == nullptr) continue;
+//
+// 		InOutSheeps.Add(SheepCharacter);
+// 	}
+// }
+//
+// void ACampaignGameMode::SubscribeToSheepsEvents() const
+// {
+// 	for (ASheepCharacter* Sheep : AllSheeps)
+// 	{
+// 		if(Sheep == nullptr) continue;
+// 		Sheep->KillEvent.AddDynamic(this, &ACampaignGameMode::OnSheepKillEvent);
+// 	}
+// }
+//
+// void ACampaignGameMode::OnSheepKillEvent()
+// {
+// 	RemoveSheepLeft(-1);
+// }
+//
+// void ACampaignGameMode::RemoveSheepLeft(int Value)
+// {
+// 	NbSheepLeft -= Value;
+//
+// 	if(NbSheepLeft <= 0) CheckWinOrLose();
+// }
+//
+// void ACampaignGameMode::CheckWinOrLose() const
+// {
+// 	HasSavedEnoughSheeps() ? Win() : Lose();
+// }
+//
+// bool ACampaignGameMode::HasSavedEnoughSheeps() const
+// {
+// 	return SheepSaved > NbSheepToSucceedLevel;
+// }
+//
+// void ACampaignGameMode::Win() const
+// {
+// 	GEngine->AddOnScreenDebugMessage(
+// 		-1,
+// 		4.0f,
+// 		FColor::Emerald,
+// 		TEXT("Win"));
+//
+// 	EndGameEvent.Broadcast(true);
+// }
+//
+// void ACampaignGameMode::Lose() const
+// {
+// 	GEngine->AddOnScreenDebugMessage(
+// 		-1,
+// 		4.0f,
+// 		FColor::Emerald,
+// 		TEXT("Win"));
+//
+// 	EndGameEvent.Broadcast(false);
+// }
+// #pragma endregion 

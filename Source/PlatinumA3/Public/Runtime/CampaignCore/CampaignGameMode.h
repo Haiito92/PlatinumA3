@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+enum class EGameStateID : uint8;
 class ASheepCharacter;
 class ACampaignPlayerStart;
 class AStateCharacter;
@@ -50,6 +51,18 @@ private:
 
 
 #pragma region GameLoop
+
+public:
+	UFUNCTION(BlueprintCallable)
+	EGameStateID GetGameStateID() const;
+	UFUNCTION(BlueprintCallable)
+	void SetGameStateID(EGameStateID NewGameStateID);
+	
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	EGameStateID GameStateID;
+
+private:
 	UFUNCTION()
 	void OnReachedSheepAmountEvent();
 

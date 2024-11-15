@@ -11,6 +11,7 @@
 #include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
+#include "Runtime/CampaignCore/GameStateID.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/Sheep/SheepCharacter.h"
 #include "Runtime/SheepSystem/SheepSubsystem.h"
@@ -19,6 +20,9 @@
 void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	//Init Game
+	GameStateID = EGameStateID::Not_Finishable;
+	
 	//Spawn Players
 	CreateAndInitPlayers();
 
@@ -189,17 +193,31 @@ TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInput
 	}
 }
 
-
 #pragma endregion
 
 
 #pragma region GameLoop
+
+EGameStateID ACampaignGameMode::GetGameStateID() const
+{
+	return GameStateID;
+}
+
+void ACampaignGameMode::SetGameStateID(EGameStateID NewGameStateID)
+{
+	GameStateID = NewGameStateID;
+}
+
 void ACampaignGameMode::OnReachedSheepAmountEvent()
 {
+	SetGameStateID(EGameStateID::Finishable);
+
+	
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
 		3.0f,
 		FColor::Cyan,
-		TEXT("Can Finish Game"));
+		TEXT("CAN FINISH"));
 }
 #pragma endregion 

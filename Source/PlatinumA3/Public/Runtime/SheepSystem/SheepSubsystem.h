@@ -49,7 +49,8 @@ public:
 private:
 	UPROPERTY()
 	TArray<TObjectPtr<USheepComponent>> SheepComponents;
-	
+	UPROPERTY()
+	unsigned int SheepAliveCount;
 	UPROPERTY()
 	unsigned int SheepCapturedCount;
 	UPROPERTY()

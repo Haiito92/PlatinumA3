@@ -70,7 +70,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 	USheepSubsystem* SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
 	if(SheepSubsystem != nullptr)
 	{
-		SheepSubsystem->InitSubsystem();
+		SheepSubsystem->InitSubsystem(0);
 	}
 }
 

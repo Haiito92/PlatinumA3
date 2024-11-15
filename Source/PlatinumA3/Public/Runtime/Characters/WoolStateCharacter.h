@@ -43,10 +43,10 @@ public:
 #pragma region Holding Skill
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Launch Fields")
 	float ThrowStrength = 10000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Launch Fields")
 	float LaunchTransTime = 2.0f;
 	
 	UPROPERTY()
@@ -96,7 +96,7 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Rally Fields")
 	float RallyRadius = 350.0f;
 	
 	UFUNCTION(BlueprintCallable)
@@ -104,6 +104,24 @@ public:
 
 	UFUNCTION()
 	TArray<AActor*> GetSomethingToRally();
+
+#pragma endregion
+
+
+
+
+#pragma region Interacting
+
+public:
+
+	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	float InteractRadius = 150.0f;
+	
+	UFUNCTION(BlueprintCallable)
+	void LaunchInteracting();
+
+	UFUNCTION()
+	AActor* GetSomethingToInteractWith();
 
 #pragma endregion
 };

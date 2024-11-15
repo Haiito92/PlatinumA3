@@ -16,6 +16,12 @@ void ACampaignPlayerController::BeginPlay()
 
 	CampaignGameMode = Cast<ACampaignGameMode>(GetWorld()->GetAuthGameMode());
 	
+	
+}
+
+void ACampaignPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
 	BindToInputs();
 }
 

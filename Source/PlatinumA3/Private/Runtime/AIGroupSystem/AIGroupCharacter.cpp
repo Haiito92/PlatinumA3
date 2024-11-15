@@ -3,6 +3,8 @@
 
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 
+#include "Runtime/AIGroupSystem/AIPawnStateID.h"
+
 #pragma region Unreal Defaults
 // Sets default values
 AAIGroupCharacter::AAIGroupCharacter()
@@ -38,10 +40,33 @@ void AAIGroupCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
 }
 #pragma endregion 
 
+
+
+
+
 void AAIGroupCharacter::InitGroupPawn(int NewIndex)
 {
 	Index = NewIndex;
-	bIsActivated = true;
+	PawnStateID = EAIPawnStateID::Activated;
+	// bIsActivated = true;
+}
+
+void AAIGroupCharacter::ActivatePawn()
+{
+	SetPawnStateID(EAIPawnStateID::Activated);
+}
+
+void AAIGroupCharacter::DisablePawn()
+{
+	SetPawnStateID(EAIPawnStateID::Disabled);
+}
+
+void AAIGroupCharacter::UnActivatePawn()
+{
+	SetPawnStateID(EAIPawnStateID::UnActivated);
+
+	GEngine->AddOnScreenDebugMessage(
+		-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
 }
 
 void AAIGroupCharacter::SetIndex(int NewIndex)
@@ -54,12 +79,24 @@ int AAIGroupCharacter::GetIndex() const
 	return Index;
 }
 
-void AAIGroupCharacter::SetIsActivated(bool IsActivated)
+void AAIGroupCharacter::SetPawnStateID(const EAIPawnStateID NewPawnStateID)
 {
-	bIsActivated = IsActivated;
+	if(PawnStateID == NewPawnStateID) return;
+	PawnStateID = NewPawnStateID;
+	
 }
 
-bool AAIGroupCharacter::GetIsActivated() const
+EAIPawnStateID AAIGroupCharacter::GetPawnStateID() const
 {
-	return bIsActivated;
+	return PawnStateID;
 }
+//
+// void AAIGroupCharacter::SetIsActivated(bool IsActivated)
+// {
+// 	bIsActivated = IsActivated;
+// }
+//
+// bool AAIGroupCharacter::GetIsActivated() const
+// {
+// 	return bIsActivated;
+// }

@@ -27,22 +27,18 @@ void ACampaignPlayerController::BindToInputs()
 	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
 	if(CampaignModeSettings == nullptr) return;
 
-	UCampaignModeInputData* InputData = CampaignModeSettings->CampaignModeInputData.LoadSynchronous();
+	const UCampaignModeInputData* InputData = CampaignModeSettings->CampaignModeInputData.LoadSynchronous();
 	if(InputData == nullptr) return;
 
 	
 	EnhancedInputComponent->BindAction(InputData->FinishGameInputAction, ETriggerEvent::Completed,
-		this, &ACampaignPlayerController::OnFinishGameInputCompleted);
+		this, &ACampaignPlayerController::OnFinishGameInputAction);
 
 }
 
-void ACampaignPlayerController::OnFinishGameInputCompleted()
+void ACampaignPlayerController::OnFinishGameInputAction()
 {
 	if(CampaignGameMode->GetGameStateID() != EGameStateID::Finishable) return;
 
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		2.0f,
-		FColor::Turquoise,
-		TEXT("Controller Finish Game"));
+	CampaignGameMode->FinishGame();
 }

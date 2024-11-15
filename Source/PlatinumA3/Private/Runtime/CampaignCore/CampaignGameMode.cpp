@@ -198,6 +198,19 @@ TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInput
 
 #pragma region GameLoop
 
+
+void ACampaignGameMode::FinishGame()
+{
+	SetGameStateID(EGameStateID::Finished);
+	GameFinishedEvent.Broadcast();
+	
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		2.0f,
+		FColor::Turquoise,
+		TEXT("Finish Game"));
+}
+
 EGameStateID ACampaignGameMode::GetGameStateID() const
 {
 	return GameStateID;

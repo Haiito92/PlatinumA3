@@ -22,7 +22,7 @@ private:
 	void BindToInputs();
 	
 	UFUNCTION()
-	void OnFinishGameInputCompleted();
+	void OnFinishGameInputAction();
 
 	UPROPERTY()
 	TObjectPtr<ACampaignGameMode> CampaignGameMode;

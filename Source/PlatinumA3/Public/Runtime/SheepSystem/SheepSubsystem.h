@@ -15,7 +15,7 @@ class PLATINUMA3_API USheepSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 public:
-	void InitSubsystem(const unsigned SheepAmountRequired);
+	void InitSubsystem(const unsigned InSheepAmountRequired);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSheepSystemInitEvent);
 	UPROPERTY()
 	FSheepSystemInitEvent SheepSystemInitEvent;

@@ -6,6 +6,7 @@
 #include "Engine/DeveloperSettings.h"
 #include "CampaignModeSettings.generated.h"
 
+class UCampaignModeInputData;
 class AStateCharacter;
 /**
  * 
@@ -16,6 +17,9 @@ class PLATINUMA3_API UCampaignModeSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Config, EditAnywhere, BlueprintReadOnly, Category="PlayerControler")
+	TSoftObjectPtr<UCampaignModeInputData> CampaignModeInputData;
+	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
 	TSubclassOf<AStateCharacter> CampaignCharacterClassP0;
 	

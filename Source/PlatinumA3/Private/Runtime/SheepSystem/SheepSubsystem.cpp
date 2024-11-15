@@ -6,7 +6,7 @@
 void USheepSubsystem::InitSubsystem()
 {
 	SetSheepCapturedCount(0);
-	SetSheepAmountRequired(4);
+	SetSheepAmountRequired(1);
 	SheepSystemInitEvent.Broadcast();
 }
 

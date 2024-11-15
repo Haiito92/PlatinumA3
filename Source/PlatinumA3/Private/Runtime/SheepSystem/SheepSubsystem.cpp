@@ -3,10 +3,10 @@
 
 #include "Runtime/SheepSystem/SheepSubsystem.h"
 
-void USheepSubsystem::InitSubsystem()
+void USheepSubsystem::InitSubsystem(const unsigned SheepAmountRequired)
 {
 	SetSheepCapturedCount(0);
-	SetSheepAmountRequired(1);
+	SetSheepAmountRequired(SheepAmountRequired);
 	SheepSystemInitEvent.Broadcast();
 }
 

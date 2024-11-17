@@ -47,9 +47,10 @@ public:
 	UPROPERTY()
 	FSheepCapturedCountChangedEvent SheepCapturedCountChangedEvent;
 private:
+	// UPROPERTY()
+	// TArray<TObjectPtr<USheepComponent>> SheepComponents;
 	UPROPERTY()
-	TArray<TObjectPtr<USheepComponent>> SheepComponents;
-	
+	unsigned int SheepAliveCount;
 	UPROPERTY()
 	unsigned int SheepCapturedCount;
 	UPROPERTY()

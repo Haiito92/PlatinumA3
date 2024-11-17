@@ -2,7 +2,9 @@
 
 
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
-
+#include "Components/CapsuleComponent.h"
+#include "Components/SceneComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Runtime/AIGroupSystem/AIPawnStateID.h"
 
 #pragma region Unreal Defaults
@@ -65,6 +67,19 @@ void AAIGroupCharacter::UnActivatePawn()
 {
 	SetPawnStateID(EAIPawnStateID::UnActivated);
 
+	UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
+	if(pCapsuleComponent == nullptr) return
+	
+	pCapsuleComponent->SetEnableGravity(false);
+	pCapsuleComponent->SetSimulatePhysics(false);
+	pCapsuleComponent->SetVisibility(false, true);
+
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
+	if(CharacterMovementComponent == nullptr)return;
+
+	CharacterMovementComponent->GravityScale = 0;
+	CharacterMovementComponent->Velocity = FVector::ZeroVector;
+	
 	GEngine->AddOnScreenDebugMessage(
 		-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
 }

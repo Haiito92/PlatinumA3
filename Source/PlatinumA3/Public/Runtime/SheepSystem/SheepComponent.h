@@ -7,6 +7,9 @@
 #include "SheepComponent.generated.h"
 
 
+enum class ESheepStateFlag;
+class USheepSubsystem;
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLATINUMA3_API USheepComponent : public UActorComponent
 {
@@ -29,10 +32,25 @@ public:
 #pragma endregion
 
 #pragma region Sheep
+	UFUNCTION(BlueprintCallable)
+	void InitSheep(int Index);
+	
 public:
 	UFUNCTION(BlueprintCallable)
 	void Capture();
+	UFUNCTION(BlueprintCallable)
+	void Die();
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSheepDeathEvent, int, Index);
+	UPROPERTY()
+	FSheepDeathEvent SheepDeathEvent;
+	
 public:
+	UFUNCTION(BlueprintCallable)
+	int GetSheepIndex() const;
+	UFUNCTION(BlueprintCallable)
+	void SetIndex(const int Index);
+	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsCaptured() const;
 	UFUNCTION(BlueprintCallable)
@@ -43,6 +61,10 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void SetCapturedRoamingLocation(const FVector& NewValue);
 private:
+
+	UPROPERTY()
+	unsigned int SheepIndex;
+	
 	UPROPERTY()
 	bool bIsCaptured;
 

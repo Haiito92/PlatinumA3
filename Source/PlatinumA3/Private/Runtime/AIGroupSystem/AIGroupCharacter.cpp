@@ -80,8 +80,8 @@ void AAIGroupCharacter::UnActivatePawn()
 	CharacterMovementComponent->GravityScale = 0;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
 	
-	GEngine->AddOnScreenDebugMessage(
-		-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
 }
 
 void AAIGroupCharacter::SetIndex(int NewIndex)
@@ -98,7 +98,8 @@ void AAIGroupCharacter::SetPawnStateID(const EAIPawnStateID NewPawnStateID)
 {
 	if(PawnStateID == NewPawnStateID) return;
 	PawnStateID = NewPawnStateID;
-	
+
+	ReceiveNewStateID(PawnStateID);
 }
 
 EAIPawnStateID AAIGroupCharacter::GetPawnStateID() const

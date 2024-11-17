@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIPawnStateID.h"
 #include "GameFramework/Character.h"
 #include "AIGroupCharacter.generated.h"
 
@@ -64,6 +65,8 @@ public:
 	void SetPawnStateID(const EAIPawnStateID NewPawnStateID);
 	UFUNCTION(BlueprintCallable)
 	EAIPawnStateID GetPawnStateID() const;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveNewStateID(const EAIPawnStateID NewPawnStateID);
 	
 	// UFUNCTION(BlueprintCallable)
 	// void SetIsActivated(bool IsActivated);

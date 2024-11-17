@@ -15,6 +15,9 @@ class PLATINUMA3_API USheepPenSystemSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Config, EditAnywhere, Category="Sheep")
+	FName SheepTag;
+	
 	UPROPERTY(Config, EditAnywhere, Category="Sheep In Pen")
 	float SheepSpeedInPen;
 };

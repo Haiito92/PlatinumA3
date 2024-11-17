@@ -6,6 +6,8 @@
 #include "GameFramework/Pawn.h"
 #include "AIGroupPawn.generated.h"
 
+enum class EAIPawnStateID : uint8;
+
 UCLASS()
 class PLATINUMA3_API AAIGroupPawn : public APawn
 {
@@ -32,7 +34,10 @@ private:
 	int Index;
 
 	UPROPERTY()
-	bool bIsActivated = true;
+	EAIPawnStateID PawnStateID;
+	
+	// UPROPERTY()
+	// bool bIsActivated = true;
 public:
 	UFUNCTION()
 	void SetIndex(int NewIndex);
@@ -40,9 +45,14 @@ public:
 	int GetIndex() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetIsActivated(bool IsActivated);
+	void SetPawnStateID(const EAIPawnStateID NewPawnStateID);
 	UFUNCTION(BlueprintCallable)
-	bool GetIsActivated() const;
+	EAIPawnStateID GetPawnStateID() const;
+	
+	// UFUNCTION(BlueprintCallable)
+	// void SetIsActivated(bool IsActivated);
+	// UFUNCTION(BlueprintCallable)
+	// bool GetIsActivated() const;
 public:
 	void InitGroupPawn(int NewIndex);
 };

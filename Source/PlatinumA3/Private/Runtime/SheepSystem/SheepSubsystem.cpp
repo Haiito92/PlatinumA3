@@ -3,10 +3,14 @@
 
 #include "Runtime/SheepSystem/SheepSubsystem.h"
 
-void USheepSubsystem::InitSubsystem()
+#include "Kismet/GameplayStatics.h"
+
+void USheepSubsystem::InitSubsystem(const unsigned InSheepAmountRequired)
 {
 	SetSheepCapturedCount(0);
-	SetSheepAmountRequired(1);
+	SetSheepAmountRequired(InSheepAmountRequired);
+
+	
 	SheepSystemInitEvent.Broadcast();
 }
 

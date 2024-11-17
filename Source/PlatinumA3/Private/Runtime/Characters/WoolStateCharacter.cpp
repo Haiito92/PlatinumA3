@@ -6,6 +6,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
+#include "Runtime/Characters/InteractInterface.h"
 #include "Runtime/Chien/Biteable.h"
 
 
@@ -291,4 +292,74 @@ TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
 	}
 
 	return ActorsToRally;
+}
+
+
+
+
+
+
+
+void AWoolStateCharacter::LaunchInteracting()
+{
+	AActor* ActorToRally = GetSomethingToInteractWith();
+
+	// for (auto& ActorToRally : ActorsToRally)
+	// {
+	// 	if (ActorToRally->Implements<UInteractInterface>())
+	// 	{
+	// 		IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+	// 	}
+	// }
+
+
+	if(ActorToRally)
+	{
+		if (ActorToRally->Implements<UInteractInterface>())
+		{
+			IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+		}
+	}
+	
+	
+	
+}
+
+AActor* AWoolStateCharacter::GetSomethingToInteractWith()
+{
+	FVector Center = GetActorLocation();
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	TArray<FOverlapResult> OverlapResults;
+	bool bOverlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECC_WorldDynamic,
+		FCollisionShape::MakeSphere(InteractRadius),
+		QueryParams
+	);
+
+	
+	if (bOverlap)
+	{
+		//DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
+
+		for (auto& Result : OverlapResults)
+		{	
+			if (AActor* OverlappedActor = Result.GetActor())
+			{
+				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
+				
+				if (OverlappedActor->Implements<UInteractInterface>())
+				{
+					return OverlappedActor;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }

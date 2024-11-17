@@ -10,7 +10,7 @@ class USheepSubsystem;
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, BlueprintType)
 class PLATINUMA3_API USheepCountUI : public UUserWidget
 {
 	GENERATED_BODY()

@@ -105,6 +105,9 @@ public:
 	void UpdateHolding();
 
 	UFUNCTION(BlueprintCallable)
+	void StartExecuteLaunch();
+	
+	UFUNCTION(BlueprintCallable)
 	void LaunchSomething();
 	
 	UFUNCTION()

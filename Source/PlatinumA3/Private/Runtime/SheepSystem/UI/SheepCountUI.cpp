@@ -33,7 +33,7 @@ void USheepCountUI::NativeDestruct()
 		this, &USheepCountUI::OnSheepCapturedCountChangedEvent);
 }
 
-void USheepCountUI::InitSheepCountUI()
+void USheepCountUI::InitSheepCountUI_Implementation()
 {
 	if(SheepSubsystem == nullptr) return;
 	

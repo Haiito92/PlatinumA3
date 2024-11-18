@@ -21,7 +21,7 @@ protected:
 	virtual void NativeDestruct() override;
 #pragma endregion
 protected:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	void InitSheepCountUI();
 
 	UPROPERTY(BlueprintReadOnly)

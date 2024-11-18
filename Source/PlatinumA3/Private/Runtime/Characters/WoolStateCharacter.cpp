@@ -3,6 +3,7 @@
 
 #include "Runtime/Characters/WoolStateCharacter.h"
 
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
@@ -98,7 +99,12 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 		TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
 		
 		AActor* Catchable = HeldComponent->GetOwner();
-		if (Catchable && Catchable->Implements<UCatchable>())
+
+		if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
+		{
+			//CatchableCharacter->GetCharacterMovement()->Movement
+		}
+		else if (Catchable && Catchable->Implements<UCatchable>())
 		{
 			ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
 			JUICY_OnThrowSomething();
@@ -121,6 +127,11 @@ void AWoolStateCharacter::UpdateHolding()
 		
 		PhysicsHandle->SetTargetLocationAndRotation(Location, Rotation);
 	}
+}
+
+void AWoolStateCharacter::StartExecuteLaunch()
+{
+	
 }
 
 void AWoolStateCharacter::LaunchSomething()

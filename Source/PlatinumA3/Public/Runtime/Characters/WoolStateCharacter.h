@@ -39,6 +39,41 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void OnLanded(const FHitResult& Hit);
+	
+#pragma region Feedback Events
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnWalk();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnInteract();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnLanded();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dog Feedback Events")
+	void JUICY_OnBark();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dog Feedback Events")
+	void JUICY_OnBite();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnStartHolding();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnStopHolding();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnThrowSomething();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnRally();
+#pragma endregion
+
+
+
+	
 
 #pragma region Holding Skill
 

@@ -89,11 +89,11 @@ void ANewSheepPen::CaptureSheep(USheepComponent* SheepComponent)
 
 	CapturedSheeps.Add(SheepComponent, 0.0f);
 	
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		4.0f,
-		FColor::Magenta,
-		TEXT("SHEEP CAPTURED !!"));
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	4.0f,
+	// 	FColor::Magenta,
+	// 	TEXT("SHEEP CAPTURED !!"));
 }
 
 
@@ -110,11 +110,11 @@ void ANewSheepPen::UpdateRoamingTimers(float DeltaTime)
 		if(SheepTimerPair.Value <= 0.0f || Distance <= 50.f)
 		{
 			SheepTimerPair.Value = 3.0f;
-			GEngine->AddOnScreenDebugMessage(
-		-1,
-		4.0f,
-		FColor::Magenta,
-		TEXT("UDPATE SHEEP TIMER"));
+			// 	GEngine->AddOnScreenDebugMessage(
+			// -1,
+			// 4.0f,
+			// FColor::Magenta,
+			// TEXT("UDPATE SHEEP TIMER"));
 			//Calculate next roaming location
 			GiveSheepNewRoamingLocation(SheepTimerPair.Key);
 			

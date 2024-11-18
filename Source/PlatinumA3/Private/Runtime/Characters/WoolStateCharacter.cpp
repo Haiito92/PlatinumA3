@@ -52,6 +52,13 @@ void AWoolStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AWoolStateCharacter::OnLanded(const FHitResult& Hit)
+{
+	Super::OnLanded(Hit);
+
+	JUICY_OnLanded();
+}
+
 void AWoolStateCharacter::StartHolding()
 {
 	AActor* Catchable = GetSomethingToHold();
@@ -64,6 +71,7 @@ void AWoolStateCharacter::StartHolding()
 		if (Catchable->Implements<UCatchable>())
 		{
 			PrimitiveComponent = ICatchable::Execute_Catch(Catchable);
+			JUICY_OnStartHolding();
 		}
 	}
 
@@ -89,7 +97,7 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 	if(IsHoldingSomething)
 	{
 		TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
-
+		
 		AActor* Catchable = HeldComponent->GetOwner();
 
 		if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
@@ -99,10 +107,13 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 		else if (Catchable && Catchable->Implements<UCatchable>())
 		{
 			ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
+			JUICY_OnThrowSomething();
 		}
 		
 		PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
+		JUICY_OnStopHolding();
+
 	}
 }
 
@@ -134,7 +145,7 @@ void AWoolStateCharacter::LaunchSomething()
 		// Apply impulse
 		FVector ThrowDirection = GetActorForwardVector();
 		HeldComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
-
+		
 		// Clear HeldComponent reference if needed
 		HeldComponent = nullptr;
 	}
@@ -201,6 +212,7 @@ void AWoolStateCharacter::LaunchBite()
 		if (ActorToBite->Implements<UBiteable>())
 		{
 			IBiteable::Execute_Bite(ActorToBite,1.f);
+			JUICY_OnBite();
 		}
 	}
 }
@@ -260,6 +272,7 @@ void AWoolStateCharacter::LaunchRally()
 		if (ActorToRally->Implements<URallyable>())
 		{
 			IRallyable::Execute_Rally(ActorToRally, GetActorLocation());
+			JUICY_OnRally();
 		}
 	}
 	
@@ -329,6 +342,7 @@ void AWoolStateCharacter::LaunchInteracting()
 		if (ActorToRally->Implements<UInteractInterface>())
 		{
 			IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+			JUICY_OnInteract();
 		}
 	}
 	

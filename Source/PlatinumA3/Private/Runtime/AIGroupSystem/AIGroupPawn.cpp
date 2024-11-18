@@ -3,6 +3,8 @@
 
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 
+#include "Runtime/AIGroupSystem/AIPawnStateID.h"
+
 #pragma region Unreal Defaults
 // Sets default values
 AAIGroupPawn::AAIGroupPawn()
@@ -34,7 +36,8 @@ void AAIGroupPawn::SetupPlayerInputComponent(UInputComponent* PlayerInputCompone
 void AAIGroupPawn::InitGroupPawn(int NewIndex)
 {
 	Index = NewIndex;
-	bIsActivated = true;
+	PawnStateID = EAIPawnStateID::Activated;
+	// bIsActivated = true;
 }
 
 void AAIGroupPawn::SetIndex(int NewIndex)
@@ -47,12 +50,22 @@ int AAIGroupPawn::GetIndex() const
 	return Index;
 }
 
-void AAIGroupPawn::SetIsActivated(bool IsActivated)
+void AAIGroupPawn::SetPawnStateID(const EAIPawnStateID NewPawnStateID)
 {
-	bIsActivated = IsActivated;
+	PawnStateID = NewPawnStateID;
 }
 
-bool AAIGroupPawn::GetIsActivated() const
+EAIPawnStateID AAIGroupPawn::GetPawnStateID() const
 {
-	return bIsActivated;
+	return PawnStateID;
 }
+
+// void AAIGroupPawn::SetIsActivated(bool IsActivated)
+// {
+// 	bIsActivated = IsActivated;
+// }
+//
+// bool AAIGroupPawn::GetIsActivated() const
+// {
+// 	return bIsActivated;
+// }

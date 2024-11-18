@@ -86,6 +86,11 @@ private:
 #pragma region Orient
 
 public:
+	UPROPERTY()
+	TObjectPtr<AActor> m_CameraActor;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Orient")
+	float m_RotationRate = 500.0f;
 
 	void Move(FVector2D MovementsValues);
 
@@ -134,6 +139,7 @@ protected:
 	UPROPERTY()
 	bool IsRallying;
 
+	
 
 #pragma endregion
 

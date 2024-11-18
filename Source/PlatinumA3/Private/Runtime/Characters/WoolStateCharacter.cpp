@@ -6,6 +6,7 @@
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
 #include "Runtime/Berger/Rallyable.h"
+#include "Runtime/Characters/InteractInterface.h"
 #include "Runtime/Chien/Biteable.h"
 
 
@@ -50,6 +51,13 @@ void AWoolStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+void AWoolStateCharacter::OnLanded(const FHitResult& Hit)
+{
+	Super::OnLanded(Hit);
+
+	JUICY_OnLanded();
+}
+
 void AWoolStateCharacter::StartHolding()
 {
 	AActor* Catchable = GetSomethingToHold();
@@ -62,6 +70,7 @@ void AWoolStateCharacter::StartHolding()
 		if (Catchable->Implements<UCatchable>())
 		{
 			PrimitiveComponent = ICatchable::Execute_Catch(Catchable);
+			JUICY_OnStartHolding();
 		}
 	}
 
@@ -87,15 +96,18 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 	if(IsHoldingSomething)
 	{
 		TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
-
+		
 		AActor* Catchable = HeldComponent->GetOwner();
 		if (Catchable && Catchable->Implements<UCatchable>())
 		{
 			ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
+			JUICY_OnThrowSomething();
 		}
 		
 		PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
+		JUICY_OnStopHolding();
+
 	}
 }
 
@@ -122,7 +134,7 @@ void AWoolStateCharacter::LaunchSomething()
 		// Apply impulse
 		FVector ThrowDirection = GetActorForwardVector();
 		HeldComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
-
+		
 		// Clear HeldComponent reference if needed
 		HeldComponent = nullptr;
 	}
@@ -189,6 +201,7 @@ void AWoolStateCharacter::LaunchBite()
 		if (ActorToBite->Implements<UBiteable>())
 		{
 			IBiteable::Execute_Bite(ActorToBite,1.f);
+			JUICY_OnBite();
 		}
 	}
 }
@@ -248,6 +261,7 @@ void AWoolStateCharacter::LaunchRally()
 		if (ActorToRally->Implements<URallyable>())
 		{
 			IRallyable::Execute_Rally(ActorToRally, GetActorLocation());
+			JUICY_OnRally();
 		}
 	}
 	
@@ -291,4 +305,75 @@ TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
 	}
 
 	return ActorsToRally;
+}
+
+
+
+
+
+
+
+void AWoolStateCharacter::LaunchInteracting()
+{
+	AActor* ActorToRally = GetSomethingToInteractWith();
+
+	// for (auto& ActorToRally : ActorsToRally)
+	// {
+	// 	if (ActorToRally->Implements<UInteractInterface>())
+	// 	{
+	// 		IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+	// 	}
+	// }
+
+
+	if(ActorToRally)
+	{
+		if (ActorToRally->Implements<UInteractInterface>())
+		{
+			IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+			JUICY_OnInteract();
+		}
+	}
+	
+	
+	
+}
+
+AActor* AWoolStateCharacter::GetSomethingToInteractWith()
+{
+	FVector Center = GetActorLocation();
+	
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(this);
+
+	TArray<FOverlapResult> OverlapResults;
+	bool bOverlap = GetWorld()->OverlapMultiByChannel(
+		OverlapResults,
+		Center,
+		FQuat::Identity,
+		ECC_WorldDynamic,
+		FCollisionShape::MakeSphere(InteractRadius),
+		QueryParams
+	);
+
+	
+	if (bOverlap)
+	{
+		//DrawDebugSphere(GetWorld(), Center, RallyRadius, 12, FColor::Red, false, 1.0f);
+
+		for (auto& Result : OverlapResults)
+		{	
+			if (AActor* OverlappedActor = Result.GetActor())
+			{
+				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
+				
+				if (OverlappedActor->Implements<UInteractInterface>())
+				{
+					return OverlappedActor;
+				}
+			}
+		}
+	}
+
+	return nullptr;
 }

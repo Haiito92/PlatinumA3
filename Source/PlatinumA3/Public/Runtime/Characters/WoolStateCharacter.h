@@ -39,14 +39,49 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
+	virtual void OnLanded(const FHitResult& Hit);
+	
+#pragma region Feedback Events
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnWalk();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnInteract();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Characters Feedback Events")
+	void JUICY_OnLanded();
+	
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dog Feedback Events")
+	void JUICY_OnBark();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Dog Feedback Events")
+	void JUICY_OnBite();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnStartHolding();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnStopHolding();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnThrowSomething();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable, Category = "Shepherd Feedback Events")
+	void JUICY_OnRally();
+#pragma endregion
+
+
+
+	
 
 #pragma region Holding Skill
 
 public:
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Launch Fields")
 	float ThrowStrength = 10000;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Launch Fields")
 	float LaunchTransTime = 2.0f;
 	
 	UPROPERTY()
@@ -96,7 +131,7 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category="Rally Fields")
 	float RallyRadius = 350.0f;
 	
 	UFUNCTION(BlueprintCallable)
@@ -104,6 +139,24 @@ public:
 
 	UFUNCTION()
 	TArray<AActor*> GetSomethingToRally();
+
+#pragma endregion
+
+
+
+
+#pragma region Interacting
+
+public:
+
+	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	float InteractRadius = 150.0f;
+	
+	UFUNCTION(BlueprintCallable)
+	void LaunchInteracting();
+
+	UFUNCTION()
+	AActor* GetSomethingToInteractWith();
 
 #pragma endregion
 };

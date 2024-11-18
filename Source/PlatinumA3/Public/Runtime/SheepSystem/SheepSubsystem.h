@@ -6,6 +6,7 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "SheepSubsystem.generated.h"
 
+class USheepComponent;
 /**
  * 
  */
@@ -14,7 +15,7 @@ class PLATINUMA3_API USheepSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 public:
-	void InitSubsystem();
+	void InitSubsystem(const unsigned InSheepAmountRequired);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSheepSystemInitEvent);
 	UPROPERTY()
 	FSheepSystemInitEvent SheepSystemInitEvent;
@@ -46,6 +47,9 @@ public:
 	UPROPERTY()
 	FSheepCapturedCountChangedEvent SheepCapturedCountChangedEvent;
 private:
+	UPROPERTY()
+	TArray<TObjectPtr<USheepComponent>> SheepComponents;
+	
 	UPROPERTY()
 	unsigned int SheepCapturedCount;
 	UPROPERTY()

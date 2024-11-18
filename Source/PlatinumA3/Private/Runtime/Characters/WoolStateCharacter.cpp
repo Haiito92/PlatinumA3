@@ -326,7 +326,7 @@ TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
 
 void AWoolStateCharacter::LaunchInteracting()
 {
-	AActor* ActorToRally = GetSomethingToInteractWith();
+	AActor* ActorToInteract = GetSomethingToInteractWith();
 
 	// for (auto& ActorToRally : ActorsToRally)
 	// {
@@ -337,11 +337,17 @@ void AWoolStateCharacter::LaunchInteracting()
 	// }
 
 
-	if(ActorToRally)
+	if(ActorToInteract)
 	{
-		if (ActorToRally->Implements<UInteractInterface>())
+
+		if(PhysicsHandle->GrabbedComponent)
 		{
-			IInteractInterface::Execute_Interact(ActorToRally, Cast<APlayerController>(GetOwner()));
+			StopHolding(LaunchTransTime);
+		}
+		
+		if (ActorToInteract->Implements<UInteractInterface>())
+		{
+			IInteractInterface::Execute_Interact(ActorToInteract, Cast<APlayerController>(GetOwner()));
 			JUICY_OnInteract();
 		}
 	}

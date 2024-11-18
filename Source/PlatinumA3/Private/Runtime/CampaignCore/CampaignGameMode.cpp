@@ -11,7 +11,8 @@
 #include "Runtime/Camera/SplineCameraScroller.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
-#include "Runtime/CampaignCore/GameStateID.h"
+#include "Runtime/CampaignCore/CampaignGameStateID.h"
+#include "Runtime/CampaignCore/CampaignHUD.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/Sheep/SheepCharacter.h"
 #include "Runtime/SheepSystem/SheepSubsystem.h"
@@ -21,7 +22,7 @@ void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	//Init Game
-	GameStateID = EGameStateID::Not_Finishable;
+	GameStateID = ECampaignGameStateID::Not_Finishable;
 	
 	//Spawn Players
 	CreateAndInitPlayers();
@@ -43,7 +44,7 @@ void ACampaignGameMode::BeginPlay()
 	InitWorldSubsystems();
 	BindToWorldSubsystemsEvents();
 
-
+	
 	//Setup Game
 	// FindAllSheepsInWorld(AllSheeps);	
 	// //Reset GameValue
@@ -81,7 +82,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 	USheepSubsystem* SheepSubsystem = GetWorld()->GetSubsystem<USheepSubsystem>();
 	if(SheepSubsystem != nullptr)
 	{
-		SheepSubsystem->InitSubsystem(0);
+		SheepSubsystem->InitSubsystem(3);
 	}
 }
 
@@ -91,6 +92,7 @@ void ACampaignGameMode::BindToWorldSubsystemsEvents() const
 	if(SheepSubsystem != nullptr)
 	{
 		SheepSubsystem->ReachedRequiredSheepAmountEvent.AddDynamic(this, &ACampaignGameMode::OnReachedSheepAmountEvent);
+		SheepSubsystem->NotEnoughSheepLeftEvent.AddDynamic(this, &ACampaignGameMode::OnNotEnoughSheepLeftEvent);
 	}
 }
 
@@ -99,6 +101,18 @@ void ACampaignGameMode::InitGameInstanceSubsystems() const
 	
 }
 
+// void ACampaignGameMode::InitializeHUDForPlayer_Implementation(APlayerController* NewPlayer)
+// {
+// 	Super::InitializeHUDForPlayer_Implementation(NewPlayer);
+//
+// 	if(NewPlayer->GetLocalPlayer()->GetIndexInGameInstance() != 0) return;
+//
+// 	ACampaignHUD* CampaignHUD = Cast<ACampaignHUD>(NewPlayer->GetHUD());
+// 	if(CampaignHUD == nullptr) return;
+//
+// 	
+//
+// }
 
 
 #pragma endregion 
@@ -110,6 +124,7 @@ void ACampaignGameMode::UnbindToWorldSubsystemsEvents() const
 	if(SheepSubsystem != nullptr)
 	{
 		SheepSubsystem->ReachedRequiredSheepAmountEvent.RemoveDynamic(this, &ACampaignGameMode::OnReachedSheepAmountEvent);
+		SheepSubsystem->NotEnoughSheepLeftEvent.RemoveDynamic(this, &ACampaignGameMode::OnNotEnoughSheepLeftEvent);
 	}
 }
 #pragma endregion 
@@ -201,7 +216,7 @@ TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInput
 
 void ACampaignGameMode::FinishGame()
 {
-	SetGameStateID(EGameStateID::Finished);
+	SetGameStateID(ECampaignGameStateID::Finished);
 	GameFinishedEvent.Broadcast();
 	
 	GEngine->AddOnScreenDebugMessage(
@@ -211,19 +226,24 @@ void ACampaignGameMode::FinishGame()
 		TEXT("Finish Game"));
 }
 
-EGameStateID ACampaignGameMode::GetGameStateID() const
+ECampaignGameStateID ACampaignGameMode::GetGameStateID() const
 {
 	return GameStateID;
 }
 
-void ACampaignGameMode::SetGameStateID(EGameStateID NewGameStateID)
+void ACampaignGameMode::SetGameStateID(ECampaignGameStateID NewGameStateID)
 {
 	GameStateID = NewGameStateID;
 }
 
+void ACampaignGameMode::OnNotEnoughSheepLeftEvent()
+{
+	FinishGame();
+}
+
 void ACampaignGameMode::OnReachedSheepAmountEvent()
 {
-	SetGameStateID(EGameStateID::Finishable);
+	SetGameStateID(ECampaignGameStateID::Finishable);
 
 	
 	

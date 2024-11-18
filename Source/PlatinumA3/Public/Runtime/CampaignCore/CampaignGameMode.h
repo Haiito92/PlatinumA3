@@ -6,7 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
-enum class EGameStateID : uint8;
+enum class ECampaignGameStateID : uint8;
 class ASheepCharacter;
 class ACampaignPlayerStart;
 class AStateCharacter;
@@ -29,6 +29,8 @@ private:
 	void BindToWorldSubsystemsEvents() const;
 	
 	void InitGameInstanceSubsystems() const;
+
+	// virtual void InitializeHUDForPlayer_Implementation(APlayerController* NewPlayer) override;
 #pragma endregion
 
 
@@ -60,15 +62,18 @@ public:
 	
 public:
 	UFUNCTION(BlueprintCallable)
-	EGameStateID GetGameStateID() const;
+	ECampaignGameStateID GetGameStateID() const;
 	UFUNCTION(BlueprintCallable)
-	void SetGameStateID(EGameStateID NewGameStateID);
+	void SetGameStateID(ECampaignGameStateID NewGameStateID);
 	
 protected:
 	UPROPERTY(BlueprintReadOnly)
-	EGameStateID GameStateID;
+	ECampaignGameStateID GameStateID;
 
 private:
+	UFUNCTION()
+	void OnNotEnoughSheepLeftEvent();
+
 	UFUNCTION()
 	void OnReachedSheepAmountEvent();
 

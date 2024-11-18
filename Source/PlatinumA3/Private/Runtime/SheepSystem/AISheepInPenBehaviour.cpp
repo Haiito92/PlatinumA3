@@ -8,6 +8,7 @@
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/SheepSystem/SheepComponent.h"
 #include "Runtime/SheepSystem/SheepPenSystemSettings.h"
+#include "Runtime/SheepSystem/SheepStateFlag.h"
 
 #pragma region BehaviourDefaults
 
@@ -35,7 +36,7 @@ bool UAISheepInPenBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) con
 {
 	const USheepComponent* SheepComponent = SheepComponents[Pawn->GetIndex()];
 	if(SheepComponent == nullptr) return false;
-	
+
 	return SheepComponent->GetIsCaptured();
 }
 
@@ -49,12 +50,12 @@ void UAISheepInPenBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 
 	CharacterMovement->MaxWalkSpeed = SheepPenSystemSettings->SheepSpeedInPen;
 	
-	Super::BehaviourEntry(Pawn);
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Green,
-	TEXT("SheepInPen ENTRY"));
+	// Super::BehaviourEntry(Pawn);
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Green,
+	// TEXT("SheepInPen ENTRY"));
 }
 
 void UAISheepInPenBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -87,11 +88,11 @@ void UAISheepInPenBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Green,
-	TEXT("SheepInPen EXIT"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Green,
+	// TEXT("SheepInPen EXIT"));
 }
 
 #pragma endregion 

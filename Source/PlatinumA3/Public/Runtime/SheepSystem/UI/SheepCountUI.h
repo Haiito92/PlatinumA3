@@ -10,7 +10,7 @@ class USheepSubsystem;
 /**
  * 
  */
-UCLASS(Abstract)
+UCLASS(Abstract, BlueprintType)
 class PLATINUMA3_API USheepCountUI : public UUserWidget
 {
 	GENERATED_BODY()
@@ -21,7 +21,7 @@ protected:
 	virtual void NativeDestruct() override;
 #pragma endregion
 protected:
-	UFUNCTION(BlueprintCallable)
+	UFUNCTION(BlueprintNativeEvent,BlueprintCallable)
 	void InitSheepCountUI();
 
 	UPROPERTY(BlueprintReadOnly)

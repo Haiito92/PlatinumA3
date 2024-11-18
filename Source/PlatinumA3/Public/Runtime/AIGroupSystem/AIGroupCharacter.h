@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIPawnStateID.h"
 #include "GameFramework/Character.h"
 #include "AIGroupCharacter.generated.h"
+
+enum class EAIPawnStateID : uint8;
 
 UCLASS()
 class PLATINUMA3_API AAIGroupCharacter : public ACharacter
@@ -32,12 +35,25 @@ public:
 #pragma endregion
 
 
+public:
+	void InitGroupPawn(int NewIndex);
+
+	UFUNCTION(BlueprintCallable)
+	void ActivatePawn();
+	UFUNCTION(BlueprintCallable)
+	void DisablePawn();
+	UFUNCTION(BlueprintCallable)
+	void UnActivatePawn();
+	
 private:
 	UPROPERTY()
 	int Index;
 
 	UPROPERTY()
-	bool bIsActivated = true;
+	EAIPawnStateID PawnStateID;
+	
+	// UPROPERTY()
+	// bool bIsActivated = true;
 
 public:
 	UFUNCTION()
@@ -46,10 +62,16 @@ public:
 	int GetIndex() const;
 
 	UFUNCTION(BlueprintCallable)
-	void SetIsActivated(bool IsActivated);
+	void SetPawnStateID(const EAIPawnStateID NewPawnStateID);
 	UFUNCTION(BlueprintCallable)
-	bool GetIsActivated() const;
+	EAIPawnStateID GetPawnStateID() const;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveNewStateID(const EAIPawnStateID NewPawnStateID);
 	
-public:
-	void InitGroupPawn(int NewIndex);
+	// UFUNCTION(BlueprintCallable)
+	// void SetIsActivated(bool IsActivated);
+	// UFUNCTION(BlueprintCallable)
+	// bool GetIsActivated() const;
+	
+
 };

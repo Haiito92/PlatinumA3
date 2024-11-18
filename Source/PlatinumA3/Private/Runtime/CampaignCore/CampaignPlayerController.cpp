@@ -8,7 +8,7 @@
 #include "Runtime/CampaignCore/CampaignGameMode.h"
 #include "Runtime/CampaignCore/CampaignModeInputData.h"
 #include "Runtime/CampaignCore/CampaignModeSettings.h"
-#include "Runtime/CampaignCore/GameStateID.h"
+#include "Runtime/CampaignCore/CampaignGameStateID.h"
 
 void ACampaignPlayerController::BeginPlay()
 {
@@ -16,6 +16,12 @@ void ACampaignPlayerController::BeginPlay()
 
 	CampaignGameMode = Cast<ACampaignGameMode>(GetWorld()->GetAuthGameMode());
 	
+	
+}
+
+void ACampaignPlayerController::SetupInputComponent()
+{
+	Super::SetupInputComponent();
 	BindToInputs();
 }
 
@@ -38,7 +44,7 @@ void ACampaignPlayerController::BindToInputs()
 
 void ACampaignPlayerController::OnFinishGameInputAction()
 {
-	if(CampaignGameMode->GetGameStateID() != EGameStateID::Finishable) return;
+	if(CampaignGameMode->GetGameStateID() != ECampaignGameStateID::Finishable) return;
 
 	CampaignGameMode->FinishGame();
 }

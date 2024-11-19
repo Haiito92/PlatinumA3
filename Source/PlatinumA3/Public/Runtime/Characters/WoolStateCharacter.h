@@ -105,7 +105,7 @@ public:
 	void UpdateHolding();
 
 	UFUNCTION(BlueprintCallable)
-	void StartExecuteLaunch();
+	void StartExecuteLaunch(const FHitResult& Hit);
 	
 	UFUNCTION(BlueprintCallable)
 	void LaunchSomething();

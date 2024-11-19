@@ -100,11 +100,18 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 		
 		AActor* Catchable = HeldComponent->GetOwner();
 
-		if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
-		{
-			//CatchableCharacter->GetCharacterMovement()->Movement
-		}
-		else if (Catchable && Catchable->Implements<UCatchable>())
+		// if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
+		// {
+		// 	CatchableCharacter->LandedDelegate.AddDynamic(this, &AWoolStateCharacter::StartExecuteLaunch);
+		// 	JUICY_OnThrowSomething();
+		// }
+		// else if (Catchable && Catchable->Implements<UCatchable>())
+		// {
+		// 	ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
+		// 	JUICY_OnThrowSomething();
+		// }
+
+		if (Catchable && Catchable->Implements<UCatchable>())
 		{
 			ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
 			JUICY_OnThrowSomething();
@@ -113,7 +120,6 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 		PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
 		JUICY_OnStopHolding();
-
 	}
 }
 
@@ -129,9 +135,9 @@ void AWoolStateCharacter::UpdateHolding()
 	}
 }
 
-void AWoolStateCharacter::StartExecuteLaunch()
+void AWoolStateCharacter::StartExecuteLaunch(const FHitResult& Hit)
 {
-	
+	//ICatchable::Execute_Launch(Hit.), Original_SimulatePhysics, Original_CollisionProfileName, LaunchTransTime);
 }
 
 void AWoolStateCharacter::LaunchSomething()

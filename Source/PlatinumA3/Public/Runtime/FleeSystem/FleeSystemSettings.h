@@ -23,6 +23,15 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category="Flee Behaviour")
 	float FleeSpeed;
 
+	UPROPERTY(Config, EditAnywhere, Category="Flee Behaviour")
+	bool CanFleeWalkOffLedges;
+	
 	UPROPERTY(Config,EditAnywhere, Category="Follow Flee Behaviour")
 	float FollowFleeDetectionRadius;
+
+	UPROPERTY(Config, EditAnywhere, Category="Follow Flee Behaviour")
+	float FollowFleeSpeed;
+
+	UPROPERTY(Config, EditAnywhere, Category="Follow Flee Behaviour")
+	bool CanFollowFleeWalkOffLedges;
 };

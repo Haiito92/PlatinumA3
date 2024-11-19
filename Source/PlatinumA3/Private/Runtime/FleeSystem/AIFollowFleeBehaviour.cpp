@@ -48,10 +48,11 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
-	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
 	if(MovementComponent != nullptr)
 	{
-		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FleeSpeed;
+		MovementComponent->bCanWalkOffLedges = FleeSystemSettings->CanFollowFleeWalkOffLedges;
+		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FollowFleeSpeed;
 	}
 	
 	GEngine->AddOnScreenDebugMessage(

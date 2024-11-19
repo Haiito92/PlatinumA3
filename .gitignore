@@ -85,3 +85,11 @@ Plugins/**/Intermediate/*
 # Cache files for the editor to use
 DerivedDataCache/*
 .idea
+Binaries/Win64/PlatinumA3Editor-Win64-DebugGame.target
+Binaries/Win64/UnrealEditor-LocalMultiplayer-Win64-DebugGame.dll
+Binaries/Win64/UnrealEditor-PlatinumA3-Win64-DebugGame.dll
+Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets-Win64-DebugGame.dll
+Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorEditorPlugin-Win64-DebugGame.dll
+Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin-Win64-DebugGame.dll
+Plugins/StateMachine/Binaries/Win64/UnrealEditor-StateMachine-Win64-DebugGame.dll
+PlatinumA3.sln.DotSettings.user

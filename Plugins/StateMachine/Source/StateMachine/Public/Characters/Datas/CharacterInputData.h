@@ -20,13 +20,13 @@ public:
 	TObjectPtr<UInputAction> MoveAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
-	TObjectPtr<UInputAction> SprintAction;
-
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
 	TObjectPtr<UInputAction> HoldingAction;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
 	TObjectPtr<UInputAction> LaunchAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Inputs|Action", Meta = (DisplayThumbnail = false))
+	TObjectPtr<UInputAction> RallyAction;
 
 	
 };

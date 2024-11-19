@@ -6,6 +6,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+enum class ECampaignGameStateID : uint8;
 class ASheepCharacter;
 class ACampaignPlayerStart;
 class AStateCharacter;
@@ -20,56 +21,61 @@ class PLATINUMA3_API ACampaignGameMode : public AGameModeBase
 #pragma region Defaults
 private:
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 #pragma endregion
 
+#pragma region Initialization
+	void InitWorldSubsystems() const;
+	void BindToWorldSubsystemsEvents() const;
+	
+	void InitGameInstanceSubsystems() const;
+
+	// virtual void InitializeHUDForPlayer_Implementation(APlayerController* NewPlayer) override;
+#pragma endregion
+
+
+#pragma region OnEndPlay
+private:
+	void UnbindToWorldSubsystemsEvents() const;
+#pragma endregion 
+	
 #pragma region Players
 	void FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const;
 
-	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;
+	TArray<AStateCharacter*> SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;
 
 	void CreateAndInitPlayers() const;
 
+	void FindAndInitSplineCamera(TArray<AStateCharacter*>& Characters) const;
+
 	TSubclassOf<AStateCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
 #pragma endregion 	
-	
-#pragma region Game
-private:
-	UPROPERTY()
-	TArray<ASheepCharacter*> AllSheeps; 
 
-	UPROPERTY()
-	int NbSheepToSucceedLevel;
 
+#pragma region GameLoop
+public:
+	UFUNCTION(BlueprintCallable)
+	void FinishGame();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishedEvent);
 	UPROPERTY()
-	int NbSheepLeft;
-	
-	UPROPERTY()
-	int SheepSaved;
+	FGameFinishedEvent GameFinishedEvent;
 	
 public:
-	void SetNbSheepToSucceedLevel(int Amount);
-	void AddSavedSheep(int Value);
+	UFUNCTION(BlueprintCallable)
+	ECampaignGameStateID GetGameStateID() const;
+	UFUNCTION(BlueprintCallable)
+	void SetGameStateID(ECampaignGameStateID NewGameStateID);
+	
+protected:
+	UPROPERTY(BlueprintReadOnly)
+	ECampaignGameStateID GameStateID;
 
 private:
-	
-	void FindAllSheepsInWorld(TArray<ASheepCharacter*>& InOutSheeps);
-	void SubscribeToSheepsEvents() const;
+	UFUNCTION()
+	void OnNotEnoughSheepLeftEvent();
 
 	UFUNCTION()
-	void OnSheepKillEvent();
-	
-	void RemoveSheepLeft(int Value);
-	
-	void CheckWinOrLose() const;
-	bool HasSavedEnoughSheeps() const;
+	void OnReachedSheepAmountEvent();
 
-	void Win() const;
-	void Lose() const;
-
-public:
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FEndGameEvent, bool, HasWon);
-
-	UPROPERTY()
-	FEndGameEvent EndGameEvent;
 #pragma endregion 
 };

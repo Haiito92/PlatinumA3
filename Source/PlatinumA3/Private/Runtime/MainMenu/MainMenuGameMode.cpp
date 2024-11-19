@@ -12,12 +12,7 @@ void AMainMenuGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	CreateAndInitPlayers();
-
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		3.f,
-		FColor::Turquoise,
-		TEXT("MM GM Begin play"));
+	
 	
 }
 #pragma endregion

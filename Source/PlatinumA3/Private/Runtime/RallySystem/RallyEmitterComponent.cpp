@@ -42,7 +42,7 @@ void URallyEmitterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion
 
 #pragma region EmitSignal
-void URallyEmitterComponent::EmitSignal() const
+void URallyEmitterComponent::EmitSignal()
 {
 	const FVector Location = GetOwner()->GetActorLocation();
 
@@ -67,6 +67,9 @@ void URallyEmitterComponent::EmitSignal() const
 
 		RallyReceiverComponent->Notify(Location);
 	}
+
+	//Juicy Blueprint Event
+	JuicyEmitSignal();
 }
 
 #pragma endregion 

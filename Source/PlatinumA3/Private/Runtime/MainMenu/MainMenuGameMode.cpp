@@ -12,6 +12,7 @@ void AMainMenuGameMode::BeginPlay()
 	Super::BeginPlay();
 
 	CreateAndInitPlayers();
+	
 }
 #pragma endregion
 

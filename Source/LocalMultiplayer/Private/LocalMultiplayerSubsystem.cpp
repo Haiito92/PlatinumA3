@@ -8,6 +8,8 @@
 
 void ULocalMultiplayerSubsystem::CreateAndInitPlayers(ELocalMultiplayerInputMappingType MappingType)
 {
+	CurrentInputMappingType = MappingType;
+	
 	FString OutError;
 
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
@@ -88,4 +90,14 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex,
 	FModifyContextOptions ModifyContextOptions;
 	ModifyContextOptions.bForceImmediately = true;
 	InputSubsystem->AddMappingContext(LocalMultiplayerSettings->GamepadProfileData.GetIMCFromType(MappingType),0, ModifyContextOptions);
+}
+
+ELocalMultiplayerInputMappingType ULocalMultiplayerSubsystem::GetCurrentInputMappingType() const
+{
+	return CurrentInputMappingType;
+}
+
+void ULocalMultiplayerSubsystem::SetCurrentInputMappingType(const ELocalMultiplayerInputMappingType NewType)
+{
+	CurrentInputMappingType = NewType;
 }

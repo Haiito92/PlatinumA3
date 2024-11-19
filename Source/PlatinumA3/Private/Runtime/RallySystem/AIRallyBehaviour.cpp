@@ -35,9 +35,10 @@ void UAIRallyBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();
 	if(RallySystemSettings == nullptr) return;
 	
-	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
 	if(MovementComponent != nullptr)
 	{
+		MovementComponent->bCanWalkOffLedges = RallySystemSettings->CanRallyWalkOffLedges;
 		MovementComponent->MaxWalkSpeed = RallySystemSettings->RallySpeed;
 	}
 	

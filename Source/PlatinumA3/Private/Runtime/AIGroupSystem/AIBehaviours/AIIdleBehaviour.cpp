@@ -33,13 +33,12 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	
 	Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 	GivePawnNewDirection(Data);
-
 	
-
-	UCharacterMovementComponent* MovementComponent = Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
 	if(MovementComponent != nullptr)
 	{
 		MovementComponent->MaxWalkSpeed = AIDefaultBehavioursSettings->WalkSpeed;
+		MovementComponent->bCanWalkOffLedges = AIDefaultBehavioursSettings->CanIdleWalkOffLedges;
 	}
 }
 

@@ -20,4 +20,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")
 	float WalkSpeed;
+
+	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")
+	bool CanIdleWalkOffLedges;
 };

@@ -44,11 +44,11 @@ void UAISheepInPenBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	if(SheepPenSystemSettings == nullptr) return;
 
-	UCharacterMovementComponent* CharacterMovement =
-		Cast<UCharacterMovementComponent>(Pawn->GetMovementComponent());
+	UCharacterMovementComponent* CharacterMovement = Pawn->GetCharacterMovement();
 	if(CharacterMovement == nullptr) return;
 
 	CharacterMovement->MaxWalkSpeed = SheepPenSystemSettings->SheepSpeedInPen;
+	CharacterMovement->bCanWalkOffLedges = SheepPenSystemSettings->CanSheepWalkOffLedges;
 	
 	// Super::BehaviourEntry(Pawn);
 	// GEngine->AddOnScreenDebugMessage(

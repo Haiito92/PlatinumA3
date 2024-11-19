@@ -23,4 +23,7 @@ public:
 	
 	UPROPERTY(Config, EditAnywhere, Category="Rally Behaviour")
 	float RallySpeed;
+
+	UPROPERTY(Config, EditAnywhere, Category="Rally Behaviour")
+	bool CanRallyWalkOffLedges;
 };

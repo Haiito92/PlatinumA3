@@ -5,6 +5,7 @@
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystemSettings.h"
+#include "Runtime/AIGroupSystem/AIPawnStateID.h"
 
 
 #pragma region SystemInitialization
@@ -115,7 +116,7 @@ void UAIGroupSubsystem::GroupUpdate()
 		if(Pawn == nullptr) continue;
 
 		//Check That pawn is activated
-		if(!Pawn->GetIsActivated()) continue;
+		if(Pawn->GetPawnStateID() != EAIPawnStateID::Activated) continue;
 		
 		//Get first valid behaviour
 		UAIBehaviour* NewBehaviour = FindFirstValidBehaviour(Pawn);

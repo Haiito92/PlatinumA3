@@ -3,6 +3,10 @@
 
 #include "Runtime/SheepSystem/SheepComponent.h"
 
+#include "Runtime/SheepSystem/SheepPenSystemSettings.h"
+#include "Runtime/SheepSystem/SheepStateFlag.h"
+#include "Runtime/SheepSystem/SheepSubsystem.h"
+
 #pragma region Unreal Defaults
 
 // Sets default values for this component's properties
@@ -21,6 +25,7 @@ void USheepComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
+	
 	// ...
 	
 }
@@ -35,14 +40,38 @@ void USheepComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 }
 
 
+
 #pragma endregion 
 #pragma region Sheep
 
+void USheepComponent::InitSheep(int Index)
+{
+	SheepIndex = Index;
+	
+}
 
 void USheepComponent::Capture()
 {
 	bIsCaptured = true;
-	
+
+	JuicyCapture();
+}
+
+void USheepComponent::Die()
+{
+	bIsCaptured = false;
+	SheepDeathEvent.Broadcast(SheepIndex);
+
+	JuicyDie();
+}
+
+int USheepComponent::GetSheepIndex() const
+{
+	return SheepIndex;
+}
+void USheepComponent::SetIndex(const int Index)
+{
+	SheepIndex = Index;
 }
 
 bool USheepComponent::GetIsCaptured() const
@@ -58,11 +87,8 @@ const FVector& USheepComponent::GetCapturedRoamingLocation() const
 {
 	return CapturedRoamingLocation;
 }
-
 void USheepComponent::SetCapturedRoamingLocation(const FVector& NewValue)
 {
 	CapturedRoamingLocation = NewValue;
 }
-
-
 #pragma endregion 

@@ -11,5 +11,7 @@ public class PlatinumA3 : ModuleRules
 		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "DeveloperSettings", "StateMachine" });
 		
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer", "StateMachine", "FocusableWidgets", "AIModule"});
+		
+		PrivateDependencyModuleNames.AddRange(new string[] {"Slate", "SlateCore", "UMG"});
 	}
 }

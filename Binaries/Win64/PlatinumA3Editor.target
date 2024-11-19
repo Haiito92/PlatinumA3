@@ -6286,6 +6286,14 @@
 			"Type": "SymbolFile"
 		},
 		{
+			"Path": "$(ProjectDir)/Binaries/Win64/UnrealEditor-PlatinumA3Editor.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Binaries/Win64/UnrealEditor-PlatinumA3Editor.pdb",
+			"Type": "SymbolFile"
+		},
+		{
 			"Path": "$(ProjectDir)/Binaries/Win64/UnrealEditor.modules",
 			"Type": "RequiredResource"
 		},

@@ -32,7 +32,14 @@ public:
 
 	void AssignGamepadInputMapping(int PlayerIndex, ELocalMultiplayerInputMappingType MappingType) const;
 
+public:
+	ELocalMultiplayerInputMappingType GetCurrentInputMappingType() const;
+	void SetCurrentInputMappingType(const ELocalMultiplayerInputMappingType NewType);
+	
 protected:
+	UPROPERTY()
+	ELocalMultiplayerInputMappingType CurrentInputMappingType;
+	
 	UPROPERTY()
 	uint8 LastAssignedPlayerIndex = -1;
 

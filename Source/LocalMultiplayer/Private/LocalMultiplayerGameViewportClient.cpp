@@ -20,12 +20,15 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 {
 	ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
+	if(LocalMultiplayerSettings == nullptr || LocalMultiplayerSubsystem == nullptr) return Super::InputKey(EventArgs);
 
+	ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
+	
 	int PlayerIndex = -1;
 	if (!EventArgs.IsGamepad())
 	{
 		const int KeyboardProfileIndex = LocalMultiplayerSettings->FindKeyboardProfileIndexFromKey(
-			EventArgs.Key, ELocalMultiplayerInputMappingType::InGame);
+			EventArgs.Key, CurrentMappingType);
 		if (KeyboardProfileIndex >= 0)
 		{
 			PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
@@ -33,7 +36,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 			{
 				PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfile(KeyboardProfileIndex);
 				LocalMultiplayerSubsystem->AssignKeyboardMapping(PlayerIndex, KeyboardProfileIndex,
-				                                                 ELocalMultiplayerInputMappingType::InGame);
+				                                                 CurrentMappingType);
 
 				//const ULocalPlayer* LocalPlayer = GameInstance->GetLocalPlayerByIndex(PlayerIndex);
 				//return LocalPlayer->PlayerController->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), EventArgs.IsGamepad(), EventArgs.InputDevice));
@@ -50,7 +53,7 @@ bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& Eve
 		{
 			PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
 			LocalMultiplayerSubsystem->
-				AssignGamepadInputMapping(PlayerIndex, ELocalMultiplayerInputMappingType::InGame);
+				AssignGamepadInputMapping(PlayerIndex, CurrentMappingType);
 
 
 			//return LocalPlayer->PlayerController->InputKey(FInputKeyParams(EventArgs.Key, EventArgs.Event, static_cast<double>(EventArgs.AmountDepressed), EventArgs.IsGamepad(), EventArgs.InputDevice));
@@ -74,11 +77,16 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 	ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
 
+	if(LocalMultiplayerSettings == nullptr || LocalMultiplayerSubsystem == nullptr)
+		return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
+
+	ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
+	
 	int PlayerIndex = -1;
 	if (!bGamepad)
 	{
 		const int KeyboardProfileIndex = LocalMultiplayerSettings->FindKeyboardProfileIndexFromKey(
-			Key, ELocalMultiplayerInputMappingType::InGame);
+			Key, CurrentMappingType);
 		if (KeyboardProfileIndex >= 0)
 		{
 			PlayerIndex = LocalMultiplayerSubsystem->GetAssignedPlayerIndexFromKeyboardProfileIndex(KeyboardProfileIndex);
@@ -86,7 +94,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 			{
 				PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToKeyboardProfile(KeyboardProfileIndex);
 				LocalMultiplayerSubsystem->AssignKeyboardMapping(PlayerIndex, KeyboardProfileIndex,
-																 ELocalMultiplayerInputMappingType::InGame);
+																 CurrentMappingType);
 			}
 		}
 	}
@@ -99,7 +107,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 		{
 			PlayerIndex = LocalMultiplayerSubsystem->AssignNewPlayerToGamepadDeviceID(DeviceID);
 			LocalMultiplayerSubsystem->
-				AssignGamepadInputMapping(PlayerIndex, ELocalMultiplayerInputMappingType::InGame);
+				AssignGamepadInputMapping(PlayerIndex, CurrentMappingType);
 		}
 	}
 

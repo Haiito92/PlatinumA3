@@ -6,7 +6,18 @@
 #include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
 
+#pragma region UnrealDefaults
+void AMainMenuGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CreateAndInitPlayers();
+	
+}
+#pragma endregion
+
 #pragma region LocalPlayers
+
 void AMainMenuGameMode::CreateAndInitPlayers() const
 {
 	UGameInstance* GameInstance = GetGameInstance();

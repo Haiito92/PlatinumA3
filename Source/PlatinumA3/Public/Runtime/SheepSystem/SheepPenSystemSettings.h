@@ -20,4 +20,7 @@ public:
 	
 	UPROPERTY(Config, EditAnywhere, Category="Sheep In Pen")
 	float SheepSpeedInPen;
+
+	UPROPERTY(Config, EditAnywhere, Category="Sheep In Pen")
+	bool CanSheepWalkOffLedges;
 };

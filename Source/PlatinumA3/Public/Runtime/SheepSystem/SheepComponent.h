@@ -10,7 +10,7 @@
 enum class ESheepStateFlag;
 class USheepSubsystem;
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PLATINUMA3_API USheepComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -38,8 +38,13 @@ public:
 public:
 	UFUNCTION(BlueprintCallable)
 	void Capture();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
+	void JuicyCapture();
+	
 	UFUNCTION(BlueprintCallable)
 	void Die();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
+	void JuicyDie();
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSheepDeathEvent, int, Index);
 	UPROPERTY()

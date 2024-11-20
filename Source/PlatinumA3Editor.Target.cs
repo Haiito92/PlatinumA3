@@ -16,6 +16,6 @@ public class PlatinumA3EditorTarget : TargetRules
 	
 	private void RegisterModulesCreatedByRider()
 	{
-		ExtraModuleNames.AddRange(new string[] { "LocalMultiplayer" });
+		ExtraModuleNames.AddRange(new string[] { "LocalMultiplayer", "PlatinumA3Editor" });
 	}
 }

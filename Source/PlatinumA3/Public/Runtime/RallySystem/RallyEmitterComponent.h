@@ -7,7 +7,7 @@
 #include "RallyEmitterComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent),Blueprintable)
 class PLATINUMA3_API URallyEmitterComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -29,7 +29,10 @@ public:
 #pragma region EmitSignal;
 public:
 	UFUNCTION(BlueprintCallable)
-	void EmitSignal() const;
+	void EmitSignal();
+public:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
+	void JuicyEmitSignal();
 private:
 	UPROPERTY()
 	float SignalRadius;

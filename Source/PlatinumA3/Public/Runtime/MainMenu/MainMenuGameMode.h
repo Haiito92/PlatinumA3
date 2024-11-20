@@ -13,7 +13,10 @@ UCLASS()
 class PLATINUMA3_API AMainMenuGameMode : public AGameModeBase
 {
 	GENERATED_BODY()
-
+#pragma region Unreal Defaults
+	virtual void BeginPlay() override;
+#pragma endregion 
+	
 #pragma region LocalPlayers
 void CreateAndInitPlayers() const;
 #pragma endregion 

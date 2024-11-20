@@ -14,7 +14,6 @@
 #include "Runtime/CampaignCore/CampaignGameStateID.h"
 #include "Runtime/CampaignCore/CampaignHUD.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
-#include "Runtime/Sheep/SheepCharacter.h"
 #include "Runtime/SheepSystem/SheepSubsystem.h"
 
 #pragma region Defaults

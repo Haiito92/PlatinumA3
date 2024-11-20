@@ -66,12 +66,18 @@ void URallyReceiverComponent::Notify(const FVector& NewDestination)
 		&URallyReceiverComponent::OnNotifyTimeOut,
 		RallySystemSettings->RallyTime,
 		false);
+
+	//Juicy
+	JuicyNotify();
 }
 
 void URallyReceiverComponent::UnNotify()
 {
 	bIsNotified = false;
 	IsNotifiedTimerHandle.Invalidate();
+
+	//Juicy
+	JuicyUnNotify();
 }
 
 void URallyReceiverComponent::OnNotifyTimeOut()

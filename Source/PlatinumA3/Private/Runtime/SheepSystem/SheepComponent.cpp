@@ -53,13 +53,16 @@ void USheepComponent::InitSheep(int Index)
 void USheepComponent::Capture()
 {
 	bIsCaptured = true;
-	
+
+	JuicyCapture();
 }
 
 void USheepComponent::Die()
 {
 	bIsCaptured = false;
 	SheepDeathEvent.Broadcast(SheepIndex);
+
+	JuicyDie();
 }
 
 int USheepComponent::GetSheepIndex() const

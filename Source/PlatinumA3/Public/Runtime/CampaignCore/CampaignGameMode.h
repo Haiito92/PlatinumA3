@@ -57,7 +57,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void FinishGame();
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishedEvent);
-	UPROPERTY()
+	UPROPERTY(BlueprintAssignable)
 	FGameFinishedEvent GameFinishedEvent;
 	
 public:

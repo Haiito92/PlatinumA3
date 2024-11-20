@@ -7,7 +7,7 @@
 #include "RallyReceiverComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PLATINUMA3_API URallyReceiverComponent : public UActorComponent
 {
 	GENERATED_BODY()
@@ -25,6 +25,7 @@ public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
 	                           FActorComponentTickFunction* ThisTickFunction) override;
 #pragma endregion
+
 #pragma region Notify
 private:
 	UPROPERTY()
@@ -42,5 +43,11 @@ public:
 	void Notify(const FVector& NewDestination);
 	void UnNotify();
 	void OnNotifyTimeOut();
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
+	void JuicyNotify();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
+	void JuicyUnNotify();
 #pragma endregion 
 };

@@ -7,6 +7,7 @@
 #include "WoolStateCharacter.generated.h"
 
 
+class UThrowComponent;
 class UPhysicsHandleComponent;
 class USceneComponent;
 
@@ -93,7 +94,8 @@ public:
 	UPROPERTY()
 	bool Original_SimulatePhysics;
 
-
+	UPROPERTY()
+	TObjectPtr<UThrowComponent> ThrowComponent;
 	
 	UFUNCTION(BlueprintCallable)
 	void StartHolding();
@@ -101,8 +103,7 @@ public:
 	UFUNCTION(BlueprintCallable)
 	void StopHolding(float TransTime);
 
-	UFUNCTION(BlueprintCallable)
-	void UpdateHolding();
+
 
 	UFUNCTION(BlueprintCallable)
 	void StartExecuteLaunch(const FHitResult& Hit);

@@ -26,6 +26,7 @@ bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
+	
 	const int Index = Pawn->GetIndex();
 	FIdlePawnData& Data = IdlingPawnDatas[Index];
 
@@ -33,7 +34,6 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	if(AIDefaultBehavioursSettings == nullptr) return;
 
 	Data.IdleAnchorPosition = Pawn->GetActorLocation();
-	UE_LOGFMT(LogTemp, Warning,"Start position : X:{O}, Y:{1}, Z:{2}", Data.IdleAnchorPosition.X,Data.IdleAnchorPosition.Y,Data.IdleAnchorPosition.Z);
 	Data.LastIdleEndPosition = Pawn->GetActorLocation();
 	Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 	GivePawnNewDirection(Data);
@@ -65,12 +65,13 @@ void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 		Data.LastIdleEndPosition = Pawn->GetActorLocation();
 		Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 		GivePawnNewDirection(Data);
+		// Pawn->SetBehaviourStartingRotation(Pawn->GetActorRotation());
 	}
 
-	Pawn->SetActorRotation(
-		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
-			Pawn->GetActorLocation() + Data.IdlingDirection)
-			);
+	
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+				Pawn->GetActorLocation() + Data.IdlingDirection);
+	Pawn->RotateAICharacter(LookAtRotation);
 	Pawn->AddMovementInput(Data.IdlingDirection,1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(

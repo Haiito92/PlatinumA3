@@ -51,7 +51,7 @@ private:
 
 	UPROPERTY()
 	EAIPawnStateID PawnStateID;
-	
+
 	// UPROPERTY()
 	// bool bIsActivated = true;
 
@@ -67,11 +67,21 @@ public:
 	EAIPawnStateID GetPawnStateID() const;
 	UFUNCTION(BlueprintImplementableEvent)
 	void ReceiveNewStateID(const EAIPawnStateID NewPawnStateID);
+
+
+public:
 	
+	UFUNCTION()
+	void RotateAICharacter(const FRotator& GoalRotation);
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveRotateAICharacter(const FRotator& GoalRotation);
+protected:
+	UPROPERTY(BlueprintReadWrite)
+	bool RotationHandled = false;
+	// UFUNCTION()
+	// void RotateCharacter(const FRotator& StartingRotation, const FRotator& GoalRotation, const float Alpha, const bool ShortestPath);
 	// UFUNCTION(BlueprintCallable)
 	// void SetIsActivated(bool IsActivated);
 	// UFUNCTION(BlueprintCallable)
 	// bool GetIsActivated() const;
-	
-
 };

@@ -16,6 +16,9 @@ class PLATINUMA3_API UAIDefaultBehavioursSettings : public UDeveloperSettings
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")
+	float IdleRadius;
+	
+	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")
 	float DirectionChangeTime;
 
 	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")

@@ -5,6 +5,7 @@
 
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Logging/StructuredLog.h"
 #include "Runtime/AIGroupSystem/AIDefaultBehavioursSettings.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 
@@ -25,12 +26,15 @@ bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
-	int Index = Pawn->GetIndex();
+	const int Index = Pawn->GetIndex();
 	FIdlePawnData& Data = IdlingPawnDatas[Index];
 
 	const UAIDefaultBehavioursSettings* AIDefaultBehavioursSettings = GetDefault<UAIDefaultBehavioursSettings>();
 	if(AIDefaultBehavioursSettings == nullptr) return;
-	
+
+	Data.IdleAnchorPosition = Pawn->GetActorLocation();
+	UE_LOGFMT(LogTemp, Warning,"Start position : X:{O}, Y:{1}, Z:{2}", Data.IdleAnchorPosition.X,Data.IdleAnchorPosition.Y,Data.IdleAnchorPosition.Z);
+	Data.LastIdleEndPosition = Pawn->GetActorLocation();
 	Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 	GivePawnNewDirection(Data);
 	
@@ -45,15 +49,21 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
-
-	int Index = Pawn->GetIndex();
+	
+	const UAIDefaultBehavioursSettings* AIDefaultBehavioursSettings = GetDefault<UAIDefaultBehavioursSettings>();
+	if(AIDefaultBehavioursSettings == nullptr) return;
+	
+	const int Index = Pawn->GetIndex();
 	
 	FIdlePawnData& Data = IdlingPawnDatas[Index];
 
 	Data.Timer -= DeltaTime;
-	if(Data.Timer <= 0.0f)
+	
+	if(Data.Timer <= 0.0f
+		|| FVector::Distance(Data.IdlingDirection, Pawn->GetActorLocation()) <= 20.0f)
 	{
-		Data.Timer = 3.0f;
+		Data.LastIdleEndPosition = Pawn->GetActorLocation();
+		Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 		GivePawnNewDirection(Data);
 	}
 
@@ -88,7 +98,22 @@ void UAIIdleBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 #pragma endregion
 void UAIIdleBehaviour::GivePawnNewDirection(FIdlePawnData& Data)
 {
-	FVector randDir = FMath::VRand();
+	FVector Location;
+
+	const UAIDefaultBehavioursSettings* Settings = GetDefault<UAIDefaultBehavioursSettings>();
+	if(Settings == nullptr) return;
+	
+	const float Radius = GetDefault<UAIDefaultBehavioursSettings>()->IdleRadius;
+	
+	Location.X = Data.IdleAnchorPosition.X + FMath::RandRange(-Radius, Radius); 
+	Location.Y = Data.IdleAnchorPosition.Y + FMath::RandRange(-Radius, Radius); 
+	Location.Z = Data.IdleAnchorPosition.Z;
+	
+	FVector randDir = Location - Data.LastIdleEndPosition;
+	UE_LOGFMT(LogTemp, Warning,"Ilde Location : X:{O}, Y:{1}, Z:{2}",
+		Location.X,Location.Y,Location.Z);
+
+
 	randDir.Z=0;
 	randDir.Normalize();
 	Data.IdlingDirection = randDir;

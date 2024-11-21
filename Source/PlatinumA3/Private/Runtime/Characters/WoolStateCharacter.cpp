@@ -68,6 +68,8 @@ void AWoolStateCharacter::StartHolding()
 		// Check if the actor implements the interface
 		ThrowComponent->Catch(PhysicsHandle, HoldingTarget);
 		IsHoldingSomething = true;
+
+		
 	}
 }
 

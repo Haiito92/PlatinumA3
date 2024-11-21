@@ -33,6 +33,9 @@ public:
 public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void SmoothRotate(const FRotator& InGoalRotation);
+
+	UFUNCTION(BlueprintCallable)
+	void StopSmoothRotate();
 	
 protected:
 

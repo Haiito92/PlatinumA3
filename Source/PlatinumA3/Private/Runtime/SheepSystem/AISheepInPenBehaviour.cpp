@@ -71,10 +71,10 @@ void UAISheepInPenBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 	Direction.Z = 0;
 	Direction.Normalize();
 
-	Pawn->SetActorRotation(
-		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
-			Pawn->GetActorLocation() + Direction)
-			);
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+			Pawn->GetActorLocation() + Direction);
+	
+	Pawn->StartRotateAICharacter(LookAtRotation);
 	Pawn->AddMovementInput(Direction, 1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(
@@ -88,6 +88,8 @@ void UAISheepInPenBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
+	Pawn->StopRotateAICharacter();
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

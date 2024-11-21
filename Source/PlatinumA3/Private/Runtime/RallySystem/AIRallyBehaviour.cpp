@@ -42,11 +42,11 @@ void UAIRallyBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = RallySystemSettings->RallySpeed;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("RALLY ENTRY"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("RALLY ENTRY"));
 }
 
 void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -59,10 +59,9 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime
 	Direction.Normalize();
 
 	//Set Sheep Rotation
-	Pawn->SetActorRotation(
-		UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
-			Pawn->GetActorLocation() + Direction)
-			);
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+			Pawn->GetActorLocation() + Direction);
+	Pawn->StartRotateAICharacter(LookAtRotation);
 	Pawn->AddMovementInput(Direction, 1.0f);
 }
 
@@ -70,9 +69,11 @@ void UAIRallyBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("RALLY EXIT"));
+	Pawn->StopRotateAICharacter();
+
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("RALLY EXIT"));
 }

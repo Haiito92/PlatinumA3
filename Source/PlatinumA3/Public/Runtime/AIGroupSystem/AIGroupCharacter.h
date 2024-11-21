@@ -72,9 +72,13 @@ public:
 public:
 	
 	UFUNCTION()
-	void RotateAICharacter(const FRotator& GoalRotation);
+	void StartRotateAICharacter(const FRotator& GoalRotation);
 	UFUNCTION(BlueprintImplementableEvent)
-	void ReceiveRotateAICharacter(const FRotator& GoalRotation);
+	void ReceiveStartRotateAICharacter(const FRotator& GoalRotation);
+	UFUNCTION()
+	void StopRotateAICharacter();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStopRotateAICharacter();
 protected:
 	UPROPERTY(BlueprintReadWrite)
 	bool RotationHandled = false;

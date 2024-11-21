@@ -55,11 +55,11 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FollowFleeSpeed;
 	}
 	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("FOLLOW FLEE ENTRY"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("FOLLOW FLEE ENTRY"));
 }
 
 void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -83,8 +83,10 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 	Direction.Normalize();
 
 	const FVector PawnLocation = Pawn->GetActorLocation();
+
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction);
 	
-	Pawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction));
+	Pawn->StartRotateAICharacter(LookAtRotation);
 	Pawn->AddMovementInput(Direction,1.0f);
 }
 
@@ -92,10 +94,12 @@ void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("FOLLOW FLEE EXIT"));
+	Pawn->StopRotateAICharacter();
+
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("FOLLOW FLEE EXIT"));
 }
 #pragma endregion 

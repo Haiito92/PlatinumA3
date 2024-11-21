@@ -38,6 +38,10 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 	GivePawnNewDirection(Data);
 	
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+					Pawn->GetActorLocation() + Data.IdlingDirection);
+	Pawn->StartRotateAICharacter(LookAtRotation);
+	
 	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
 	if(MovementComponent != nullptr)
 	{
@@ -65,13 +69,14 @@ void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 		Data.LastIdleEndPosition = Pawn->GetActorLocation();
 		Data.Timer = AIDefaultBehavioursSettings->DirectionChangeTime;
 		GivePawnNewDirection(Data);
-		// Pawn->SetBehaviourStartingRotation(Pawn->GetActorRotation());
+		
+		const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+				Pawn->GetActorLocation() + Data.IdlingDirection);
+		Pawn->StartRotateAICharacter(LookAtRotation);
 	}
 
 	
-	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
-				Pawn->GetActorLocation() + Data.IdlingDirection);
-	Pawn->RotateAICharacter(LookAtRotation);
+	
 	Pawn->AddMovementInput(Data.IdlingDirection,1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(
@@ -85,6 +90,7 @@ void UAIIdleBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
+	Pawn->StopRotateAICharacter();
 	//int Index = Pawn->GetIndex();
 	//FIdlePawnData& Data = IdlingPawnDatas[Index];
 	//Data.TimerHandle.Invalidate();

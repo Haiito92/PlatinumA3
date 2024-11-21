@@ -45,9 +45,14 @@ void USmoothRotationComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
+void USmoothRotationComponent::StopSmoothRotate()
+{
+	SmoothRotateTimeline.Stop();
+}
+
 void USmoothRotationComponent::SetOwnerRotation()
 {
-	UE_LOGFMT(LogTemp, Warning, "SetOwnerRotation");
+	// UE_LOGFMT(LogTemp, Warning, "SetOwnerRotation");
 	
 	const float TimelineValue = SmoothRotateTimeline.GetPlaybackPosition();
 	const float CurveFloatValue = RotationCurve->GetFloatValue(TimelineValue);

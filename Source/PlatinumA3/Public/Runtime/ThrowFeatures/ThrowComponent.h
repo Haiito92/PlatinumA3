@@ -49,7 +49,7 @@ public:
 	UPROPERTY()
 	FTimerHandle TimerHandle;
 
-	UPROPERTY(BlueprintAssignable, Category="Throw Component Delegates")
+	UPROPERTY()
 	FSimpleDynamicDelegate LandingStep_Delegate;
 
 	UPROPERTY(BlueprintAssignable, Category="Throw Component Delegates")

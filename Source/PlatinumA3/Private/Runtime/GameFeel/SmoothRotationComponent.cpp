@@ -5,6 +5,7 @@
 
 #include "Components/TimelineComponent.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Logging/StructuredLog.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -26,7 +27,9 @@ void USmoothRotationComponent::BeginPlay()
 
 	FOnTimelineFloat TimelineCallback;
 	TimelineCallback.BindUFunction(this, FName("SetOwnerRotation"));
-	
+	SmoothRotateTimeline.AddInterpFloat(RotationCurve, TimelineCallback);
+
+	SmoothRotateTimeline.SetPlayRate(1/RotationTime);
 	// ...
 	
 }
@@ -44,6 +47,8 @@ void USmoothRotationComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 
 void USmoothRotationComponent::SetOwnerRotation()
 {
+	UE_LOGFMT(LogTemp, Warning, "SetOwnerRotation");
+	
 	const float TimelineValue = SmoothRotateTimeline.GetPlaybackPosition();
 	const float CurveFloatValue = RotationCurve->GetFloatValue(TimelineValue);
 

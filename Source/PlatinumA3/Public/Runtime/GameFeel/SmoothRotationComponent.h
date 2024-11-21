@@ -42,6 +42,9 @@ protected:
 	UPROPERTY()
 	FTimeline SmoothRotateTimeline;
 
+	UPROPERTY(EditAnywhere)
+	float RotationTime = 1.0f;
+	
 	UPROPERTY()
 	FRotator StartRotation;
 	UPROPERTY()

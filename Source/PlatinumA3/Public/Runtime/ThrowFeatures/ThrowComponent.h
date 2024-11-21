@@ -26,25 +26,22 @@ protected:
 	UFUNCTION()
 	void OnCustomLandedFunc();
 
-	UFUNCTION()
-	void OnPhysicsHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-	UFUNCTION()
-	void HandleComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
 public:
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 
 public:
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category="Components")
+	UPROPERTY(BlueprintReadOnly, Category="Components")
 	TObjectPtr<UPhysicsHandleComponent> PhysicsHandle;
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Components")
 	TObjectPtr<UPrimitiveComponent> PrimitiveComponent;
 	
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Components")
+	UPROPERTY(BlueprintReadOnly, Category="Components")
 	TObjectPtr<USceneComponent> HoldingTarget;
+
+	UPROPERTY(BlueprintReadOnly, Category="Components")
+	TObjectPtr<ACharacter> OwnerCharacterActor;
 
 	UPROPERTY()
 	FTimerHandle TimerHandle;
@@ -91,7 +88,4 @@ public:
 	
 	UFUNCTION(BlueprintCallable, Category = "Throw Component")
 	void Launch();
-
-	UFUNCTION(BlueprintCallable)
-	void StartExecuteLaunch(const FHitResult& Hit);
 };

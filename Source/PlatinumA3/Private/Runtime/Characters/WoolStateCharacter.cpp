@@ -59,6 +59,8 @@ void AWoolStateCharacter::StartHolding()
 {
 	AActor* Catchable = GetSomethingToHold();
 
+	if(!Catchable) return;
+	
 	ThrowComponent = Catchable->GetComponentByClass<UThrowComponent>();
 	
 	if(IsValid(ThrowComponent))

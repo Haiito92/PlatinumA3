@@ -17,7 +17,15 @@ public:
 	// UPROPERTY()
 	// FTimerHandle TimerHandle;
 	UPROPERTY()
-	FVector IdlingDirection = FVector::Zero();
+	FVector IdlingDirection = FVector::ZeroVector;
+
+	UPROPERTY()
+	FVector IdleAnchorPosition = FVector::ZeroVector;
+
+	UPROPERTY()
+	FVector LastIdleEndPosition = FVector::ZeroVector;
+
+	~FIdlePawnData() = default;
 };
 /**
  * 

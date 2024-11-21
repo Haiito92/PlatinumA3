@@ -9,6 +9,16 @@
 /**
  * 
  */
+//
+// USTRUCT()
+// struct FAIPawnBehaviourData
+// {
+// 	GENERATED_BODY()
+//
+// public:
+// 	UPROPERTY()
+// 	FRotator StartingRotation = FRotator::ZeroRotator;
+// };
 
 class AAIGroupPawn;
 class AAIGroupCharacter;
@@ -26,4 +36,8 @@ public:
 	virtual void BehaviourEntry(AAIGroupCharacter* Pawn);
 	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime);
 	virtual void BehaviourExit(AAIGroupCharacter* Pawn);
+
+protected:
+	// UPROPERTY()
+	// TArray<FAIPawnBehaviourData> PawnBehaviourDatas;
 };

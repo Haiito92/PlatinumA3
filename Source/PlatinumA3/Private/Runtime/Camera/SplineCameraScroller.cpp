@@ -55,15 +55,46 @@ void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharact
 void ASplineCameraScroller::UpdateSplineCamera()
 {
 	if(!m_Berger || !m_Chien || !m_CameraActor) return;
-	
-	FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
 
+	// float CharactersDistance = FVector::Distance(m_Berger->m_CameraActor->GetActorLocation(), m_Chien->GetActorLocation());
+	//
+	// FVector MyLocation = m_CameraActor->GetActorLocation();
+	// Direction = (InterpolatedLocation - MyLocation).GetSafeNormal();
+	//
+	// float Offset = FMath::Lerp(0, 100, CharactersDistance);
+	// CameraTargetLocation = CameraTargetLocation + -Direction * Offset;
+
+
+
+
+	
+	// FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
+	// FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
+	//
+	// FVector LerpedLocation = FMath::Lerp(m_CameraActor->GetActorLocation(), CameraTargetLocation, m_CameraMoveSpeed * GetWorld()->GetDeltaSeconds());
+	//
+	// m_CameraActor->SetActorLocation(LerpedLocation);
+
+
+
+
+
+
+
+
+	FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
 	FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
 
-	FVector LerpedLocation = FMath::Lerp(m_CameraActor->GetActorLocation(), CameraTargetLocation, m_CameraMoveSpeed * GetWorld()->GetDeltaSeconds());
-	
-	m_CameraActor->SetActorLocation(LerpedLocation);
+	float DistanceBetweenActors = FVector::Dist(m_Berger->GetActorLocation(), m_Chien->GetActorLocation());
+	float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
 
+	FVector OffsetDirection = (CameraTargetLocation - InterpolatedLocation).GetSafeNormal(); 
+	FVector AdjustedCameraTargetLocation = CameraTargetLocation + OffsetDirection * ZoomOutFactor;
+
+	FVector LerpedLocation = FMath::Lerp(m_CameraActor->GetActorLocation(), AdjustedCameraTargetLocation, m_CameraMoveSpeed * GetWorld()->GetDeltaSeconds());
+
+	m_CameraActor->SetActorLocation(LerpedLocation);
+	
 	LookAtTargetSmooth(InterpolatedLocation);
 }
 

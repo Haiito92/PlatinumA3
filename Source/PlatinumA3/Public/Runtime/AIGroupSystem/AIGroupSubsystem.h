@@ -31,7 +31,7 @@ class PLATINUMA3_API UAIGroupSubsystem : public UWorldSubsystem
 	GENERATED_BODY()
 
 private:
-	const float SYSTEM_UPDATE_RATE = 0.02f;
+	const float SYSTEM_UPDATE_RATE = 0.015f;
 private:
 	UPROPERTY()
 	TArray<AAIGroupCharacter*> Pawns;

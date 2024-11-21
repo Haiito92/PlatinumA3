@@ -118,11 +118,16 @@ void UAIGroupSubsystem::GroupUpdate()
 		//Check That pawn is activated
 		if(Pawn->GetPawnStateID() != EAIPawnStateID::Activated) continue;
 		
+		FAIGroupPawnData& Data = PawnDatas[i];
+		
 		//Get first valid behaviour
 		UAIBehaviour* NewBehaviour = FindFirstValidBehaviour(Pawn);
-		if(NewBehaviour == nullptr) continue;
+		if(NewBehaviour == nullptr)
+		{
+			Data.CurrentBehaviour = nullptr;
+			continue;
+		};
 
-		FAIGroupPawnData& Data = PawnDatas[i];
 		if(Data.CurrentBehaviour == nullptr) continue;
 			
 		//Compare New Behavior with current one

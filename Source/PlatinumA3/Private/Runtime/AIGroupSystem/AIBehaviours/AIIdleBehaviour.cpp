@@ -20,7 +20,7 @@ void UAIIdleBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 
 bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
 {
-	return true;
+	return Pawn->GetPawnStateID() == EAIPawnStateID::Activated;
 }
 
 void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)

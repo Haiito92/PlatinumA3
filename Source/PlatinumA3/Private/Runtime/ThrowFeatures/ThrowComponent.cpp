@@ -175,8 +175,7 @@ void UThrowComponent::CheckForLanding()
 
 void UThrowComponent::Launch()
 {
-
-	if(PrimitiveComponent)
+	if(PrimitiveComponent && PhysicsHandle)
 	{
 		PhysicsHandle->ReleaseComponent();
 

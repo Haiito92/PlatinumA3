@@ -91,6 +91,7 @@ void AWoolStateCharacter::StartExecuteLaunch(const FHitResult& Hit)
 
 void AWoolStateCharacter::LaunchSomething()
 {
+	if(!ThrowComponent) return;
 	ThrowComponent->Launch();
 }
 

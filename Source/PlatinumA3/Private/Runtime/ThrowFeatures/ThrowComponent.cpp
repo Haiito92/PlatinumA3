@@ -3,7 +3,9 @@
 
 #include "Runtime/ThrowFeatures/ThrowComponent.h"
 
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Character.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
 
@@ -26,11 +28,28 @@ void UThrowComponent::BeginPlay()
 
 	AActor* Catchable = GetOwner();
 
-	if(ACharacter* Character = Cast<ACharacter>(Catchable))
-	{
-		Character->LandedDelegate.AddDynamic(this, &UThrowComponent::StartExecuteLaunch);
-	}
+	 OwnerCharacterActor = Cast<ACharacter>(Catchable);
 }
+
+void UThrowComponent::OnCustomLandedFunc()
+{
+	GEngine->AddOnScreenDebugMessage(
+			-1,
+			3.0f,
+			FColor::Purple,
+			TEXT("ON LANDED DELEGATE")
+			);
+
+	PrimitiveComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+	PrimitiveComponent->SetSimulatePhysics(false);
+	//PrimitiveComponent->SetRelativeRotation(FRotator::ZeroRotator);
+	
+	Landing_Delegate.Broadcast();
+
+	LandingStep_Delegate.RemoveDynamic(this, &UThrowComponent::OnCustomLandedFunc);
+}
+
+
 
 
 // Called every frame
@@ -44,6 +63,8 @@ void UThrowComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 
 void UThrowComponent::Catch(UPhysicsHandleComponent* InPhysicsHandle, USceneComponent* InHoldingTarget)
 {
+	Catch_Delegate.Broadcast();
+	
 	HoldingTarget = InHoldingTarget;
 	PhysicsHandle = InPhysicsHandle;
 	
@@ -63,6 +84,12 @@ void UThrowComponent::Catch(UPhysicsHandleComponent* InPhysicsHandle, USceneComp
 		Original_CollisionProfileName = PrimitiveComponent->GetCollisionProfileName();
 	
 		PrimitiveComponent->SetSimulatePhysics(true);
+
+		//PrimitiveComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
+
+		PrimitiveComponent->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+		PrimitiveComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		
 		//PrimitiveComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
 	
 		PrimitiveComponent->SetLinearDamping(1.2f);
@@ -80,31 +107,100 @@ void UThrowComponent::UpdateHolding()
 		FVector Location = HoldingTarget->GetComponentLocation();
 		Location += FVector(0, 0, 100);
 		FRotator Rotation = HoldingTarget->GetComponentRotation();
-		
+
 		PhysicsHandle->SetTargetLocationAndRotation(Location, Rotation);
 	}
 }
 
 void UThrowComponent::StopHolding()
 {
-	if(PrimitiveComponent)
+	if(PrimitiveComponent && PhysicsHandle)
 	{
-		PrimitiveComponent->SetSimulatePhysics(false);
+		PhysicsHandle->ReleaseComponent();
+		IsHoldingSomething = false;
 	}
 }
 
-void UThrowComponent::Launch(bool IsSimulatingPhysic, FName CollisionProfilName, float TransTime)
+void UThrowComponent::CheckForLanding()
 {
+	PrimitiveComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+
+	float DistanceOffset = 0;
+	if(OwnerCharacterActor)
+	{
+		DistanceOffset = OwnerCharacterActor->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	}
+
+
 	
+	FVector CharacterLocation = GetOwner()->GetActorLocation();
+
+	FVector Start = CharacterLocation;
+	FVector End = CharacterLocation - FVector(0.f, 0.f, 200.f);
+	FHitResult HitResult;
+	FCollisionQueryParams QueryParams;
+	QueryParams.AddIgnoredActor(GetOwner()); 
+
+	bool bHit = GetWorld()->LineTraceSingleByChannel(
+		HitResult, 
+		Start, 
+		End, 
+		ECC_Visibility,
+		QueryParams
+	);
+
+	float GroundDistance;
+	// Process the result
+	if (bHit)
+	{
+		GroundDistance = (Start - HitResult.Location).Size();
+		GroundDistance -= DistanceOffset;
+		
+		UE_LOG(LogTemp, Warning, TEXT("Distance to ground: %f"), GroundDistance);
+
+		if(GroundDistance < 1.0f)
+		{
+			LandingStep_Delegate.Broadcast();
+		}
+
+		DrawDebugLine(GetWorld(), Start, HitResult.Location, FColor::Green, false, 1.f, 0, 2.f);
+		DrawDebugPoint(GetWorld(), HitResult.Location, 10.f, FColor::Red, false, 1.f);
+	}
+	else
+	{
+		GroundDistance = -1.f;
+		DrawDebugLine(GetWorld(), Start, End, FColor::Red, false, 1.f, 0, 2.f);
+	}
 }
 
-void UThrowComponent::StartExecuteLaunch(const FHitResult& Hit)
+void UThrowComponent::Launch()
 {
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		3.0f,
-		FColor::Purple,
-		TEXT("ON LANDED")
-	);
+	if(PrimitiveComponent && PhysicsHandle)
+	{
+		PhysicsHandle->ReleaseComponent();
+
+		// Apply impulse
+		FVector ThrowDirection = PhysicsHandle->GetOwner()->GetActorForwardVector();
+		PrimitiveComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
+		
+		GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle,                   
+		this,                          
+		&UThrowComponent::CheckForLanding,
+		0.02f,                          
+		true                           
+		);
+
+		
+		if (OwnerCharacterActor)
+		{
+			LandingStep_Delegate.AddDynamic(this, &UThrowComponent::OnCustomLandedFunc);
+		}
+
+	}
+
+	Throw_Delegate.Broadcast();
+	StopHolding();
 }
+
 

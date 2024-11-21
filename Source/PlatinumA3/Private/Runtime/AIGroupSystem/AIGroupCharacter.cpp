@@ -5,6 +5,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Components/SceneComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Runtime/AIGroupSystem/AIPawnStateID.h"
 
 #pragma region Unreal Defaults
@@ -106,6 +107,24 @@ EAIPawnStateID AAIGroupCharacter::GetPawnStateID() const
 {
 	return PawnStateID;
 }
+
+void AAIGroupCharacter::StartRotateAICharacter(const FRotator& GoalRotation)
+{
+	RotationHandled = false;
+
+	ReceiveStartRotateAICharacter(GoalRotation);
+	
+	if(RotationHandled) return;
+
+	SetActorRotation(GoalRotation);
+}
+
+void AAIGroupCharacter::StopRotateAICharacter()
+{
+	ReceiveStopRotateAICharacter();
+}
+
+
 //
 // void AAIGroupCharacter::SetIsActivated(bool IsActivated)
 // {

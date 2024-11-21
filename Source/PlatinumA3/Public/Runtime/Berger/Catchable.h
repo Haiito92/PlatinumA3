@@ -29,4 +29,8 @@ public:
 	
 	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Catchable Interface")
 	void Launch(bool IsSimulatingPhysic, FName CollisionProfilName, float TransTime);
+
+	// Interface function to handle OnLanded
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent, Category = "Catchable Interface")
+	void HandleOnLanded(const FHitResult& Hit);
 };

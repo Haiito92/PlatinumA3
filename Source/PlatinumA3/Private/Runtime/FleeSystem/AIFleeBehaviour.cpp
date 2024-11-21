@@ -115,8 +115,11 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 
 	Direction.Z = 0;
 	Direction.Normalize();
+
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction);
 	
-	Pawn->SetActorRotation(UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction));
+	Pawn->StartRotateAICharacter(LookAtRotation);
+	
 	Pawn->AddMovementInput(Direction,1.0f);
 	
 	// GEngine->AddOnScreenDebugMessage(
@@ -128,12 +131,14 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 void UAIFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
+
+	Pawn->StopRotateAICharacter();
 	
 	if(FleeSubsystem == nullptr) return;
 	FleeSubsystem->GetCurrentFleeLeaders().Remove(Pawn->GetIndex());	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("FLEE EXIT"));
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("FLEE EXIT"));
 }

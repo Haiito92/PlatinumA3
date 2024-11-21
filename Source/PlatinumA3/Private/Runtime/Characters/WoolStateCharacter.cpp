@@ -9,6 +9,7 @@
 #include "Runtime/Berger/Rallyable.h"
 #include "Runtime/Characters/InteractInterface.h"
 #include "Runtime/Chien/Biteable.h"
+#include "Runtime/ThrowFeatures/ThrowComponent.h"
 
 
 // Sets default values
@@ -39,11 +40,6 @@ void AWoolStateCharacter::BeginPlay()
 void AWoolStateCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	if(IsHoldingSomething)
-	{
-		
-	}
 }
 
 // Called to bind functionality to input
@@ -63,31 +59,12 @@ void AWoolStateCharacter::StartHolding()
 {
 	AActor* Catchable = GetSomethingToHold();
 
-	TObjectPtr<UPrimitiveComponent> PrimitiveComponent;
+	ThrowComponent = Catchable->GetComponentByClass<UThrowComponent>();
 	
-	if(IsValid(Catchable))
+	if(IsValid(ThrowComponent))
 	{
 		// Check if the actor implements the interface
-		if (Catchable->Implements<UCatchable>())
-		{
-			PrimitiveComponent = ICatchable::Execute_Catch(Catchable);
-			JUICY_OnStartHolding();
-		}
-	}
-
-	if(PrimitiveComponent)
-	{
-		
-		Original_SimulatePhysics = PrimitiveComponent->IsSimulatingPhysics();
-		Original_CollisionProfileName = PrimitiveComponent->GetCollisionProfileName();
-
-		PrimitiveComponent->SetSimulatePhysics(true);
-		PrimitiveComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
-
-		PrimitiveComponent->SetLinearDamping(1.2f);
-		PrimitiveComponent->SetAngularDamping(4.0f);
-
-		PhysicsHandle->GrabComponentAtLocationWithRotation(PrimitiveComponent, FName(), HoldingTarget->GetComponentLocation(), HoldingTarget->GetComponentRotation());
+		ThrowComponent->Catch(PhysicsHandle, HoldingTarget);
 		IsHoldingSomething = true;
 	}
 }
@@ -96,42 +73,36 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 {
 	if(IsHoldingSomething)
 	{
-		TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
+		// TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
+		//
+		// AActor* Catchable = HeldComponent->GetOwner();
+		//
+		//
+		//
+		// if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
+		// {
+		// 	CatchableCharacter->GetMesh()->SetSimulatePhysics(false);
+		// 	JUICY_OnThrowSomething();
+		// }
+		// else if (Catchable && Catchable->Implements<UCatchable>())
+		// {
+		// 	ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
+		// 	JUICY_OnThrowSomething();
+		// }
 		
-		AActor* Catchable = HeldComponent->GetOwner();
 
-		if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
-		{
-			//CatchableCharacter->GetCharacterMovement()->Movement
-		}
-		else if (Catchable && Catchable->Implements<UCatchable>())
-		{
-			ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
-			JUICY_OnThrowSomething();
-		}
-		
+		ThrowComponent->StopHolding();
 		PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
 		JUICY_OnStopHolding();
-
 	}
 }
 
-void AWoolStateCharacter::UpdateHolding()
-{
-	if(IsHoldingSomething)
-	{
-		FVector Location = HoldingTarget->GetComponentLocation();
-		Location += FVector(0, 0, 100);
-		FRotator Rotation = HoldingTarget->GetComponentRotation();
-		
-		PhysicsHandle->SetTargetLocationAndRotation(Location, Rotation);
-	}
-}
 
-void AWoolStateCharacter::StartExecuteLaunch()
+
+void AWoolStateCharacter::StartExecuteLaunch(const FHitResult& Hit)
 {
-	
+	//ICatchable::Execute_Launch(Hit.), Original_SimulatePhysics, Original_CollisionProfileName, LaunchTransTime);
 }
 
 void AWoolStateCharacter::LaunchSomething()

@@ -73,26 +73,8 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 {
 	if(IsHoldingSomething)
 	{
-		// TObjectPtr<UPrimitiveComponent> HeldComponent = PhysicsHandle->GrabbedComponent;
-		//
-		// AActor* Catchable = HeldComponent->GetOwner();
-		//
-		//
-		//
-		// if(ACharacter* CatchableCharacter = Cast<ACharacter>(Catchable))
-		// {
-		// 	CatchableCharacter->GetMesh()->SetSimulatePhysics(false);
-		// 	JUICY_OnThrowSomething();
-		// }
-		// else if (Catchable && Catchable->Implements<UCatchable>())
-		// {
-		// 	ICatchable::Execute_Launch(Catchable, Original_SimulatePhysics, Original_CollisionProfileName, TransTime);
-		// 	JUICY_OnThrowSomething();
-		// }
-		
-
 		ThrowComponent->StopHolding();
-		PhysicsHandle->ReleaseComponent();
+		//PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
 		JUICY_OnStopHolding();
 	}
@@ -107,20 +89,7 @@ void AWoolStateCharacter::StartExecuteLaunch(const FHitResult& Hit)
 
 void AWoolStateCharacter::LaunchSomething()
 {
-	UPrimitiveComponent* HeldComponent = PhysicsHandle->GrabbedComponent;
-
-	if(HeldComponent)
-	{
-		StopHolding(LaunchTransTime);
-		
-		// Apply impulse
-		FVector ThrowDirection = GetActorForwardVector();
-		HeldComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
-		
-		// Clear HeldComponent reference if needed
-		HeldComponent = nullptr;
-	}
-	
+	ThrowComponent->Launch();
 }
 
 

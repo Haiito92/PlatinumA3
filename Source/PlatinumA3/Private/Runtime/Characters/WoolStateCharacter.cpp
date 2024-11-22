@@ -69,7 +69,7 @@ void AWoolStateCharacter::StartHolding()
 		ThrowComponent->Catch(PhysicsHandle, HoldingTarget);
 		IsHoldingSomething = true;
 
-		
+		JUICY_OnStartHolding();
 	}
 }
 
@@ -95,6 +95,7 @@ void AWoolStateCharacter::LaunchSomething()
 {
 	if(!ThrowComponent) return;
 	ThrowComponent->Launch();
+	JUICY_OnThrowSomething();
 }
 
 

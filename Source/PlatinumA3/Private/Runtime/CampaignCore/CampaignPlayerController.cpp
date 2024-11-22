@@ -44,7 +44,18 @@ void ACampaignPlayerController::BindToInputs()
 
 void ACampaignPlayerController::OnFinishGameInputAction()
 {
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	2.0f,
+	// 	FColor::Turquoise,
+	// 	TEXT("Finish Game"));
 	if(CampaignGameMode->GetGameStateID() != ECampaignGameStateID::Finishable) return;
 
+	GEngine->AddOnScreenDebugMessage(
+		-1,
+		2.0f,
+		FColor::Turquoise,
+		TEXT("Finish Game"));
+	
 	CampaignGameMode->FinishGame();
 }

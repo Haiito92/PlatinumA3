@@ -102,11 +102,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	void StopHolding(float TransTime);
-
-
-
-	UFUNCTION(BlueprintCallable)
-	void StartExecuteLaunch(const FHitResult& Hit);
+	
 	
 	UFUNCTION(BlueprintCallable)
 	void LaunchSomething();

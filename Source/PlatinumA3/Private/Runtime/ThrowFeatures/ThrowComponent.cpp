@@ -28,25 +28,36 @@ void UThrowComponent::BeginPlay()
 
 	AActor* Catchable = GetOwner();
 
-	 OwnerCharacterActor = Cast<ACharacter>(Catchable);
+	if(Catchable)
+	{
+		OwnerCharacterActor = Cast<ACharacter>(Catchable);
+	}
 }
 
 void UThrowComponent::OnCustomLandedFunc()
 {
+
 	GEngine->AddOnScreenDebugMessage(
 			-1,
 			3.0f,
 			FColor::Purple,
 			TEXT("ON LANDED DELEGATE")
 			);
-
-	PrimitiveComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
-	PrimitiveComponent->SetSimulatePhysics(false);
-	//PrimitiveComponent->SetRelativeRotation(FRotator::ZeroRotator);
 	
-	Landing_Delegate.Broadcast();
+	if(PrimitiveComponent)
+	{
+		PrimitiveComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
+		PrimitiveComponent->SetSimulatePhysics(false);
+	
+	
+		Landing_Delegate.Broadcast();
 
-	LandingStep_Delegate.RemoveDynamic(this, &UThrowComponent::OnCustomLandedFunc);
+		LandingStep_Delegate.Clear();
+		GetWorld()->GetTimerManager().ClearTimer(TimerHandle);
+		
+		//Clear Values
+		PrimitiveComponent = nullptr;
+	}
 }
 
 
@@ -102,7 +113,7 @@ void UThrowComponent::Catch(UPhysicsHandleComponent* InPhysicsHandle, USceneComp
 
 void UThrowComponent::UpdateHolding()
 {
-	if(IsHoldingSomething && PhysicsHandle)
+	if(IsHoldingSomething && PhysicsHandle && PrimitiveComponent)
 	{
 		FVector Location = HoldingTarget->GetComponentLocation();
 		Location += FVector(0, 0, 100);
@@ -114,15 +125,30 @@ void UThrowComponent::UpdateHolding()
 
 void UThrowComponent::StopHolding()
 {
-	if(PrimitiveComponent && PhysicsHandle)
+	if(PrimitiveComponent && PhysicsHandle && IsHoldingSomething)
 	{
 		PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
+
+		GetWorld()->GetTimerManager().SetTimer(
+		TimerHandle,                   
+		this,                          
+		&UThrowComponent::CheckForLanding,
+		0.02f,                          
+		true                           
+		);
+
+		
+		if (OwnerCharacterActor)
+		{
+			LandingStep_Delegate.AddDynamic(this, &UThrowComponent::OnCustomLandedFunc);
+		}
 	}
 }
 
 void UThrowComponent::CheckForLanding()
 {
+	
 	PrimitiveComponent->SetPhysicsAngularVelocityInDegrees(FVector::ZeroVector);
 
 	float DistanceOffset = 0;
@@ -175,32 +201,21 @@ void UThrowComponent::CheckForLanding()
 
 void UThrowComponent::Launch()
 {
-	if(PrimitiveComponent && PhysicsHandle)
+	if(IsHoldingSomething)
 	{
-		PhysicsHandle->ReleaseComponent();
-
-		// Apply impulse
-		FVector ThrowDirection = PhysicsHandle->GetOwner()->GetActorForwardVector();
-		PrimitiveComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
-		
-		GetWorld()->GetTimerManager().SetTimer(
-		TimerHandle,                   
-		this,                          
-		&UThrowComponent::CheckForLanding,
-		0.02f,                          
-		true                           
-		);
-
-		
-		if (OwnerCharacterActor)
+		if(PrimitiveComponent && PhysicsHandle)
 		{
-			LandingStep_Delegate.AddDynamic(this, &UThrowComponent::OnCustomLandedFunc);
+			PhysicsHandle->ReleaseComponent();
+
+			// Apply impulse
+			FVector ThrowDirection = PhysicsHandle->GetOwner()->GetActorForwardVector();
+			PrimitiveComponent->AddImpulse(ThrowDirection * ThrowStrength, NAME_None, true);
 		}
 
+		Throw_Delegate.Broadcast();
+		StopHolding();
 	}
-
-	Throw_Delegate.Broadcast();
-	StopHolding();
+	
 }
 
 

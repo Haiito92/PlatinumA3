@@ -78,7 +78,6 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 	if(IsHoldingSomething)
 	{
 		ThrowComponent->StopHolding();
-		//PhysicsHandle->ReleaseComponent();
 		IsHoldingSomething = false;
 		JUICY_OnStopHolding();
 	}
@@ -86,14 +85,11 @@ void AWoolStateCharacter::StopHolding(float TransTime)
 
 
 
-void AWoolStateCharacter::StartExecuteLaunch(const FHitResult& Hit)
-{
-	//ICatchable::Execute_Launch(Hit.), Original_SimulatePhysics, Original_CollisionProfileName, LaunchTransTime);
-}
+
 
 void AWoolStateCharacter::LaunchSomething()
 {
-	if(!ThrowComponent) return;
+	if(!ThrowComponent || !IsHoldingSomething) return;
 	ThrowComponent->Launch();
 	JUICY_OnThrowSomething();
 }

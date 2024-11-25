@@ -10,7 +10,8 @@ public class PlatinumA3Editor : ModuleRules
             new string[]
             {
                 "Core",
-                "PlatinumA3"
+                "PlatinumA3",
+                "FCTween"
             }
         );
 

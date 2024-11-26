@@ -13,6 +13,7 @@
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
 #include "Runtime/CampaignCore/CampaignGameStateID.h"
 #include "Runtime/CampaignCore/CampaignHUD.h"
+#include "Runtime/CheatsSystem/CheatsSubsystem.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/SheepSystem/SheepSubsystem.h"
 
@@ -83,6 +84,16 @@ void ACampaignGameMode::InitWorldSubsystems() const
 	{
 		SheepSubsystem->InitSubsystem(3);
 	}
+
+#if UE_EDITOR
+	//Init CheatSubsystem
+	UCheatsSubsystem* CheatsSubsystem = GetWorld()->GetSubsystem<UCheatsSubsystem>();
+	if(CheatsSubsystem != nullptr)
+	{
+		CheatsSubsystem->InitSubsystem();
+	}
+	
+#endif
 }
 
 void ACampaignGameMode::BindToWorldSubsystemsEvents() const

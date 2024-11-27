@@ -3,6 +3,7 @@
 
 #include "Runtime/CheatsSystem/CheatsSubsystem.h"
 
+#include "GameFramework/PlayerStart.h"
 #include "Kismet/GameplayStatics.h"
 #include "Logging/StructuredLog.h"
 #include "Runtime/Characters/WoolDogCharacter.h"
@@ -38,4 +39,15 @@ const TArray<TObjectPtr<ACheatTeleportPoint>>& UCheatsSubsystem::GetCheatTelepor
 void UCheatsSubsystem::CheatTeleport(const int Index) const
 {
 	UE_LOGFMT(LogTemp, Warning, "Cheat Teleport : {0}", Index);
+	const ACheatTeleportPoint* CheatTeleportPoint = CheatTeleportPoints[Index];
+	if(CheatTeleportPoint==nullptr)return;
+
+	const USceneComponent* DogTeleportStart = CheatTeleportPoint->GetDogTeleportStart();
+	if(DogCharacter != nullptr && DogTeleportStart != nullptr)
+		DogCharacter->SetActorLocation(DogTeleportStart->GetComponentLocation());
+
+	const USceneComponent* ShepherdTeleportStart = CheatTeleportPoint->GetShepherdTeleportStart();
+	if(ShepherdCharacter != nullptr && ShepherdTeleportStart != nullptr)
+		ShepherdCharacter->SetActorLocation(ShepherdTeleportStart->GetComponentLocation());
+	
 }

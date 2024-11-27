@@ -25,5 +25,16 @@ public:
 	virtual void Tick(float DeltaTime) override;
 #pragma endregion
 
+public:
+	const TObjectPtr<USceneComponent> GetDogTeleportStart() const;
+	const TObjectPtr<USceneComponent> GetShepherdTeleportStart() const;
 	
+protected:
+	UPROPERTY()
+	TObjectPtr<USceneComponent> RootSceneComponent;
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> DogTeleportStart;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<USceneComponent> ShepherdTeleportStart;
 };

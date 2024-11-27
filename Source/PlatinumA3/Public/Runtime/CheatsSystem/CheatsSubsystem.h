@@ -6,6 +6,8 @@
 #include "Subsystems/WorldSubsystem.h"
 #include "CheatsSubsystem.generated.h"
 
+class AWoolShepherdCharacter;
+class AWoolDogCharacter;
 class ACheatTeleportPoint;
 /**
  * 
@@ -20,7 +22,8 @@ public:
 	void InitSubsystem();
 
 protected:
-	
+	TObjectPtr<AWoolDogCharacter> DogCharacter;
+	TObjectPtr<AWoolShepherdCharacter> ShepherdCharacter;
 #pragma region CheatTeleport
 
 public:

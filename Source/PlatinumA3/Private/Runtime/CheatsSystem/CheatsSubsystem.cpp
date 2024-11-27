@@ -5,12 +5,19 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Logging/StructuredLog.h"
+#include "Runtime/Characters/WoolDogCharacter.h"
+#include "Runtime/Characters/WoolShepherdCharacter.h"
 #include "Runtime/CheatsSystem/CheatTeleport/CheatTeleportPoint.h"
 
 void UCheatsSubsystem::InitSubsystem()
 {
 	// UE_LOGFMT(LogTemp, Log, "Init Cheats");
 
+	DogCharacter = Cast<AWoolDogCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(),
+		AWoolDogCharacter::StaticClass()));
+	ShepherdCharacter = Cast<AWoolShepherdCharacter>(UGameplayStatics::GetActorOfClass(GetWorld(),
+		AWoolShepherdCharacter::StaticClass()));
+	
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ACheatTeleportPoint::StaticClass(),FoundActors);
 

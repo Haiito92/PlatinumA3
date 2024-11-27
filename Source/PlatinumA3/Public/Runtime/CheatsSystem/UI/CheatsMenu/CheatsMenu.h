@@ -13,4 +13,8 @@ UCLASS(Abstract, BlueprintType, Blueprintable)
 class PLATINUMA3_API UCheatsMenu : public UUserWidget
 {
 	GENERATED_BODY()
+	
+public:
+	UFUNCTION(BlueprintCallable, BlueprintNativeEvent)
+	void InitCheatsMenu();
 };

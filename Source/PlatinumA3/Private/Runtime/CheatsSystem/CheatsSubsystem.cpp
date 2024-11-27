@@ -27,3 +27,8 @@ const TArray<TObjectPtr<ACheatTeleportPoint>>& UCheatsSubsystem::GetCheatTelepor
 {
 	return CheatTeleportPoints;
 }
+
+void UCheatsSubsystem::CheatTeleport(const int Index) const
+{
+	UE_LOGFMT(LogTemp, Warning, "Cheat Teleport : {0}", Index);
+}

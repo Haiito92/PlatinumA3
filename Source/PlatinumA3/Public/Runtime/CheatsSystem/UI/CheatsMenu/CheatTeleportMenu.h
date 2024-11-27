@@ -6,16 +6,21 @@
 #include "Blueprint/UserWidget.h"
 #include "CheatTeleportMenu.generated.h"
 
+class UCheatsSubsystem;
 /**
  * 
  */
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FUITeleportInfo
 {
 	GENERATED_BODY()
+	~FUITeleportInfo() = default;
 
 	UPROPERTY(BlueprintReadOnly, Category="Teleport")
-	FName ShortName;
+	uint8 Index = 0;
+	
+	UPROPERTY(BlueprintReadOnly, Category="Teleport")
+	FName ShortName = "";
 };
 
 UCLASS()
@@ -23,12 +28,26 @@ class PLATINUMA3_API UCheatTeleportMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
+public:
+	UFUNCTION(BlueprintCallable)
+	void InitMenu();
+	
 protected:
-	
+
+	UFUNCTION(BlueprintCallable)
+	void PrevTeleportInfos();
+	UFUNCTION(BlueprintCallable)
+	void NextTeleportInfos();
+
+	void UpdateTeleportInfos(int IndexDelta);
 	void GetTeleportInfos(int Index);
+
+	UFUNCTION(BlueprintCallable)
+	void CheatTeleport() const;
 	
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly, Category="Teleport Infos")
 	FUITeleportInfo CurrentTeleportInfo;
 
-	
+	UPROPERTY()
+	TObjectPtr<UCheatsSubsystem> CheatsSubsystem;
 };

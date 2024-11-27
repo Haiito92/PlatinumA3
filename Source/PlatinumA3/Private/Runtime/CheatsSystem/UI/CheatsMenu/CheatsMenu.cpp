@@ -2,3 +2,9 @@
 
 
 #include "Runtime/CheatsSystem/UI/CheatsMenu/CheatsMenu.h"
+
+
+void UCheatsMenu::InitCheatsMenu_Implementation()
+{
+	
+}

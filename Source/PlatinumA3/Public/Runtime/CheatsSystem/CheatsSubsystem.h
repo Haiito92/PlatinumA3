@@ -19,11 +19,13 @@ class PLATINUMA3_API UCheatsSubsystem : public UWorldSubsystem
 public:
 	void InitSubsystem();
 
+protected:
+	
 #pragma region CheatTeleport
 
 public:
 	const TArray<TObjectPtr<ACheatTeleportPoint>>& GetCheatTeleportPoints() const;
-	
+	void CheatTeleport(const int Index) const;
 protected:
 	UPROPERTY()
 	TArray<TObjectPtr<ACheatTeleportPoint>> CheatTeleportPoints;

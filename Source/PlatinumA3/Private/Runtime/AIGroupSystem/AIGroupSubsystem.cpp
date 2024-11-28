@@ -4,6 +4,7 @@
 #include "Logging/StructuredLog.h"
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacterSpawnPoint.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystemSettings.h"
 #include "Runtime/AIGroupSystem/AIPawnStateID.h"
 
@@ -22,6 +23,7 @@ void UAIGroupSubsystem::InitSubsystem()
 
 	UE_LOGFMT(LogTemp, Warning, "Init");
 	InitPawnPool(Settings->PoolStartSize);
+	SpawnStartPawns();
 	
 	FindAllPawns();
 	InitAllPawns();
@@ -167,17 +169,60 @@ UAIBehaviour* UAIGroupSubsystem::FindFirstValidBehaviour(AAIGroupCharacter* Pawn
 void UAIGroupSubsystem::InitPawnPool(const int InStartPawnAmount)
 {
 	if(Settings == nullptr) return;
-	UE_LOGFMT(LogTemp, Warning, "Init Pawn Pool");
+	// UE_LOGFMT(LogTemp, Warning, "Init Pawn Pool");
 	PoolLocation = {-100000,-100000, -100000};
 	
 	for (int i = 0; i < InStartPawnAmount; ++i)
 	{
-		AAIGroupCharacter* Pawn =
-			GetWorld()->SpawnActor<AAIGroupCharacter>(Settings->PawnClass,PoolLocation, FRotator::ZeroRotator);
+		AAIGroupCharacter* Pawn = CreatePawn(PoolLocation, FRotator::ZeroRotator);
 		if(Pawn == nullptr) continue;
 		
-		Pawn->UnActivatePawn();
 		Pawns.Add(Pawn);
 	}
+}
+
+void UAIGroupSubsystem::SpawnStartPawns()
+{
+	TArray<AActor*> FoundActors;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AAIGroupCharacterSpawnPoint::StaticClass(), FoundActors);
+	for (AActor* FoundActor : FoundActors)
+	{
+		const AAIGroupCharacterSpawnPoint* SpawnPoint = Cast<AAIGroupCharacterSpawnPoint>(FoundActor);
+		if(SpawnPoint == nullptr) continue;
+
+		SpawnPawn(SpawnPoint->GetActorLocation(), SpawnPoint->GetActorRotation());
+	}
+}
+
+void UAIGroupSubsystem::SpawnPawn(const FVector& InLocation, const FRotator& InRotation)
+{
+	AAIGroupCharacter* Pawn = FindUnActivatedPawn();
+	if (Pawn == nullptr)
+	{
+		Pawn = CreatePawn(InLocation, InRotation);
+		if(Pawn == nullptr) return;
+		Pawns.Add(Pawn);
+	}
+
+	Pawn->SetActorLocation(InLocation);
+	Pawn->SetActorRotation(InRotation);
+	Pawn->ActivatePawn();
+}
+
+AAIGroupCharacter* UAIGroupSubsystem::FindUnActivatedPawn() const
+{
+	for (AAIGroupCharacter* Pawn : Pawns)
+	{
+		if(Pawn->GetPawnStateID()==EAIPawnStateID::UnActivated) return Pawn;
+	}
+	return nullptr;
+}
+
+AAIGroupCharacter* UAIGroupSubsystem::CreatePawn(const FVector& InLocation, const FRotator& InRotation) const
+{
+	AAIGroupCharacter* Pawn =
+			GetWorld()->SpawnActor<AAIGroupCharacter>(Settings->PawnClass,InLocation, InRotation);
+	if(Pawn != nullptr) Pawn->UnActivatePawn();
+	return Pawn;
 }
 #pragma endregion 

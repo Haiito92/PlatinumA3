@@ -7,6 +7,7 @@
 #include "AIGroupSubsystem.generated.h"
 
 
+class UAIGroupSubsystemSettings;
 class AAIGroupPawn;
 class AAIGroupCharacter;
 class UAIBehaviour;
@@ -32,15 +33,7 @@ class PLATINUMA3_API UAIGroupSubsystem : public UWorldSubsystem
 
 private:
 	const float SYSTEM_UPDATE_RATE = 0.015f;
-private:
-	UPROPERTY()
-	TArray<AAIGroupCharacter*> Pawns;
-	UPROPERTY()
-	TArray<FAIGroupPawnData> PawnDatas;
 
-	UPROPERTY()
-	TArray<UAIBehaviour*> Behaviours;
-	//Ajouter un default behavior ??
 
 #pragma region SystemInitialization
 public:
@@ -62,5 +55,25 @@ private:
 	void GroupUpdate();
 	
 	UAIBehaviour* FindFirstValidBehaviour(AAIGroupCharacter* Pawn)const;
-#pragma endregion 
+#pragma endregion
+
+#pragma region SystemPool
+protected:
+	void InitPawnPool(const int InStartPawnAmount);
+private:
+	UPROPERTY()
+	FVector PoolLocation;
+	
+	UPROPERTY()
+	TArray<AAIGroupCharacter*> Pawns;
+	UPROPERTY()
+	TArray<FAIGroupPawnData> PawnDatas;
+#pragma endregion
+	
+	UPROPERTY()
+	TArray<UAIBehaviour*> Behaviours;
+	//Ajouter un default behavior ??
+
+	UPROPERTY()
+	const UAIGroupSubsystemSettings* Settings;
 };

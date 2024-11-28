@@ -16,6 +16,12 @@ class PLATINUMA3_API UAIGroupSubsystemSettings : public UDeveloperSettings
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Config, EditAnywhere, Category="Pawns")
+	TSubclassOf<AAIGroupCharacter> PawnClass;
+
+	UPROPERTY(Config, EditAnywhere, Category="Pool")
+	unsigned int PoolStartSize = 1;
+	
 	UPROPERTY(Config, EditAnywhere, Category="Behaviors")
 	TArray<TSubclassOf<UAIBehaviour>> BehaviorsClasses;
 };

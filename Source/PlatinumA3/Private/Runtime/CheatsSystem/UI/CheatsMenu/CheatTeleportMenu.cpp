@@ -12,6 +12,7 @@ void UCheatTeleportMenu::InitMenu()
 	if(tCheatsSubsystem == nullptr) return;
 	CheatsSubsystem = tCheatsSubsystem;
 
+	if(CheatsSubsystem->GetCheatTeleportPoints().Num() == 0) return;
 	GetTeleportInfos(0);
 }
 

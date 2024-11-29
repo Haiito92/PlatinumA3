@@ -25,7 +25,7 @@ void UAIGroupSubsystem::InitSubsystem()
 	InitPawnPool(Settings->PoolStartSize);
 	SpawnStartPawns();
 	
-	FindAllPawns();
+	// FindAllPawns();
 	InitAllPawns();
 	
 	InitBehaviours();

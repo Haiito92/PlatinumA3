@@ -59,17 +59,14 @@ void AAIGroupCharacter::ActivatePawn()
 	SetPawnStateID(EAIPawnStateID::Activated);
 
 	UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
-	if(pCapsuleComponent == nullptr) return
-	
-	pCapsuleComponent->SetEnableGravity(true);
-	pCapsuleComponent->SetSimulatePhysics(true);
-	pCapsuleComponent->SetVisibility(true, true);
-	SetActorEnableCollision(true);
+	if(pCapsuleComponent == nullptr) return;
 
+	pCapsuleComponent->SetEnableGravity(true);
+	pCapsuleComponent->SetVisibility(true, true);
+	pCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if(CharacterMovementComponent == nullptr)return;
-
-	CharacterMovementComponent->GravityScale = 1;
+	CharacterMovementComponent->GravityScale = 1.0f;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
 }
 
@@ -86,9 +83,8 @@ void AAIGroupCharacter::UnActivatePawn()
 	if(pCapsuleComponent == nullptr) return
 	
 	pCapsuleComponent->SetEnableGravity(false);
-	pCapsuleComponent->SetSimulatePhysics(false);
 	pCapsuleComponent->SetVisibility(false, true);
-	SetActorEnableCollision(false);
+	pCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if(CharacterMovementComponent == nullptr)return;

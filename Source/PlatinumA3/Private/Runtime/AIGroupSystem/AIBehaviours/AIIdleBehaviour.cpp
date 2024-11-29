@@ -117,8 +117,8 @@ void UAIIdleBehaviour::GivePawnNewDirection(FIdlePawnData& Data)
 	Location.Z = Data.IdleAnchorPosition.Z;
 	
 	FVector randDir = Location - Data.LastIdleEndPosition;
-	UE_LOGFMT(LogTemp, Warning,"Ilde Location : X:{O}, Y:{1}, Z:{2}",
-		Location.X,Location.Y,Location.Z);
+	// UE_LOGFMT(LogTemp, Warning,"Ilde Location : X:{O}, Y:{1}, Z:{2}",
+	// 	Location.X,Location.Y,Location.Z);
 
 
 	randDir.Z=0;

@@ -6238,6 +6238,18 @@
 			"Type": "RequiredResource"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/FCTween/Binaries/Win64/UnrealEditor-FCTween.dll",
+			"Type": "DynamicLibrary"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FCTween/Binaries/Win64/UnrealEditor-FCTween.pdb",
+			"Type": "SymbolFile"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FCTween/Binaries/Win64/UnrealEditor.modules",
+			"Type": "RequiredResource"
+		},
+		{
 			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/Binaries/Win64/UnrealEditor-FocusableWidgets.dll",
 			"Type": "DynamicLibrary"
 		},
@@ -27569,6 +27581,10 @@
 		},
 		{
 			"Path": "$(ProjectDir)/PlatinumA3.uproject",
+			"Type": "UFS"
+		},
+		{
+			"Path": "$(ProjectDir)/Plugins/FCTween/FCTween.uplugin",
 			"Type": "UFS"
 		},
 		{

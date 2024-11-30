@@ -71,11 +71,11 @@ void UAIEscapeCornerBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		3.0f,
-		FColor::Orange,
-		TEXT("Escape Corner Entry"));
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	3.0f,
+	// 	FColor::Orange,
+	// 	TEXT("Escape Corner Entry"));
 
 	if(Settings == nullptr) return;
 
@@ -106,9 +106,10 @@ void UAIEscapeCornerBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
-	GEngine->AddOnScreenDebugMessage(
-		-1,
-		3.0f,
-		FColor::Orange,
-		TEXT("Escape Corner Exit"));
+	Pawn->StopRotateAICharacter();
+	// GEngine->AddOnScreenDebugMessage(
+	// 	-1,
+	// 	3.0f,
+	// 	FColor::Orange,
+	// 	TEXT("Escape Corner Exit"));
 }

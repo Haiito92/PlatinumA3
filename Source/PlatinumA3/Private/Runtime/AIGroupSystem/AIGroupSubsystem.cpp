@@ -1,15 +1,14 @@
 #include "Runtime/AIGroupSystem/AIGroupSubsystem.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Logging/StructuredLog.h"
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
-#include "Runtime/AIGroupSystem/AIGroupPawn.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystemSettings.h"
 #include "Runtime/AIGroupSystem/AIPawnStateID.h"
 
 
 #pragma region SystemInitialization
-
 
 void UAIGroupSubsystem::InitSubsystem()
 {
@@ -18,6 +17,11 @@ void UAIGroupSubsystem::InitSubsystem()
 	// 	3.0f,
 	// 	FColor::Yellow,
 	// 	TEXT("INIT AIGROUP SUBSYSTEM"));
+	Settings = GetDefault<UAIGroupSubsystemSettings>();
+	if(Settings == nullptr) return;
+
+	UE_LOGFMT(LogTemp, Warning, "Init");
+	InitPawnPool(Settings->PoolStartSize);
 	
 	FindAllPawns();
 	InitAllPawns();
@@ -37,7 +41,6 @@ void UAIGroupSubsystem::InitSubsystem()
 
 void UAIGroupSubsystem::InitBehaviours()
 {
-	const UAIGroupSubsystemSettings* Settings = GetDefault<UAIGroupSubsystemSettings>();
 
 	if(Settings == nullptr) return;
 
@@ -66,6 +69,16 @@ void UAIGroupSubsystem::FindAllPawns()
 	}
 }
 
+void UAIGroupSubsystem::InitAllPawns()
+{
+	for (int i = 0; i < Pawns.Num(); ++i)
+	{
+		AAIGroupCharacter* Pawn = Pawns[i];
+		if(Pawn == nullptr) continue;
+
+		Pawn->InitGroupPawn(i);
+	}
+}
 
 void UAIGroupSubsystem::InitPawnDatas()
 {
@@ -91,16 +104,7 @@ void UAIGroupSubsystem::StartFirstPawnsBehavior()
 	}
 }
 
-void UAIGroupSubsystem::InitAllPawns()
-{
-	for (int i = 0; i < Pawns.Num(); ++i)
-	{
-		AAIGroupCharacter* Pawn = Pawns[i];
-		if(Pawn == nullptr) continue;
 
-		Pawn->InitGroupPawn(i);
-	}
-}
 #pragma endregion 
 
 #pragma region System Update
@@ -156,5 +160,24 @@ UAIBehaviour* UAIGroupSubsystem::FindFirstValidBehaviour(AAIGroupCharacter* Pawn
 	}
 
 	return nullptr;
+}
+#pragma endregion
+
+#pragma region SystemPool
+void UAIGroupSubsystem::InitPawnPool(const int InStartPawnAmount)
+{
+	if(Settings == nullptr) return;
+	UE_LOGFMT(LogTemp, Warning, "Init Pawn Pool");
+	PoolLocation = {-100000,-100000, -100000};
+	
+	for (int i = 0; i < InStartPawnAmount; ++i)
+	{
+		AAIGroupCharacter* Pawn =
+			GetWorld()->SpawnActor<AAIGroupCharacter>(Settings->PawnClass,PoolLocation, FRotator::ZeroRotator);
+		if(Pawn == nullptr) continue;
+		
+		Pawn->UnActivatePawn();
+		Pawns.Add(Pawn);
+	}
 }
 #pragma endregion 

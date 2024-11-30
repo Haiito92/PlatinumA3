@@ -57,6 +57,20 @@ void AAIGroupCharacter::InitGroupPawn(int NewIndex)
 void AAIGroupCharacter::ActivatePawn()
 {
 	SetPawnStateID(EAIPawnStateID::Activated);
+
+	UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
+	if(pCapsuleComponent == nullptr) return
+	
+	pCapsuleComponent->SetEnableGravity(true);
+	pCapsuleComponent->SetSimulatePhysics(true);
+	pCapsuleComponent->SetVisibility(true, true);
+	SetActorEnableCollision(true);
+
+	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
+	if(CharacterMovementComponent == nullptr)return;
+
+	CharacterMovementComponent->GravityScale = 1;
+	CharacterMovementComponent->Velocity = FVector::ZeroVector;
 }
 
 void AAIGroupCharacter::DisablePawn()
@@ -74,6 +88,7 @@ void AAIGroupCharacter::UnActivatePawn()
 	pCapsuleComponent->SetEnableGravity(false);
 	pCapsuleComponent->SetSimulatePhysics(false);
 	pCapsuleComponent->SetVisibility(false, true);
+	SetActorEnableCollision(false);
 
 	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if(CharacterMovementComponent == nullptr)return;

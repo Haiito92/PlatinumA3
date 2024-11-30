@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/SphereComponent.h"
 #include "FleeFollowerComponent.generated.h"
 
 
-class USphereComponent;
+class UFleeLeaderComponent;
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PLATINUMA3_API UFleeFollowerComponent : public UActorComponent
+class PLATINUMA3_API UFleeFollowerComponent : public USphereComponent
 {
 	GENERATED_BODY()
 	
@@ -33,12 +34,10 @@ public:
 
 #pragma region FleeFollower
 private:
-
+	UPROPERTY()
+	TArray<UFleeLeaderComponent*> NeighbouringLeaders;
 	UPROPERTY()
 	TArray<UFleeFollowerComponent*> NeighbouringFollowers;
-	
-	UPROPERTY()
-	TObjectPtr<USphereComponent> DetectionCollision;
 
 	UFUNCTION()
 	void OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,

@@ -6,11 +6,12 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
+#include "Runtime/FleeSystem/FleeFollowerComponent.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/FleeSystem/FleeSystemSettings.h"
 
-#pragma region Unreal Defaults
+#pragma region Behaviour Defaults
 void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
@@ -20,27 +21,36 @@ void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Paw
 	{
 		FleeSubsystem = tFleeSubsystem;
 	}
+
+	FleeFollowerComponents.Init(nullptr, Pawns.Num());
+	for (int i = 0; i < Pawns.Num(); ++i)
+	{
+		UFleeFollowerComponent* FleeFollowerComponent = Pawns[i]->FindComponentByClass<UFleeFollowerComponent>();
+		if(FleeFollowerComponent == nullptr) continue;
+
+		FleeFollowerComponents[i] = FleeFollowerComponent;
+	}
 }
 
 bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	bool Valid = false;
 
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
-	if(FleeSystemSettings == nullptr) return false;
-	
-	for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
-	{
-		if(Pair.Key == Pawn->GetIndex()) continue;
-		
-		FVector LeaderLocation = Pair.Value->GetOwner()->GetActorLocation();
-		
-		if(FVector::Distance(LeaderLocation, Pawn->GetActorLocation()) < FleeSystemSettings->FollowFleeDetectionRadius)
-		{
-			Valid = true;
-			break;
-		}
-	}
+	// const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	// if(FleeSystemSettings == nullptr) return false;
+	//
+	// for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
+	// {
+	// 	if(Pair.Key == Pawn->GetIndex()) continue;
+	// 	
+	// 	FVector LeaderLocation = Pair.Value->GetOwner()->GetActorLocation();
+	// 	
+	// 	if(FVector::Distance(LeaderLocation, Pawn->GetActorLocation()) < FleeSystemSettings->FollowFleeDetectionRadius)
+	// 	{
+	// 		Valid = true;
+	// 		break;
+	// 	}
+	// }
 	
 	return Valid;
 }
@@ -83,11 +93,12 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 		if(FVector::Distance(LeaderLocation, Pawn->GetActorLocation()) < FleeSystemSettings->FollowFleeDetectionRadius)
 		{
 			Direction += FleeLeaderComponent->GetOwner()->GetActorForwardVector();
+			Direction.Normalize();
 		}
 	}
 
 	Direction.Z = 0;
-	Direction.Normalize();
+	
 
 	const FVector PawnLocation = Pawn->GetActorLocation();
 

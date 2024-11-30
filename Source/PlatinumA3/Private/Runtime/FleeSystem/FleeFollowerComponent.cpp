@@ -4,6 +4,7 @@
 #include "Runtime/FleeSystem/FleeFollowerComponent.h"
 
 #include "Components/SphereComponent.h"
+#include "Runtime/FleeSystem/FleeLeaderComponent.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -22,14 +23,8 @@ void UFleeFollowerComponent::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	// ...
-	DetectionCollision = Cast<USphereComponent>(
-		GetOwner()->FindComponentByTag(USphereComponent::StaticClass(), "FleeFollower"));
-
-	if(DetectionCollision==nullptr)return;
-
-	DetectionCollision->OnComponentBeginOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
-	DetectionCollision->OnComponentEndOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
+	OnComponentBeginOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
+	OnComponentEndOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
 	
 }
 
@@ -37,8 +32,8 @@ void UFleeFollowerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
 	
-	DetectionCollision->OnComponentBeginOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
-	DetectionCollision->OnComponentEndOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
+	OnComponentBeginOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
+	OnComponentEndOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
 
 }
 
@@ -57,6 +52,13 @@ void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* Overla
 	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor == GetOwner()) return;
+
+	UFleeLeaderComponent* FleeLeaderComponent = OtherActor->FindComponentByClass<UFleeLeaderComponent>();
+	if(FleeLeaderComponent != nullptr)
+	{
+		NeighbouringLeaders.Add(FleeLeaderComponent);
+	}
+	
 	
 	UFleeFollowerComponent* FleeFollowerComponent = OtherActor->FindComponentByClass<UFleeFollowerComponent>();
 	if(FleeFollowerComponent == nullptr) return;
@@ -73,6 +75,12 @@ void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* Overla
 void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
 	UPrimitiveComponent* PrimitiveComponent1, int I)
 {
+	UFleeLeaderComponent* FleeLeaderComponent = Actor->FindComponentByClass<UFleeLeaderComponent>();
+	if(FleeLeaderComponent != nullptr)
+	{
+		NeighbouringLeaders.Remove(FleeLeaderComponent);
+	}
+	
 	UFleeFollowerComponent* FleeFollowerComponent = Actor->FindComponentByClass<UFleeFollowerComponent>();
 	if(FleeFollowerComponent == nullptr) return;
 

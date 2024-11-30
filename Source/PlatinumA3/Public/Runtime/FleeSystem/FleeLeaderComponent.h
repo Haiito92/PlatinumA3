@@ -4,11 +4,12 @@
 
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
+#include "Components/SphereComponent.h"
 #include "FleeLeaderComponent.generated.h"
 
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PLATINUMA3_API UFleeLeaderComponent : public UActorComponent
+class PLATINUMA3_API UFleeLeaderComponent : public USphereComponent
 {
 	GENERATED_BODY()
 
@@ -18,8 +19,10 @@ public:
 	UFleeLeaderComponent();
 
 protected:
+	
 	// Called when the game starts
 	virtual void BeginPlay() override;
+	virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
 
 public:
 	// Called every frame
@@ -28,11 +31,21 @@ public:
 #pragma endregion
 
 #pragma region FleeLeader
-// public:
-// 	FVector GetLeaderLocation() const;
-// 	FVector GetLeaderForwardVector() const;
-// private:
-// 	UPROPERTY()
-// 	TObjectPtr<AActor> Owner;
+public:
+	UFUNCTION()
+	const inline TArray<AActor*>& GetScaryActors() const; 
+protected:
+	UFUNCTION()
+	void OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
+								 const FHitResult& SweepResult);
+	UFUNCTION()
+	void OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I);
+
+private:
+	UPROPERTY()
+	FName TagToFleeFrom;
+	
+	UPROPERTY()
+	TArray<AActor*> ScaryActors;
 #pragma endregion 
 };

@@ -28,7 +28,7 @@ void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 		// TEXT("Get FLEE Subsystem"));
 	}
 	
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	const FName& Tag = FleeSystemSettings->TagToFleeFrom;
 	
@@ -53,18 +53,18 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	bool valid = false;
 
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
-	if(FleeSystemSettings == nullptr) return false;
+	// const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	// if(FleeSystemSettings == nullptr) return false;
+	//
+	// for (AActor* Actor : ActorsToFleeFrom)
+	// {
+	// 	if(FVector::Distance(Pawn->GetActorLocation(), Actor->GetActorLocation()) < FleeSystemSettings->FleeDetectionRadius)
+	// 	{
+	// 		valid = true;
+	// 	}
+	// }
 	
-	for (AActor* Actor : ActorsToFleeFrom)
-	{
-		if(FVector::Distance(Pawn->GetActorLocation(), Actor->GetActorLocation()) < FleeSystemSettings->FleeDetectionRadius)
-		{
-			valid = true;
-		}
-	}
-	
-	return valid;
+	return FleeLeaderComponents[Pawn->GetIndex()]->GetScaryActors().Num() > 0;
 }
 
 void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
@@ -75,7 +75,6 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	if(FleeSubsystem == nullptr || LeaderComponent == nullptr) return;
 	FleeSubsystem->GetCurrentFleeLeaders().Add(Pawn->GetIndex(),LeaderComponent);
 	
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
 	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
@@ -97,20 +96,18 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
+	int Index = Pawn->GetIndex();
+
 	FVector Direction = FVector::Zero();
 
 	const FVector PawnLocation = Pawn->GetActorLocation();
 
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
-	for (AActor* ActorToFleeFrom : ActorsToFleeFrom)
+	for (const AActor* ActorToFleeFrom : FleeLeaderComponents[Index]->GetScaryActors())
 	{
 		FVector AtoP = PawnLocation - ActorToFleeFrom->GetActorLocation();
-		if(AtoP.Length() < FleeSystemSettings->FleeDetectionRadius)
-		{
-			Direction += AtoP;
-		}
+		Direction += AtoP;
 	}
 
 	Direction.Z = 0;

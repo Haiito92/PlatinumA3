@@ -3,6 +3,8 @@
 
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
+
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
 UFleeLeaderComponent::UFleeLeaderComponent()
@@ -20,7 +22,24 @@ void UFleeLeaderComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+
+	OnComponentBeginOverlap.AddDynamic(this, &UFleeLeaderComponent::OnDetectionBeginOverlap);
+	OnComponentEndOverlap.AddDynamic(this, &UFleeLeaderComponent::OnDetectionEndOverlap);
+
 	
+	const UFleeSystemSettings* Settings = GetDefault<UFleeSystemSettings>();
+	if (Settings == nullptr) return;
+
+	TagToFleeFrom = Settings->TagToFleeFrom;
+	SphereRadius = Settings->FleeDetectionRadius;
+	
+}
+
+void UFleeLeaderComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
+{
+	Super::EndPlay(EndPlayReason);
+	OnComponentBeginOverlap.RemoveDynamic(this, &UFleeLeaderComponent::OnDetectionBeginOverlap);
+	OnComponentEndOverlap.RemoveDynamic(this, &UFleeLeaderComponent::OnDetectionEndOverlap);
 }
 
 
@@ -33,18 +52,31 @@ void UFleeLeaderComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
+const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
+{
+	return ScaryActors;
+}
 #pragma endregion
 
 #pragma region FleeLeader
 
-// FVector UFleeLeaderComponent::GetLeaderLocation() const
-// {
-// 	return GetOwner()->GetActorLocation();
-// }
-//
-// FVector UFleeLeaderComponent::GetLeaderForwardVector() const
-// {
-// 	return GetOwner()->GetActorForwardVector();
-// }
+void UFleeLeaderComponent::OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
+	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	if(OtherActor->ActorHasTag(TagToFleeFrom))
+	{
+		ScaryActors.Add(OtherActor);
+	}
+}
+
+void UFleeLeaderComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
+	UPrimitiveComponent* PrimitiveComponent1, int I)
+{
+	if(Actor->ActorHasTag(TagToFleeFrom))
+	{
+		ScaryActors.Remove(Actor);
+	}
+}
+
 
 #pragma endregion 

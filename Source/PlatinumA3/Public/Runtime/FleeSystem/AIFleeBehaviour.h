@@ -11,6 +11,7 @@
  * 
  */
 
+class UFleeSystemSettings;
 class UFleeSubsystem;
 class UFleeLeaderComponent;
 
@@ -22,6 +23,9 @@ class PLATINUMA3_API UAIFleeBehaviour : public UAIBehaviour
 private:
 	UPROPERTY()
 	TObjectPtr<UFleeSubsystem> FleeSubsystem;
+
+	UPROPERTY()
+	const UFleeSystemSettings* FleeSystemSettings;
 	
 	UPROPERTY()
 	TArray<AActor*> ActorsToFleeFrom;

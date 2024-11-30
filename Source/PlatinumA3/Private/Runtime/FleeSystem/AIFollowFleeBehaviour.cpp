@@ -22,7 +22,7 @@ void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Paw
 	}
 }
 
-bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	bool Valid = false;
 

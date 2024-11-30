@@ -18,7 +18,7 @@ void UAIIdleBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	IdlingPawnDatas.Init({},Pawns.Num());
 }
 
-bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	return Pawn->GetPawnStateID() == EAIPawnStateID::Activated;
 }

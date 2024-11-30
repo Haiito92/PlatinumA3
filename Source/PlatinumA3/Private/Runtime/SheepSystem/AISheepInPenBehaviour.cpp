@@ -32,7 +32,7 @@ void UAISheepInPenBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Paw
 	}
 }
 
-bool UAISheepInPenBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAISheepInPenBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	const USheepComponent* SheepComponent = SheepComponents[Pawn->GetIndex()];
 	if(SheepComponent == nullptr) return false;

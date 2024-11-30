@@ -32,7 +32,7 @@ private:
 public:
 	virtual void InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns) override;
 	
-	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) const override;
+	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) override;
 
 	virtual void BehaviourEntry(AAIGroupCharacter* Pawn) override;
 	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime) override;

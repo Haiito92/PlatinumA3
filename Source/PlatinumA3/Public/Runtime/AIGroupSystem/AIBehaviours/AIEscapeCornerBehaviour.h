@@ -6,9 +6,21 @@
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "AIEscapeCornerBehaviour.generated.h"
 
+class UAIDefaultBehavioursSettings;
 /**
  * 
  */
+USTRUCT()
+struct FEscapeCornerPawnData
+{
+	GENERATED_BODY()
+public:
+	~FEscapeCornerPawnData() = default;
+
+	FVector EscapeDirection = FVector::ZeroVector;
+};
+
+
 UCLASS()
 class PLATINUMA3_API UAIEscapeCornerBehaviour : public UAIBehaviour
 {
@@ -16,11 +28,17 @@ class PLATINUMA3_API UAIEscapeCornerBehaviour : public UAIBehaviour
 #pragma region BehaviourDefaults
 	virtual void InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns) override;
 	
-	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) const override;
+	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) override;
 
 	virtual void BehaviourEntry(AAIGroupCharacter* Pawn) override;
 	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime) override;
 	virtual void BehaviourExit(AAIGroupCharacter* Pawn) override;
 	
-#pragma endregion 
+#pragma endregion
+
+private:
+	const UAIDefaultBehavioursSettings* Settings;
+	
+	UPROPERTY()
+	TArray<FEscapeCornerPawnData> EscapeDatas;
 };

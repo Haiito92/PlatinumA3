@@ -49,7 +49,7 @@ void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	
 }
 
-bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	bool valid = false;
 

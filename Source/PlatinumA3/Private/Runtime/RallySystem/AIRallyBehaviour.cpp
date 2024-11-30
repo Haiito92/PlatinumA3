@@ -23,7 +23,7 @@ void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	}
 }
 
-bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	return RallyReceiverComponents[Pawn->GetIndex()]->GetIsNotified();
 }

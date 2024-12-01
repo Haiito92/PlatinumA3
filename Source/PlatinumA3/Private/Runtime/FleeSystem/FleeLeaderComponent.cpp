@@ -84,8 +84,7 @@ void UFleeLeaderComponent::OnDetectionBeginOverlap(UPrimitiveComponent* Overlapp
 		ScaryActors.Add(OtherActor);
 		if (ScaryActors.Num() == 1)
 		{
-			bFleeing = true;
-			StartFleeEvent.Broadcast(LeaderIndex);
+			StartFlee();
 		}
 	}
 }
@@ -98,10 +97,23 @@ void UFleeLeaderComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveC
 		ScaryActors.Remove(Actor);
 		if (ScaryActors.Num() == 0)
 		{
-			bFleeing = false;
-			StopFleeEvent.Broadcast(LeaderIndex);
+			StopFlee();
 		}
 	}
+}
+
+void UFleeLeaderComponent::StartFlee()
+{
+	bFleeing = true;
+	StartFleeEvent.Broadcast(LeaderIndex);
+	JuicyStartFlee();
+}
+
+void UFleeLeaderComponent::StopFlee()
+{
+	bFleeing = false;
+	StopFleeEvent.Broadcast(LeaderIndex);
+	JuicyStopFlee();
 }
 
 

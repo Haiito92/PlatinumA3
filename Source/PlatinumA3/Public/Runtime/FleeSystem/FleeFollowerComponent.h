@@ -66,8 +66,13 @@ protected:
 	
 	UFUNCTION()
 	void StartFollowFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStartFollowFlee();
+	
 	UFUNCTION()
 	void StopFollowFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStopFollowFlee();
 private:	
 
 	UPROPERTY()

@@ -68,12 +68,14 @@ void UFleeFollowerComponent::StartFollowFlee()
 {
 	bFollowFleeing = true;
 	StartFollowFleeEvent.Broadcast();
+	JuicyStartFollowFlee();
 }
 
 void UFleeFollowerComponent::StopFollowFlee()
 {
 	bFollowFleeing = false;
 	StopFollowFleeEvent.Broadcast();
+	JuicyStopFollowFlee();
 }
 #pragma endregion 
 #pragma region GroupsFollowed

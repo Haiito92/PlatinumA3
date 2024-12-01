@@ -58,6 +58,16 @@ protected:
 	UFUNCTION()
 	void OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I);
 
+	UFUNCTION()
+	void StartFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStartFlee();
+	
+	UFUNCTION()
+	void StopFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStopFlee();
+
 private:
 	UPROPERTY()
 	FName TagToFleeFrom;

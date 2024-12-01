@@ -45,6 +45,15 @@ public:
 	int GetBrainIndex() const;
 	UFUNCTION()
 	TArray<UFleeBrainComponent*>& GetLinkedBrainComponents();
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLinkEvent, UFleeBrainComponent*, Brain, UFleeBrainComponent*, OtherBrain);
+	UPROPERTY()
+	FLinkEvent LinkEvent;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FUnlinkEvent, UFleeBrainComponent*, Brain, UFleeBrainComponent*, OtherBrain);
+	UPROPERTY()
+	FUnlinkEvent UnlinkEvent;
+	
 protected:
 	UFUNCTION()
 	void OnLinkDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
@@ -63,7 +72,7 @@ private:
 #pragma region LeaderCortex
 public:
 	UFUNCTION()
-	UFleeLeaderComponent* GetFleeLeaderComponent() const;
+	inline UFleeLeaderComponent* GetFleeLeaderComponent() const;
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeaderCortexStartFleeEvent, int, LeaderIndex);
 	UPROPERTY()
@@ -85,7 +94,7 @@ private:
 
 public:
 	UFUNCTION()
-	UFleeFollowerComponent* GetFleeFollowerComponent() const;
+	inline UFleeFollowerComponent* GetFleeFollowerComponent() const;
 private:
 	UPROPERTY()
 	TObjectPtr<UFleeFollowerComponent> FleeFollowerComponent;

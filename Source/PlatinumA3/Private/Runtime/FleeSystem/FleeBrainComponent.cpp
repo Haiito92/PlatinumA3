@@ -109,10 +109,12 @@ void UFleeBrainComponent::OnLinkDetectionBeginOverlap(UPrimitiveComponent* Overl
 {
 	if(OtherActor == GetOwner()) return;
 
-	UFleeBrainComponent* FleeBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
-	if(FleeBrainComponent == nullptr) return;
+	UFleeBrainComponent* OtherBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
+	if(OtherBrainComponent == nullptr) return;
 
-	LinkedBrainComponents.AddUnique(FleeBrainComponent);
+	LinkedBrainComponents.AddUnique(OtherBrainComponent);
+
+	LinkEvent.Broadcast(this, OtherBrainComponent);
 }
 
 void UFleeBrainComponent::OnLinkDetectionEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
@@ -120,16 +122,18 @@ void UFleeBrainComponent::OnLinkDetectionEndOverlap(UPrimitiveComponent* Overlap
 {
 	if(OtherActor == GetOwner()) return;
 
-	UFleeBrainComponent* FleeBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
-	if(FleeBrainComponent == nullptr) return;
+	UFleeBrainComponent* OtherBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
+	if(OtherBrainComponent == nullptr) return;
 
-	LinkedBrainComponents.Remove(FleeBrainComponent);
+	LinkedBrainComponents.Remove(OtherBrainComponent);
+
+	UnlinkEvent.Broadcast(this, OtherBrainComponent);
 }
 #pragma endregion
 
 #pragma region LeaderCortex
 
-UFleeLeaderComponent* UFleeBrainComponent::GetFleeLeaderComponent() const
+inline UFleeLeaderComponent* UFleeBrainComponent::GetFleeLeaderComponent() const
 {
 	return FleeLeaderComponent;
 }
@@ -147,7 +151,7 @@ void UFleeBrainComponent::OnLeaderCortexStopFleeEvent(int InLeaderIndex)
 #pragma endregion 
 
 #pragma region FollowerCortex
-UFleeFollowerComponent* UFleeBrainComponent::GetFleeFollowerComponent() const
+inline UFleeFollowerComponent* UFleeBrainComponent::GetFleeFollowerComponent() const
 {
 	return FleeFollowerComponent;
 }

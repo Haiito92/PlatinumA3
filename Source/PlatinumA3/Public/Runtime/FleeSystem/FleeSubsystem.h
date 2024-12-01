@@ -67,6 +67,11 @@ public:
 
 
 #pragma region FleeBrains
+protected:
+	UFUNCTION()
+	void OnLinkEvent(UFleeBrainComponent* Brain, UFleeBrainComponent* OtherBrain);
+	UFUNCTION()
+	void OnUnlinkEvent(UFleeBrainComponent* Brain, UFleeBrainComponent* OtherBrain);
 private:
 	UPROPERTY()
 	TArray<UFleeBrainComponent*> FleeBrainComponents;
@@ -95,6 +100,10 @@ protected:
 
 	UFUNCTION()
 	void RemoveFollowerFromGroup(const int InGroupLeaderIndex,UFleeFollowerComponent* InFollowerToRemove);
+
+	UFUNCTION()
+	bool FindPathToLeader(UFleeBrainComponent* InStart, int InGroupLeaderIndex, TArray<UFleeBrainComponent*>& InOutVisitedBrains);
+
 private:
 #pragma endregion 
 };

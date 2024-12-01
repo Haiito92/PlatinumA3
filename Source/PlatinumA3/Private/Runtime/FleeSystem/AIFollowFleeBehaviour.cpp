@@ -54,7 +54,7 @@ bool UAIFollowFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 	// 	}
 	// }
 	
-	return Valid;
+	return FleeFollowerComponents[Pawn->GetIndex()]->GetFollowFleeing();
 }
 
 void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
@@ -70,11 +70,11 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FollowFleeSpeed;
 	}
 	
-	// GEngine->AddOnScreenDebugMessage(
-	// -1,
-	// 4.0f,
-	// FColor::Orange,
-	// TEXT("FOLLOW FLEE ENTRY"));
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("FOLLOW FLEE ENTRY"));
 }
 
 void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -82,9 +82,6 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
 	if(FleeSystemSettings == nullptr) return;
-	
-	FVector Direction;
-	
 	// for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
 	// {
 	// 	if(Pair.Key == Pawn->GetIndex()) continue;
@@ -97,7 +94,18 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 	// 	}
 	// }
 
+	UFleeFollowerComponent* FollowerComponent = FleeFollowerComponents[Pawn->GetIndex()];
+	if(FollowerComponent == nullptr) return;
+	
+	FVector Direction;
+
+	for (const TTuple<int, FGroupFollowedData>& Pair : FollowerComponent->GetGroupFollowedDatas())
+	{
+		Direction += Pair.Value.GroupDirection;
+	}
+	
 	Direction.Z = 0;
+	Direction.Normalize();
 	
 
 	const FVector PawnLocation = Pawn->GetActorLocation();
@@ -114,10 +122,10 @@ void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 
 	Pawn->StopRotateAICharacter();
 
-	// GEngine->AddOnScreenDebugMessage(
-	// -1,
-	// 4.0f,
-	// FColor::Orange,
-	// TEXT("FOLLOW FLEE EXIT"));
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("FOLLOW FLEE EXIT"));
 }
 #pragma endregion 

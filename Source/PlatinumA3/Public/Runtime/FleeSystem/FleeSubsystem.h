@@ -46,13 +46,23 @@ public:
 };
 
 UCLASS()
-class PLATINUMA3_API UFleeSubsystem : public UWorldSubsystem
+class PLATINUMA3_API UFleeSubsystem : public UTickableWorldSubsystem
 {
 	GENERATED_BODY()
+#pragma region UnrealDefaults
+protected:
+	virtual TStatId GetStatId() const override {return TStatId();};
+	virtual void Tick(float DeltaTime) override;
+	
+#pragma endregion 
 public:
 	
 	UFUNCTION()
 	void InitSubsystem();
+
+	UFUNCTION()
+	void UpdateSubsystem(float InDeltaTime);
+
 
 #pragma region FleeLeaders
 public:

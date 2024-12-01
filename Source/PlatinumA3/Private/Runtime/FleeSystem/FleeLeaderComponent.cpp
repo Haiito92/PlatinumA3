@@ -57,6 +57,12 @@ void UFleeLeaderComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UFleeLeaderComponent::Init(unsigned InIndex)
 {
 	LeaderIndex = InIndex;
+
+	const UFleeSystemSettings* Settings = GetDefault<UFleeSystemSettings>();
+	if(Settings!=nullptr)
+	{
+		SphereRadius = Settings->FleeDetectionRadius;
+	}
 }
 
 const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const

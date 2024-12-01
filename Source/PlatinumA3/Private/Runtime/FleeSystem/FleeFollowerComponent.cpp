@@ -4,7 +4,9 @@
 #include "Runtime/FleeSystem/FleeFollowerComponent.h"
 
 #include "Components/SphereComponent.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -22,6 +24,7 @@ UFleeFollowerComponent::UFleeFollowerComponent()
 void UFleeFollowerComponent::BeginPlay()
 {
 	Super::BeginPlay();
+
 	
 	OnComponentBeginOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
 	OnComponentEndOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
@@ -45,12 +48,38 @@ void UFleeFollowerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	// ...
 }
+
+
 #pragma endregion
 
 #pragma region FleeFollower
-TMap<int, int>& UFleeFollowerComponent::GetGroupFollowedIndexes()
+void UFleeFollowerComponent::Init(int InFollowerIndex)
 {
-	return GroupFollowedIndexes;
+	FollowerIndex = InFollowerIndex;
+	const UFleeSystemSettings* Settings = GetDefault<UFleeSystemSettings>();
+	if(Settings!= nullptr)
+	{
+		SphereRadius = Settings->FollowFleeDetectionRadius;
+	}
+	
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors, AAIGroupCharacter::StaticClass());
+	
+	for (const AActor* OverlappingActor : OverlappingActors)
+	{
+		if(OverlappingActor == GetOwner()) continue;
+		
+		UFleeLeaderComponent* FleeLeaderComponent = OverlappingActor->FindComponentByClass<UFleeLeaderComponent>();
+		if(FleeLeaderComponent != nullptr) AddNeighbouringLeader(FleeLeaderComponent);
+
+		UFleeFollowerComponent* FleeFollowerComponent = OverlappingActor->FindComponentByClass<UFleeFollowerComponent>();
+		if(FleeFollowerComponent != nullptr) AddNeighbouringFollower(FleeFollowerComponent);
+	}
+}
+
+TMap<int, FGroupFollowedData>& UFleeFollowerComponent::GetGroupFollowedDatas()
+{
+	return GroupFollowedDatas;
 }
 
 int UFleeFollowerComponent::GetFollowerIndex() const
@@ -58,32 +87,27 @@ int UFleeFollowerComponent::GetFollowerIndex() const
 	return FollowerIndex;
 }
 
+bool UFleeFollowerComponent::GetFollowFleeing() const
+{
+	return bFollowFleeing;
+}
+
 void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
                                                      UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor == GetOwner()) return;
-
+	
 	UFleeLeaderComponent* FleeLeaderComponent = OtherActor->FindComponentByClass<UFleeLeaderComponent>();
 	if(FleeLeaderComponent != nullptr)
 	{
-		const int LeaderIndex = FleeLeaderComponent->GetLeaderIndex();
-		
-		if(FleeLeaderComponent->GetFleeing())
-		{
-			IncrementGroupAmount(LeaderIndex);
-		}
-		
-		NeighbouringLeaders.Add(FleeLeaderComponent);
-		FleeLeaderComponent->StartFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
-		FleeLeaderComponent->StopFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
+		AddNeighbouringLeader(FleeLeaderComponent);
 	}
 	
 	
 	UFleeFollowerComponent* FleeFollowerComponent = OtherActor->FindComponentByClass<UFleeFollowerComponent>();
 	if(FleeFollowerComponent == nullptr) return;
 	
-	NeighbouringFollowers.Add(FleeFollowerComponent);
-	
+	AddNeighbouringFollower(FleeFollowerComponent);	
 }
 
 void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
@@ -92,21 +116,13 @@ void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* Primitiv
 	UFleeLeaderComponent* FleeLeaderComponent = Actor->FindComponentByClass<UFleeLeaderComponent>();
 	if(FleeLeaderComponent != nullptr)
 	{
-		const int LeaderIndex = FleeLeaderComponent->GetLeaderIndex();
-		if(FleeLeaderComponent->GetFleeing())
-		{
-			DecrementGroupAmount(LeaderIndex);
-		}
-		
-		NeighbouringLeaders.Remove(FleeLeaderComponent);
-		FleeLeaderComponent->StartFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
-		FleeLeaderComponent->StopFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
+		RemoveNeighbouringLeader(FleeLeaderComponent);
 	}
 	
 	UFleeFollowerComponent* FleeFollowerComponent = Actor->FindComponentByClass<UFleeFollowerComponent>();
 	if(FleeFollowerComponent == nullptr) return;
 
-	NeighbouringFollowers.Remove(FleeFollowerComponent);
+	RemoveNeighbouringFollower(FleeFollowerComponent);
 	
 }
 
@@ -120,31 +136,86 @@ void UFleeFollowerComponent::OnLeaderStopFleeEvent(int LeaderIndex)
 	DecrementGroupAmount(LeaderIndex);
 }
 
+void UFleeFollowerComponent::AddNeighbouringLeader(UFleeLeaderComponent* LeaderComponent)
+{
+	const int LeaderIndex = LeaderComponent->GetLeaderIndex();
+		
+	if(LeaderComponent->GetFleeing())
+	{
+		IncrementGroupAmount(LeaderIndex);
+	}
+		
+	NeighbouringLeaders.AddUnique(LeaderComponent);
+	LeaderComponent->StartFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
+	LeaderComponent->StopFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
+}
+
+void UFleeFollowerComponent::RemoveNeighbouringLeader(UFleeLeaderComponent* LeaderComponent)
+{
+	const int LeaderIndex = LeaderComponent->GetLeaderIndex();
+	if(LeaderComponent->GetFleeing())
+	{
+		DecrementGroupAmount(LeaderIndex);
+	}
+		
+	NeighbouringLeaders.Remove(LeaderComponent);
+	LeaderComponent->StartFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
+	LeaderComponent->StopFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
+}
+
+void UFleeFollowerComponent::AddNeighbouringFollower(UFleeFollowerComponent* FollowerComponent)
+{
+	NeighbouringFollowers.AddUnique(FollowerComponent);
+}
+
+void UFleeFollowerComponent::RemoveNeighbouringFollower(UFleeFollowerComponent* FollowerComponent)
+{
+	NeighbouringFollowers.Remove(FollowerComponent);
+}
+
 void UFleeFollowerComponent::IncrementGroupAmount(int InGroupLeaderIndex, int InAmount)
 {
-	if(!GroupFollowedIndexes.Contains(InGroupLeaderIndex))
+	if(!GroupFollowedDatas.Contains(InGroupLeaderIndex))
 	{
-		GroupFollowedIndexes.Add(InGroupLeaderIndex, InAmount);
+		const FGroupFollowedData Data = {InAmount,FVector::ZeroVector};
+		GroupFollowedDatas.Add(InGroupLeaderIndex, Data);
 		EncounteredNewGroupEvent.Broadcast(InGroupLeaderIndex, FollowerIndex);
+
+		if( GroupFollowedDatas.Num() == 1) StartFollowFlee();
 	}else
 	{
-		int* Amount = GroupFollowedIndexes.Find(InGroupLeaderIndex);
-		(*Amount) += InAmount;
+		FGroupFollowedData* Data = GroupFollowedDatas.Find(InGroupLeaderIndex);
+		Data->NeighboursAmount += InAmount;
 	}
 }
 
 void UFleeFollowerComponent::DecrementGroupAmount(int InGroupLeaderIndex, int InAmount)
 {
-	if(!GroupFollowedIndexes.Contains(InGroupLeaderIndex)) return;
+	if(!GroupFollowedDatas.Contains(InGroupLeaderIndex)) return;
 
-	int* Amount = GroupFollowedIndexes.Find(InGroupLeaderIndex);
-	(*Amount) -= InAmount;
+	FGroupFollowedData* Data = GroupFollowedDatas.Find(InGroupLeaderIndex);
 	
-	if((*Amount) <= 0)
+	Data->NeighboursAmount -= InAmount;
+	
+	if(Data->NeighboursAmount <= 0)
 	{
 		LostContactWithGroupEvent.Broadcast(InGroupLeaderIndex, FollowerIndex);
 	
-		GroupFollowedIndexes.Remove(InGroupLeaderIndex);
+		GroupFollowedDatas.Remove(InGroupLeaderIndex);
+
+		if( GroupFollowedDatas.Num() == 0) StopFollowFlee();
 	}
+}
+
+void UFleeFollowerComponent::StartFollowFlee()
+{
+	bFollowFleeing = true;
+	StartFollowFleeEvent.Broadcast();
+}
+
+void UFleeFollowerComponent::StopFollowFlee()
+{
+	bFollowFleeing = false;
+	StopFollowFleeEvent.Broadcast();
 }
 #pragma endregion 

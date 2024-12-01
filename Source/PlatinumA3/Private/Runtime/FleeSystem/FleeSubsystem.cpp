@@ -8,7 +8,14 @@
 #include "Runtime/FleeSystem/FleeFollowerComponent.h"
 #include "Runtime/FleeSystem/FleeLeaderComponent.h"
 
+#pragma region UnrealDefaults
 
+void UFleeSubsystem::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	UpdateSubsystem(DeltaTime);
+}
+#pragma endregion 
 void UFleeSubsystem::InitSubsystem()
 {
 	TArray<AActor*> FoundActors;
@@ -30,22 +37,26 @@ void UFleeSubsystem::InitSubsystem()
 	{
 		UFleeFollowerComponent* FollowerComponent = FoundActors[i]->FindComponentByClass<UFleeFollowerComponent>();
 		if(FollowerComponent == nullptr) return;
-
+		FollowerComponent->Init(i);
 		FleeFollowerComponents[i] = FollowerComponent;
 		FollowerComponent->EncounteredNewGroupEvent.AddDynamic(this, &UFleeSubsystem::OnFollowerEncounteredNewGroup);
 		FollowerComponent->LostContactWithGroupEvent.AddDynamic(this, &UFleeSubsystem::OnFollowerLostContactWithGroup);
 	}
 }
 
-// const FVector& FFleeLeaderData::GetLeaderLocation() const
-// {
-// 	return LeaderLocation;
-// }
-//
-// const FVector& FFleeLeaderData::GetLeaderForwardVector() const
-// {
-// 	return LeaderForwardVector;
-// }
+void UFleeSubsystem::UpdateSubsystem(float InDeltaTime)
+{
+	for (TTuple<int, FFleeGroupData>& Pair : ActiveFleeGroups)
+	{
+		Pair.Value.GroupDirection = FleeLeaderComponents[Pair.Key]->GetOwner()->GetActorForwardVector();
+		
+		for (UFleeFollowerComponent* Follower : Pair.Value.Followers)
+		{
+			FGroupFollowedData* Data = Follower->GetGroupFollowedDatas().Find(Pair.Key);
+			Data->GroupDirection = Pair.Value.GroupDirection;
+		}
+	}
+}
 
 #pragma region FleeLeaders
 
@@ -58,10 +69,10 @@ void UFleeSubsystem::OnLeaderStartFlee(int LeaderIndex)
 void UFleeSubsystem::OnLeaderStopFlee(int LeaderIndex)
 {
 	FFleeGroupData* Data = ActiveFleeGroups.Find(LeaderIndex);
-	for (UFleeFollowerComponent* Follower : Data->Followers)
-	{
-		Follower->GetGroupFollowedIndexes().Remove(LeaderIndex);
-	}
+	// for (UFleeFollowerComponent* Follower : Data->Followers)
+	// {
+	// 	Follower->GetGroupFollowedDatas().Remove(LeaderIndex);
+	// }
 	ActiveFleeGroups.Remove(LeaderIndex);
 }
 

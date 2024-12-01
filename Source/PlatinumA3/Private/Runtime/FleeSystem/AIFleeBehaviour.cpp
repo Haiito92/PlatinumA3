@@ -64,16 +64,16 @@ bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 	// 	}
 	// }
 	
-	return FleeLeaderComponents[Pawn->GetIndex()]->GetScaryActors().Num() > 0;
+	return FleeLeaderComponents[Pawn->GetIndex()]->GetFleeing();
 }
 
 void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 	
-	UFleeLeaderComponent* LeaderComponent = FleeLeaderComponents[Pawn->GetIndex()];
-	if(FleeSubsystem == nullptr || LeaderComponent == nullptr) return;
-	FleeSubsystem->GetCurrentFleeLeaders().Add(Pawn->GetIndex(),LeaderComponent);
+	// UFleeLeaderComponent* LeaderComponent = FleeLeaderComponents[Pawn->GetIndex()];
+	// if(FleeSubsystem == nullptr || LeaderComponent == nullptr) return;
+	// FleeSubsystem->GetCurrentFleeLeaders().Add(Pawn->GetIndex(),LeaderComponent);
 	
 	if(FleeSystemSettings == nullptr) return;
 	
@@ -131,8 +131,9 @@ void UAIFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 
 	Pawn->StopRotateAICharacter();
 	
-	if(FleeSubsystem == nullptr) return;
-	FleeSubsystem->GetCurrentFleeLeaders().Remove(Pawn->GetIndex());	
+	// if(FleeSubsystem == nullptr) return;
+	// FleeSubsystem->GetCurrentFleeLeaders().Remove(Pawn->GetIndex());
+	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

@@ -6,6 +6,7 @@
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "AIFollowFleeBehaviour.generated.h"
 
+class UFleeSystemSettings;
 class UFleeFollowerComponent;
 class UFleeSubsystem;
 /**
@@ -30,6 +31,9 @@ public:
 #pragma region FollowFlee
 	UPROPERTY()
 	TObjectPtr<UFleeSubsystem> FleeSubsystem;
+
+	UPROPERTY()
+	const UFleeSystemSettings* FleeSystemSettings;
 
 	UPROPERTY()
 	TArray<UFleeFollowerComponent*> FleeFollowerComponents;

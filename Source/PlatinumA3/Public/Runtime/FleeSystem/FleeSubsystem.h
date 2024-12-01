@@ -25,25 +25,62 @@
 // 	FVector& LeaderForwardVector;
 // };
 
+class UFleeFollowerComponent;
 class UFleeLeaderComponent;
+
+USTRUCT()
+struct FFleeGroupData
+{
+	GENERATED_BODY()
+public:
+	~FFleeGroupData() = default;
+
+	UPROPERTY()
+	UFleeLeaderComponent* GroupLeader;
+
+	UPROPERTY()
+	FVector GroupDirection = FVector::ZeroVector;
+	
+	UPROPERTY()
+	TArray<UFleeFollowerComponent*> Followers;
+};
 
 UCLASS()
 class PLATINUMA3_API UFleeSubsystem : public UWorldSubsystem
 {
 	GENERATED_BODY()
 public:
+	
 	UFUNCTION()
 	void InitSubsystem();
 
+#pragma region FleeLeaders
+public:
+	
+protected:
 	UFUNCTION()
-	TMap<int,UFleeLeaderComponent*>& GetCurrentFleeLeaders();
+	void OnLeaderStartFlee(int LeaderIndex);
+	
+	UFUNCTION()
+	void OnLeaderStopFlee(int LeaderIndex);
+
 private:
 	UPROPERTY()
-	TMap<int,UFleeLeaderComponent*> CurrentFleeLeaders;
-// public:
-// 	UFUNCTION()
-// 	TMap<int,FFleeLeaderData>& GetLeadersData() const;
-// private:
-// 	UPROPERTY()
-// 	TMap<int,FFleeLeaderData> LeadersData;
+	TArray<UFleeLeaderComponent*> FleeLeaderComponents;
+	
+	UPROPERTY()
+	TMap<int, FFleeGroupData>ActiveFleeGroups;
+
+#pragma endregion 
+#pragma region FleeFollowers
+protected:
+	UFUNCTION()
+	void OnFollowerEncounteredNewGroup(int InGroupLeaderIndex, int InFollowerIndex);
+	UFUNCTION()
+	void OnFollowerLostContactWithGroup(int InGroupLeaderIndex, int InFollowerIndex);
+
+private:
+	UPROPERTY()
+	TArray<UFleeFollowerComponent*> FleeFollowerComponents;
+#pragma endregion 
 };

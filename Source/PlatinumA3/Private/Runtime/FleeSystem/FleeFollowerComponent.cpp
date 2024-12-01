@@ -48,15 +48,34 @@ void UFleeFollowerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion
 
 #pragma region FleeFollower
+TMap<int, int>& UFleeFollowerComponent::GetGroupFollowedIndexes()
+{
+	return GroupFollowedIndexes;
+}
+
+int UFleeFollowerComponent::GetFollowerIndex() const
+{
+	return FollowerIndex;
+}
+
 void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                     UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor == GetOwner()) return;
 
 	UFleeLeaderComponent* FleeLeaderComponent = OtherActor->FindComponentByClass<UFleeLeaderComponent>();
 	if(FleeLeaderComponent != nullptr)
 	{
+		const int LeaderIndex = FleeLeaderComponent->GetLeaderIndex();
+		
+		if(FleeLeaderComponent->GetFleeing())
+		{
+			IncrementGroupAmount(LeaderIndex);
+		}
+		
 		NeighbouringLeaders.Add(FleeLeaderComponent);
+		FleeLeaderComponent->StartFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
+		FleeLeaderComponent->StopFleeEvent.AddDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
 	}
 	
 	
@@ -65,11 +84,6 @@ void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* Overla
 	
 	NeighbouringFollowers.Add(FleeFollowerComponent);
 	
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Green,
-	// 	TEXT("Overlap Begin"));
 }
 
 void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
@@ -78,17 +92,59 @@ void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* Primitiv
 	UFleeLeaderComponent* FleeLeaderComponent = Actor->FindComponentByClass<UFleeLeaderComponent>();
 	if(FleeLeaderComponent != nullptr)
 	{
+		const int LeaderIndex = FleeLeaderComponent->GetLeaderIndex();
+		if(FleeLeaderComponent->GetFleeing())
+		{
+			DecrementGroupAmount(LeaderIndex);
+		}
+		
 		NeighbouringLeaders.Remove(FleeLeaderComponent);
+		FleeLeaderComponent->StartFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStartFleeEvent);
+		FleeLeaderComponent->StopFleeEvent.RemoveDynamic(this, &UFleeFollowerComponent::OnLeaderStopFleeEvent);
 	}
 	
 	UFleeFollowerComponent* FleeFollowerComponent = Actor->FindComponentByClass<UFleeFollowerComponent>();
 	if(FleeFollowerComponent == nullptr) return;
 
 	NeighbouringFollowers.Remove(FleeFollowerComponent);
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Green,
-	// 	TEXT("Overlap End"));
+	
+}
+
+void UFleeFollowerComponent::OnLeaderStartFleeEvent(int LeaderIndex)
+{
+	IncrementGroupAmount(LeaderIndex);
+}
+
+void UFleeFollowerComponent::OnLeaderStopFleeEvent(int LeaderIndex)
+{
+	DecrementGroupAmount(LeaderIndex);
+}
+
+void UFleeFollowerComponent::IncrementGroupAmount(int InGroupLeaderIndex, int InAmount)
+{
+	if(!GroupFollowedIndexes.Contains(InGroupLeaderIndex))
+	{
+		GroupFollowedIndexes.Add(InGroupLeaderIndex, InAmount);
+		EncounteredNewGroupEvent.Broadcast(InGroupLeaderIndex, FollowerIndex);
+	}else
+	{
+		int* Amount = GroupFollowedIndexes.Find(InGroupLeaderIndex);
+		(*Amount) += InAmount;
+	}
+}
+
+void UFleeFollowerComponent::DecrementGroupAmount(int InGroupLeaderIndex, int InAmount)
+{
+	if(!GroupFollowedIndexes.Contains(InGroupLeaderIndex)) return;
+
+	int* Amount = GroupFollowedIndexes.Find(InGroupLeaderIndex);
+	(*Amount) -= InAmount;
+	
+	if((*Amount) <= 0)
+	{
+		LostContactWithGroupEvent.Broadcast(InGroupLeaderIndex, FollowerIndex);
+	
+		GroupFollowedIndexes.Remove(InGroupLeaderIndex);
+	}
 }
 #pragma endregion 

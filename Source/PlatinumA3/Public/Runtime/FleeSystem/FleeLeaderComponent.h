@@ -33,7 +33,24 @@ public:
 #pragma region FleeLeader
 public:
 	UFUNCTION()
-	const inline TArray<AActor*>& GetScaryActors() const; 
+	void Init(unsigned int InIndex);
+	
+	UFUNCTION()
+	const inline TArray<AActor*>& GetScaryActors() const;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStartFleeEvent, int, InLeaderIndex);
+	UPROPERTY()
+	FStartFleeEvent StartFleeEvent;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStopFleeEvent, int, InLeaderIndex);
+	UPROPERTY()
+	FStopFleeEvent StopFleeEvent;
+
+	UFUNCTION()
+	bool GetFleeing() const;
+
+	UFUNCTION()
+	int GetLeaderIndex() const;
 protected:
 	UFUNCTION()
 	void OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
@@ -47,5 +64,11 @@ private:
 	
 	UPROPERTY()
 	TArray<AActor*> ScaryActors;
+
+	UPROPERTY()
+	bool bFleeing = false;
+
+	UPROPERTY()
+	unsigned int LeaderIndex;
 #pragma endregion 
 };

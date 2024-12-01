@@ -22,6 +22,8 @@ void UAIFollowFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Paw
 		FleeSubsystem = tFleeSubsystem;
 	}
 
+	FleeSystemSettings = GetDefault<UFleeSystemSettings>();
+	
 	FleeFollowerComponents.Init(nullptr, Pawns.Num());
 	for (int i = 0; i < Pawns.Num(); ++i)
 	{
@@ -59,7 +61,6 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourEntry(Pawn);
 
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
 	UCharacterMovementComponent* MovementComponent = Pawn->GetCharacterMovement();
@@ -80,22 +81,21 @@ void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float Delt
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
-	const UFleeSystemSettings* FleeSystemSettings = GetDefault<UFleeSystemSettings>();
 	if(FleeSystemSettings == nullptr) return;
 	
 	FVector Direction;
 	
-	for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
-	{
-		if(Pair.Key == Pawn->GetIndex()) continue;
-		const UFleeLeaderComponent* FleeLeaderComponent = Pair.Value;
-		FVector LeaderLocation = FleeLeaderComponent->GetOwner()->GetActorLocation();
-		if(FVector::Distance(LeaderLocation, Pawn->GetActorLocation()) < FleeSystemSettings->FollowFleeDetectionRadius)
-		{
-			Direction += FleeLeaderComponent->GetOwner()->GetActorForwardVector();
-			Direction.Normalize();
-		}
-	}
+	// for (TTuple<int, UFleeLeaderComponent*> Pair : FleeSubsystem->GetCurrentFleeLeaders())
+	// {
+	// 	if(Pair.Key == Pawn->GetIndex()) continue;
+	// 	const UFleeLeaderComponent* FleeLeaderComponent = Pair.Value;
+	// 	FVector LeaderLocation = FleeLeaderComponent->GetOwner()->GetActorLocation();
+	// 	if(FVector::Distance(LeaderLocation, Pawn->GetActorLocation()) < FleeSystemSettings->FollowFleeDetectionRadius)
+	// 	{
+	// 		Direction += FleeLeaderComponent->GetOwner()->GetActorForwardVector();
+	// 		Direction.Normalize();
+	// 	}
+	// }
 
 	Direction.Z = 0;
 	

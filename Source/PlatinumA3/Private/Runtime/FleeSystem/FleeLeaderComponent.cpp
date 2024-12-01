@@ -51,21 +51,41 @@ void UFleeLeaderComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	// ...
 }
+#pragma endregion 
+#pragma region FleeLeader
+
+void UFleeLeaderComponent::Init(unsigned InIndex)
+{
+	LeaderIndex = InIndex;
+}
 
 const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
 {
 	return ScaryActors;
 }
-#pragma endregion
 
-#pragma region FleeLeader
+
+bool UFleeLeaderComponent::GetFleeing() const
+{
+	return bFleeing;
+}
+
+int UFleeLeaderComponent::GetLeaderIndex() const
+{
+	return LeaderIndex;
+}
 
 void UFleeLeaderComponent::OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+                                                   UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	if(OtherActor->ActorHasTag(TagToFleeFrom))
 	{
 		ScaryActors.Add(OtherActor);
+		if (ScaryActors.Num() == 1)
+		{
+			bFleeing = true;
+			StartFleeEvent.Broadcast(LeaderIndex);
+		}
 	}
 }
 
@@ -75,6 +95,11 @@ void UFleeLeaderComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveC
 	if(Actor->ActorHasTag(TagToFleeFrom))
 	{
 		ScaryActors.Remove(Actor);
+		if (ScaryActors.Num() == 0)
+		{
+			bFleeing = false;
+			StopFleeEvent.Broadcast(LeaderIndex);
+		}
 	}
 }
 

@@ -2,6 +2,8 @@
 	"BuildId": "27405482",
 	"Modules": 
 	{
-		"PlatinumA3": "UnrealEditor-PlatinumA3.dll"
+		"LocalMultiplayer": "UnrealEditor-LocalMultiplayer.dll",
+		"PlatinumA3": "UnrealEditor-PlatinumA3.dll",
+		"PlatinumA3Editor": "UnrealEditor-PlatinumA3Editor.dll"
 	}
 }

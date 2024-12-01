@@ -5,8 +5,9 @@
 
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
+#include "Runtime/FleeSystem/FleeBrainComponent.h"
 #include "Runtime/FleeSystem/FleeFollowerComponent.h"
-#include "Runtime/FleeSystem/FleeLeaderComponent.h"
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 #pragma region UnrealDefaults
 
@@ -18,29 +19,23 @@ void UFleeSubsystem::Tick(float DeltaTime)
 #pragma endregion 
 void UFleeSubsystem::InitSubsystem()
 {
+	const UFleeSystemSettings* Settings = GetDefault<UFleeSystemSettings>();
+	if(Settings == nullptr) return;
+	
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AAIGroupCharacter::StaticClass(),FoundActors);
 
-	FleeLeaderComponents.Init(nullptr, FoundActors.Num());
-	for (int i = 0; i < FleeLeaderComponents.Num(); ++i)
+	FleeBrainComponents.Init(nullptr, FoundActors.Num());
+	for (int i = 0; i < FleeBrainComponents.Num(); i++)
 	{
-		UFleeLeaderComponent* LeaderComponent = FoundActors[i]->FindComponentByClass<UFleeLeaderComponent>();
-		if(LeaderComponent == nullptr) return;
-		LeaderComponent->Init(i);
-		FleeLeaderComponents[i] = LeaderComponent;
-		LeaderComponent->StartFleeEvent.AddDynamic(this, &UFleeSubsystem::OnLeaderStartFlee);
-		LeaderComponent->StopFleeEvent.AddDynamic(this, &UFleeSubsystem::OnLeaderStopFlee);
-	}
-
-	FleeFollowerComponents.Init(nullptr, FoundActors.Num());
-	for (int i = 0; i < FleeFollowerComponents.Num(); ++i)
-	{
-		UFleeFollowerComponent* FollowerComponent = FoundActors[i]->FindComponentByClass<UFleeFollowerComponent>();
-		if(FollowerComponent == nullptr) return;
-		FollowerComponent->Init(i);
-		FleeFollowerComponents[i] = FollowerComponent;
-		FollowerComponent->EncounteredNewGroupEvent.AddDynamic(this, &UFleeSubsystem::OnFollowerEncounteredNewGroup);
-		FollowerComponent->LostContactWithGroupEvent.AddDynamic(this, &UFleeSubsystem::OnFollowerLostContactWithGroup);
+		UFleeBrainComponent* BrainComponent = FoundActors[i]->FindComponentByClass<UFleeBrainComponent>();
+		if(BrainComponent == nullptr) continue;
+		
+		BrainComponent->InitBrain(i, Settings->FollowFleeDetectionRadius, Settings->FleeDetectionRadius);
+		FleeBrainComponents[i] = BrainComponent;
+		
+		BrainComponent->LeaderCortexStartFleeEvent.AddDynamic(this, &UFleeSubsystem::OnLeaderStartFlee);
+		BrainComponent->LeaderCortexStopFleeEvent.AddDynamic(this, &UFleeSubsystem::OnLeaderStopFlee);
 	}
 }
 
@@ -48,7 +43,7 @@ void UFleeSubsystem::UpdateSubsystem(float InDeltaTime)
 {
 	for (TTuple<int, FFleeGroupData>& Pair : ActiveFleeGroups)
 	{
-		Pair.Value.GroupDirection = FleeLeaderComponents[Pair.Key]->GetOwner()->GetActorForwardVector();
+		Pair.Value.GroupDirection = FleeBrainComponents[Pair.Key]->GetOwner()->GetActorForwardVector();
 		
 		for (UFleeFollowerComponent* Follower : Pair.Value.Followers)
 		{
@@ -63,35 +58,72 @@ void UFleeSubsystem::UpdateSubsystem(float InDeltaTime)
 
 void UFleeSubsystem::OnLeaderStartFlee(int LeaderIndex)
 {
-	ActiveFleeGroups.Add(LeaderIndex, {FleeLeaderComponents[LeaderIndex]});
+	const FFleeGroupData Data = {FleeBrainComponents[LeaderIndex]->GetFleeLeaderComponent()};
+	ActiveFleeGroups.Add(LeaderIndex,Data);
+	PropagateFlee(LeaderIndex);
 }
 
 void UFleeSubsystem::OnLeaderStopFlee(int LeaderIndex)
 {
 	FFleeGroupData* Data = ActiveFleeGroups.Find(LeaderIndex);
-	// for (UFleeFollowerComponent* Follower : Data->Followers)
-	// {
-	// 	Follower->GetGroupFollowedDatas().Remove(LeaderIndex);
-	// }
+	for (UFleeFollowerComponent* Follower : Data->Followers)
+	{
+		Follower->RemoveGroupFollowed(LeaderIndex);
+	}
+	
 	ActiveFleeGroups.Remove(LeaderIndex);
 }
 
+void UFleeSubsystem::PropagateFlee(const int StartIndex)
+{
+	UFleeBrainComponent* BrainComponent = FleeBrainComponents[StartIndex];
+	if(BrainComponent == nullptr) return;
+	
+	TQueue<UFleeBrainComponent*> Frontier;
+	Frontier.Enqueue(BrainComponent);
+	TArray<UFleeBrainComponent*> VisitedBrains;
+
+	UFleeBrainComponent* CurrentBrain = nullptr;
+	while(!Frontier.IsEmpty())
+	{
+		Frontier.Dequeue(CurrentBrain);
+		VisitedBrains.Add(CurrentBrain);
+
+		for (UFleeBrainComponent* LinkedBrain : CurrentBrain->GetLinkedBrainComponents())
+		{
+			if(VisitedBrains.Contains(LinkedBrain)) continue;
+			
+			Frontier.Enqueue(LinkedBrain);
+		}
+
+		if(CurrentBrain->GetBrainIndex() == StartIndex) continue;
+
+		UFleeFollowerComponent* FollowerComponent = CurrentBrain->GetFleeFollowerComponent();
+		if(FollowerComponent->FollowsGroup(StartIndex)) continue;
+
+		AddFollowerToGroup(StartIndex, FollowerComponent);
+	}
+}
 #pragma endregion 
 
 #pragma region FleeFollowers
-void UFleeSubsystem::OnFollowerEncounteredNewGroup(int InGroupLeaderIndex, int InFollowerIndex)
+void UFleeSubsystem::AddFollowerToGroup(const int InGroupLeaderIndex, UFleeFollowerComponent* InFollowerToAdd)
 {
-	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
-	if(Data==nullptr) return;
+	if(!ActiveFleeGroups.Contains(InGroupLeaderIndex)) return;
 
-	Data->Followers.Add(FleeFollowerComponents[InFollowerIndex]);
+	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
+	Data->Followers.AddUnique(InFollowerToAdd);
+
+	InFollowerToAdd->AddGroupFollowed(InGroupLeaderIndex);
 }
 
-void UFleeSubsystem::OnFollowerLostContactWithGroup(int InGroupLeaderIndex, int InFollowerIndex)
+void UFleeSubsystem::RemoveFollowerFromGroup(const int InGroupLeaderIndex, UFleeFollowerComponent* InFollowerToRemove)
 {
-	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
-	if(Data==nullptr) return;
+	if(!ActiveFleeGroups.Contains(InGroupLeaderIndex)) return;
 
-	Data->Followers.Remove(FleeFollowerComponents[InFollowerIndex]);
+	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
+	Data->Followers.Remove(InFollowerToRemove);
+
+	InFollowerToRemove->RemoveGroupFollowed(InGroupLeaderIndex);
 }
 #pragma endregion 

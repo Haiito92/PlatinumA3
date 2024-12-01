@@ -33,7 +33,7 @@ public:
 #pragma region FleeLeader
 public:
 	UFUNCTION()
-	void Init(unsigned int InIndex);
+	void Init(const unsigned InIndex, const int InDetectionRadius);
 	
 	UFUNCTION()
 	const inline TArray<AActor*>& GetScaryActors() const;

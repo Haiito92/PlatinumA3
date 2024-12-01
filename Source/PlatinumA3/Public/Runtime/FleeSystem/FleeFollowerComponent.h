@@ -19,9 +19,6 @@ public:
 	~FGroupFollowedData() = default;
 
 	UPROPERTY()
-	int NeighboursAmount = 0;
-
-	UPROPERTY()
 	FVector GroupDirection = FVector::ZeroVector;
 };
 
@@ -52,14 +49,6 @@ public:
 	UFUNCTION()
 	void Init(int InFollowerIndex);
 	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FEncounteredNewGroupEvent, int, InGroupLeaderIndex, int, InFollowerIndex);
-	UPROPERTY()
-	FEncounteredNewGroupEvent EncounteredNewGroupEvent;
-	
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FLostContactWithGroupEvent, int, GroupLeaderIndex, int, InFollowerIndex);
-	UPROPERTY()
-	FLostContactWithGroupEvent LostContactWithGroupEvent;
-
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartFollowFleeEvent);
 	UPROPERTY()
 	FStartFollowFleeEvent StartFollowFleeEvent;
@@ -69,58 +58,41 @@ public:
 	FStopFollowFleeEvent StopFollowFleeEvent;
 	
 	UFUNCTION()
-	TMap<int,FGroupFollowedData>& GetGroupFollowedDatas();
-
-	UFUNCTION()
 	int GetFollowerIndex()const;
 
 	UFUNCTION()
 	bool GetFollowFleeing() const;
 protected:
-	UFUNCTION()
-	void OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-								 const FHitResult& SweepResult);
-	UFUNCTION()
-	void OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I);
 	
-	UFUNCTION()
-	void OnLeaderStartFleeEvent(int LeaderIndex);
-	UFUNCTION()
-	void OnLeaderStopFleeEvent(int LeaderIndex);
-
-	UFUNCTION()
-	void AddNeighbouringLeader(UFleeLeaderComponent* LeaderComponent);
-	UFUNCTION()
-	void RemoveNeighbouringLeader(UFleeLeaderComponent* LeaderComponent);
-
-	UFUNCTION()
-	void AddNeighbouringFollower(UFleeFollowerComponent* FollowerComponent);
-	UFUNCTION()
-	void RemoveNeighbouringFollower(UFleeFollowerComponent* FollowerComponent);
-	
-	UFUNCTION()
-	void IncrementGroupAmount(int InGroupLeaderIndex, int InAmount = 1);
-	UFUNCTION()
-	void DecrementGroupAmount(int InGroupLeaderIndex, int InAmount = 1);
-
 	UFUNCTION()
 	void StartFollowFlee();
 	UFUNCTION()
 	void StopFollowFlee();
 private:	
-	UPROPERTY()
-	TArray<UFleeLeaderComponent*> NeighbouringLeaders;
-	UPROPERTY()
-	TArray<UFleeFollowerComponent*> NeighbouringFollowers;
-
-	UPROPERTY()
-	TMap<int, FGroupFollowedData> GroupFollowedDatas;
 
 	UPROPERTY()
 	int FollowerIndex;
 	
 	UPROPERTY()
 	bool bFollowFleeing;
+#pragma endregion
+
+#pragma region GroupsFollowed
+public:
+	UFUNCTION()
+	TMap<int,FGroupFollowedData>& GetGroupFollowedDatas();
+
+	UFUNCTION()
+	bool FollowsGroup(const int InGroupLeaderIndex) const;
+	
+	UFUNCTION()
+	void AddGroupFollowed(const int InGroupLeaderIndex);
+
+	UFUNCTION()
+	void RemoveGroupFollowed(const int InGroupLeaderIndex);
+private:
+	UPROPERTY()
+	TMap<int, FGroupFollowedData> GroupFollowedDatas;
 #pragma endregion 
 };
 

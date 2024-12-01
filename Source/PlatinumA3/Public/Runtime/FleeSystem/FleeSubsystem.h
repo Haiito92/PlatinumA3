@@ -25,6 +25,7 @@
 // 	FVector& LeaderForwardVector;
 // };
 
+class UFleeBrainComponent;
 class UFleeFollowerComponent;
 class UFleeLeaderComponent;
 
@@ -43,6 +44,7 @@ public:
 	
 	UPROPERTY()
 	TArray<UFleeFollowerComponent*> Followers;
+
 };
 
 UCLASS()
@@ -64,9 +66,14 @@ public:
 	void UpdateSubsystem(float InDeltaTime);
 
 
+#pragma region FleeBrains
+private:
+	UPROPERTY()
+	TArray<UFleeBrainComponent*> FleeBrainComponents;
+#pragma endregion
+	
 #pragma region FleeLeaders
 public:
-	
 protected:
 	UFUNCTION()
 	void OnLeaderStartFlee(int LeaderIndex);
@@ -74,10 +81,9 @@ protected:
 	UFUNCTION()
 	void OnLeaderStopFlee(int LeaderIndex);
 
+	UFUNCTION()
+	void PropagateFlee(const int StartIndex);
 private:
-	UPROPERTY()
-	TArray<UFleeLeaderComponent*> FleeLeaderComponents;
-	
 	UPROPERTY()
 	TMap<int, FFleeGroupData>ActiveFleeGroups;
 
@@ -85,12 +91,10 @@ private:
 #pragma region FleeFollowers
 protected:
 	UFUNCTION()
-	void OnFollowerEncounteredNewGroup(int InGroupLeaderIndex, int InFollowerIndex);
-	UFUNCTION()
-	void OnFollowerLostContactWithGroup(int InGroupLeaderIndex, int InFollowerIndex);
+	void AddFollowerToGroup(const int InGroupLeaderIndex, UFleeFollowerComponent* InFollowerToAdd);
 
+	UFUNCTION()
+	void RemoveFollowerFromGroup(const int InGroupLeaderIndex,UFleeFollowerComponent* InFollowerToRemove);
 private:
-	UPROPERTY()
-	TArray<UFleeFollowerComponent*> FleeFollowerComponents;
 #pragma endregion 
 };

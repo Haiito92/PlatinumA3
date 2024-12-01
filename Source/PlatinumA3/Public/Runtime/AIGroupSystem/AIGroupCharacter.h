@@ -44,7 +44,13 @@ public:
 	void DisablePawn();
 	UFUNCTION(BlueprintCallable)
 	void UnActivatePawn();
-	
+protected:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveActivatePawn();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveDisablePawn();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveUnActivatePawn();
 private:
 	UPROPERTY()
 	int Index;

@@ -68,11 +68,15 @@ void AAIGroupCharacter::ActivatePawn()
 	if(CharacterMovementComponent == nullptr)return;
 	CharacterMovementComponent->GravityScale = 1.0f;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
+
+	ReceiveActivatePawn();
 }
 
 void AAIGroupCharacter::DisablePawn()
 {
 	SetPawnStateID(EAIPawnStateID::Disabled);
+
+	ReceiveDisablePawn();
 }
 
 void AAIGroupCharacter::UnActivatePawn()
@@ -91,7 +95,8 @@ void AAIGroupCharacter::UnActivatePawn()
 
 	CharacterMovementComponent->GravityScale = 0;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
-	
+
+	ReceiveUnActivatePawn();
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
 }

@@ -40,6 +40,10 @@
 			"Name": "SkyCreatorPlugin",
 			"Enabled": true,
 			"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/content/b9aa540db8c54f7d928c61d3b30cb955"
+		},
+		{
+			"Name": "FCTween",
+			"Enabled": true
 		}
 	]
 }

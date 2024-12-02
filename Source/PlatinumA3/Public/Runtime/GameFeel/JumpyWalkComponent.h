@@ -34,6 +34,8 @@ protected:
 
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void StopJumpyWalk();
-	
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyFootStep();
 #pragma endregion 
 };

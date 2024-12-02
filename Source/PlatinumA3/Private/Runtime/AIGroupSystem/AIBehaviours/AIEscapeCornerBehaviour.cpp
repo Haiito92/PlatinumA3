@@ -91,6 +91,8 @@ void UAIEscapeCornerBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = Settings->EscapeWalkSpeed;
 		MovementComponent->bCanWalkOffLedges = Settings->CanEscapeWalkOffLedges;
 	}
+
+	Pawn->StartMovingAICharacter();
 }
 
 void UAIEscapeCornerBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -107,6 +109,7 @@ void UAIEscapeCornerBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
+	Pawn->StopMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1,
 	// 	3.0f,

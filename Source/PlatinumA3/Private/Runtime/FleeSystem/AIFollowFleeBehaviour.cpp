@@ -69,12 +69,13 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->bCanWalkOffLedges = FleeSystemSettings->CanFollowFleeWalkOffLedges;
 		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FollowFleeSpeed;
 	}
-	
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("FOLLOW FLEE ENTRY"));
+
+	Pawn->StartMovingAICharacter();
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("FOLLOW FLEE ENTRY"));
 }
 
 void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -121,11 +122,12 @@ void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
-
-	GEngine->AddOnScreenDebugMessage(
-	-1,
-	4.0f,
-	FColor::Orange,
-	TEXT("FOLLOW FLEE EXIT"));
+	Pawn->StopMovingAICharacter();
+	
+	// GEngine->AddOnScreenDebugMessage(
+	// -1,
+	// 4.0f,
+	// FColor::Orange,
+	// TEXT("FOLLOW FLEE EXIT"));
 }
 #pragma endregion 

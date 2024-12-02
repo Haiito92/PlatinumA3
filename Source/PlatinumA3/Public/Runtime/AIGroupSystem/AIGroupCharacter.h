@@ -76,6 +76,15 @@ public:
 
 
 public:
+	UFUNCTION()
+	void StartMovingAICharacter();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStartMovingAICharacter();
+	UFUNCTION()
+	void StopMovingAICharacter();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStopMovingAICharacter();
+	
 	
 	UFUNCTION()
 	void StartRotateAICharacter(const FRotator& GoalRotation);

@@ -124,6 +124,16 @@ EAIPawnStateID AAIGroupCharacter::GetPawnStateID() const
 	return PawnStateID;
 }
 
+void AAIGroupCharacter::StartMovingAICharacter()
+{
+	ReceiveStartMovingAICharacter();
+}
+
+void AAIGroupCharacter::StopMovingAICharacter()
+{
+	ReceiveStopMovingAICharacter();
+}
+
 void AAIGroupCharacter::StartRotateAICharacter(const FRotator& GoalRotation)
 {
 	RotationHandled = false;

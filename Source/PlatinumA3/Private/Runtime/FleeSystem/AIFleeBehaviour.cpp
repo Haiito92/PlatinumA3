@@ -84,7 +84,7 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = FleeSystemSettings->FleeSpeed;
 	}
 	
-	
+	Pawn->StartMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,
@@ -130,7 +130,7 @@ void UAIFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
-	
+	Pawn->StopMovingAICharacter();
 	// if(FleeSubsystem == nullptr) return;
 	// FleeSubsystem->GetCurrentFleeLeaders().Remove(Pawn->GetIndex());
 	

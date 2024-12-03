@@ -37,6 +37,7 @@ class PLATINUMA3_API UAIEscapeCornerBehaviour : public UAIBehaviour
 #pragma endregion
 
 private:
+	UPROPERTY()
 	const UAIDefaultBehavioursSettings* Settings;
 	
 	UPROPERTY()

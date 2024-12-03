@@ -3,14 +3,27 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "FleeLeaderComponent.h"
 #include "Components/ActorComponent.h"
+#include "Components/SphereComponent.h"
 #include "FleeFollowerComponent.generated.h"
 
 
-class USphereComponent;
+class UFleeLeaderComponent;
+
+USTRUCT()
+struct FGroupFollowedData
+{
+	GENERATED_BODY()
+public:
+	~FGroupFollowedData() = default;
+
+	UPROPERTY()
+	FVector GroupDirection = FVector::ZeroVector;
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
-class PLATINUMA3_API UFleeFollowerComponent : public UActorComponent
+class PLATINUMA3_API UFleeFollowerComponent : public USphereComponent
 {
 	GENERATED_BODY()
 	
@@ -32,20 +45,59 @@ public:
 #pragma endregion
 
 #pragma region FleeFollower
-private:
+public:
+	UFUNCTION()
+	void Init(int InFollowerIndex);
+	
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStartFollowFleeEvent);
+	UPROPERTY()
+	FStartFollowFleeEvent StartFollowFleeEvent;
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStopFollowFleeEvent);
+	UPROPERTY()
+	FStopFollowFleeEvent StopFollowFleeEvent;
+	
+	UFUNCTION()
+	int GetFollowerIndex()const;
+
+	UFUNCTION()
+	bool GetFollowFleeing() const;
+protected:
+	
+	UFUNCTION()
+	void StartFollowFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStartFollowFlee();
+	
+	UFUNCTION()
+	void StopFollowFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyStopFollowFlee();
+private:	
 
 	UPROPERTY()
-	TArray<UFleeFollowerComponent*> NeighbouringFollowers;
+	int FollowerIndex;
 	
 	UPROPERTY()
-	TObjectPtr<USphereComponent> DetectionCollision;
+	bool bFollowFleeing;
+#pragma endregion
+
+#pragma region GroupsFollowed
+public:
+	UFUNCTION()
+	TMap<int,FGroupFollowedData>& GetGroupFollowedDatas();
 
 	UFUNCTION()
-	void OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep,
-								 const FHitResult& SweepResult);
+	bool FollowsGroup(const int InGroupLeaderIndex) const;
+	
 	UFUNCTION()
-	void OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor, UPrimitiveComponent* PrimitiveComponent1, int I);
+	void AddGroupFollowed(const int InGroupLeaderIndex);
 
+	UFUNCTION()
+	void RemoveGroupFollowed(const int InGroupLeaderIndex);
+private:
+	UPROPERTY()
+	TMap<int, FGroupFollowedData> GroupFollowedDatas;
 #pragma endregion 
 };
 

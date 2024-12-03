@@ -60,6 +60,11 @@ private:
 #pragma region SystemPool
 protected:
 	void InitPawnPool(const int InStartPawnAmount);
+	void SpawnStartPawns();
+	void SpawnPawn(const FVector& InLocation, const FRotator& InRotation = FRotator::ZeroRotator);
+	AAIGroupCharacter* FindUnActivatedPawn() const;
+	AAIGroupCharacter* CreatePawn(const FVector& InLocation, const FRotator& InRotation = FRotator::ZeroRotator) const;
+
 private:
 	UPROPERTY()
 	FVector PoolLocation;

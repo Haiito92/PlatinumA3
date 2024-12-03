@@ -23,7 +23,7 @@ void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	}
 }
 
-bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIRallyBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	return RallyReceiverComponents[Pawn->GetIndex()]->GetIsNotified();
 }
@@ -41,7 +41,8 @@ void UAIRallyBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->bCanWalkOffLedges = RallySystemSettings->CanRallyWalkOffLedges;
 		MovementComponent->MaxWalkSpeed = RallySystemSettings->RallySpeed;
 	}
-	
+
+	Pawn->StartMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,
@@ -70,7 +71,7 @@ void UAIRallyBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
-
+	Pawn->StopMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

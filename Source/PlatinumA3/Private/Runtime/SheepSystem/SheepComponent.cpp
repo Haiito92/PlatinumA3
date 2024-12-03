@@ -47,7 +47,14 @@ void USheepComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 void USheepComponent::InitSheep(int Index)
 {
 	SheepIndex = Index;
-	
+}
+
+void USheepComponent::Birth()
+{
+	bIsAlive = true;
+	bIsCaptured = false;
+	SheepBirthEvent.Broadcast(SheepIndex);
+	JuicyBirth();
 }
 
 void USheepComponent::Capture()
@@ -59,6 +66,7 @@ void USheepComponent::Capture()
 
 void USheepComponent::Die()
 {
+	bIsAlive = false;
 	bIsCaptured = false;
 	SheepDeathEvent.Broadcast(SheepIndex);
 
@@ -72,6 +80,16 @@ int USheepComponent::GetSheepIndex() const
 void USheepComponent::SetIndex(const int Index)
 {
 	SheepIndex = Index;
+}
+
+bool USheepComponent::GetIsAlive() const
+{
+	return bIsAlive;
+}
+
+void USheepComponent::SetIsAlive(const bool InIsAlive)
+{
+	bIsAlive = InIsAlive;
 }
 
 bool USheepComponent::GetIsCaptured() const

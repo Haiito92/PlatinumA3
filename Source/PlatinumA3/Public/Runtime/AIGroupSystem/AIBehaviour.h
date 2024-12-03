@@ -31,7 +31,7 @@ class PLATINUMA3_API UAIBehaviour : public UObject
 public:
 	virtual void InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns);
 	
-	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) const;
+	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn);
 
 	virtual void BehaviourEntry(AAIGroupCharacter* Pawn);
 	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime);

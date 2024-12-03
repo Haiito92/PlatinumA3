@@ -26,6 +26,7 @@ public:
 #pragma region Sheeps
 
 public:
+	
 	UFUNCTION()
 	void AddSheep(USheepComponent* SheepComponent);
 	
@@ -49,7 +50,7 @@ public:
 	UPROPERTY()
 	FReachedRequiredSheepAmountEvent ReachedRequiredSheepAmountEvent;
 
-	
+	void IncrementSheepAliveCount(const unsigned int AmountToIncrement);
 	void DecrementSheepAliveCount(const unsigned int AmountToDecrement);
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FNotEnoughSheepLeftEvent);
 	UPROPERTY()
@@ -89,6 +90,8 @@ protected:
 #pragma endregion
 
 #pragma region ReactionsToSheepEvents
+	UFUNCTION()
+	void OnSheepBirth(int Index);
 	UFUNCTION()
 	void OnSheepDeath(int Index);
 #pragma endregion 

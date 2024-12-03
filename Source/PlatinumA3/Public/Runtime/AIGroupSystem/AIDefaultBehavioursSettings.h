@@ -26,4 +26,13 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Idle Behaviour")
 	bool CanIdleWalkOffLedges;
+
+	UPROPERTY(Config, EditAnywhere, Category="Escape Corner Behaviour")
+	float EscapeDetectionDistance;
+
+	UPROPERTY(Config, EditAnywhere, Category="Escape Corner Behaviour")
+	float EscapeWalkSpeed;
+
+	UPROPERTY(Config, EditAnywhere, Category="Escape Corner Behaviour")
+	bool CanEscapeWalkOffLedges;
 };

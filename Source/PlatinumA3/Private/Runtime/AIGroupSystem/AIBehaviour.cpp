@@ -10,7 +10,7 @@ void UAIBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	// PawnBehaviourDatas.Init({FRotator::ZeroRotator}, Pawns.Num());
 }
 
-bool UAIBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	return false;
 }

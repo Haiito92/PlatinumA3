@@ -37,6 +37,15 @@ public:
 	
 public:
 	UFUNCTION(BlueprintCallable)
+	void Birth();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyBirth();
+
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSheepBirthEvent, int, Index);
+	UPROPERTY()
+	FSheepBirthEvent SheepBirthEvent;
+	
+	UFUNCTION(BlueprintCallable)
 	void Capture();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
 	void JuicyCapture();
@@ -55,6 +64,11 @@ public:
 	int GetSheepIndex() const;
 	UFUNCTION(BlueprintCallable)
 	void SetIndex(const int Index);
+
+	UFUNCTION(BlueprintCallable)
+	bool GetIsAlive() const;	
+	UFUNCTION(BlueprintCallable)
+	void SetIsAlive(const bool InIsAlive);
 	
 	UFUNCTION(BlueprintCallable)
 	bool GetIsCaptured() const;
@@ -69,6 +83,9 @@ private:
 
 	UPROPERTY()
 	unsigned int SheepIndex;
+
+	UPROPERTY()
+	bool bIsAlive;
 	
 	UPROPERTY()
 	bool bIsCaptured;

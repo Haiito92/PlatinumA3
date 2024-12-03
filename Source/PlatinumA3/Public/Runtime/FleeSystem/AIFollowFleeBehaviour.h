@@ -6,6 +6,8 @@
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "AIFollowFleeBehaviour.generated.h"
 
+class UFleeSystemSettings;
+class UFleeFollowerComponent;
 class UFleeSubsystem;
 /**
  * 
@@ -15,11 +17,11 @@ class PLATINUMA3_API UAIFollowFleeBehaviour : public UAIBehaviour
 {
 	GENERATED_BODY()
 
-#pragma region Unreal Defaults
+#pragma region Behaviour Defaults
 public:
 	virtual void InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns) override;
 
-	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) const override;
+	virtual bool CheckBehaviourValidity(AAIGroupCharacter* Pawn) override;
 
 	virtual void BehaviourEntry(AAIGroupCharacter* Pawn) override;
 	virtual void BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime) override;
@@ -27,6 +29,13 @@ public:
 #pragma endregion
 
 #pragma region FollowFlee
+	UPROPERTY()
 	TObjectPtr<UFleeSubsystem> FleeSubsystem;
+
+	UPROPERTY()
+	const UFleeSystemSettings* FleeSystemSettings;
+
+	UPROPERTY()
+	TArray<UFleeFollowerComponent*> FleeFollowerComponents;
 #pragma endregion
 };

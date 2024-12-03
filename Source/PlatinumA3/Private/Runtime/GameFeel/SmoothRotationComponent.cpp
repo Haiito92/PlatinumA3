@@ -45,11 +45,6 @@ void USmoothRotationComponent::TickComponent(float DeltaTime, ELevelTick TickTyp
 	// ...
 }
 
-void USmoothRotationComponent::StopSmoothRotate()
-{
-	SmoothRotateTimeline.Stop();
-}
-
 void USmoothRotationComponent::SetOwnerRotation()
 {
 	// UE_LOGFMT(LogTemp, Warning, "SetOwnerRotation");
@@ -79,4 +74,9 @@ void USmoothRotationComponent::SmoothRotate_Implementation(const FRotator& InGoa
 	SmoothRotateTimeline.PlayFromStart();
 }
 
+
+void USmoothRotationComponent::StopSmoothRotate()
+{
+	SmoothRotateTimeline.Stop();
+}
 #pragma endregion 

@@ -4,6 +4,9 @@
 #include "Runtime/FleeSystem/FleeFollowerComponent.h"
 
 #include "Components/SphereComponent.h"
+#include "Runtime/AIGroupSystem/AIGroupCharacter.h"
+#include "Runtime/FleeSystem/FleeLeaderComponent.h"
+#include "Runtime/FleeSystem/FleeSystemSettings.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -21,25 +24,11 @@ UFleeFollowerComponent::UFleeFollowerComponent()
 void UFleeFollowerComponent::BeginPlay()
 {
 	Super::BeginPlay();
-	
-	// ...
-	DetectionCollision = Cast<USphereComponent>(
-		GetOwner()->FindComponentByTag(USphereComponent::StaticClass(), "FleeFollower"));
-
-	if(DetectionCollision==nullptr)return;
-
-	DetectionCollision->OnComponentBeginOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
-	DetectionCollision->OnComponentEndOverlap.AddDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
-	
 }
 
 void UFleeFollowerComponent::EndPlay(const EEndPlayReason::Type EndPlayReason)
 {
 	Super::EndPlay(EndPlayReason);
-	
-	DetectionCollision->OnComponentBeginOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionBeginOverlap);
-	DetectionCollision->OnComponentEndOverlap.RemoveDynamic(this, &UFleeFollowerComponent::OnDetectionEndOverlap);
-
 }
 
 
@@ -50,37 +39,69 @@ void UFleeFollowerComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 
 	// ...
 }
+
+
 #pragma endregion
 
 #pragma region FleeFollower
-void UFleeFollowerComponent::OnDetectionBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor,
-	UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void UFleeFollowerComponent::Init(int InFollowerIndex)
 {
-	if(OtherActor == GetOwner()) return;
-	
-	UFleeFollowerComponent* FleeFollowerComponent = OtherActor->FindComponentByClass<UFleeFollowerComponent>();
-	if(FleeFollowerComponent == nullptr) return;
-	
-	NeighbouringFollowers.Add(FleeFollowerComponent);
-	
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Green,
-	// 	TEXT("Overlap Begin"));
+	FollowerIndex = InFollowerIndex;
+	// const UFleeSystemSettings* Settings = GetDefault<UFleeSystemSettings>();
+	// if(Settings!= nullptr)
+	// {
+	// 	SphereRadius = Settings->FollowFleeDetectionRadius;
+	// }
 }
 
-void UFleeFollowerComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveComponent, AActor* Actor,
-	UPrimitiveComponent* PrimitiveComponent1, int I)
+int UFleeFollowerComponent::GetFollowerIndex() const
 {
-	UFleeFollowerComponent* FleeFollowerComponent = Actor->FindComponentByClass<UFleeFollowerComponent>();
-	if(FleeFollowerComponent == nullptr) return;
+	return FollowerIndex;
+}
 
-	NeighbouringFollowers.Remove(FleeFollowerComponent);
-	// GEngine->AddOnScreenDebugMessage(
-	// 	-1,
-	// 	3.0f,
-	// 	FColor::Green,
-	// 	TEXT("Overlap End"));
+bool UFleeFollowerComponent::GetFollowFleeing() const
+{
+	return bFollowFleeing;
+}
+
+void UFleeFollowerComponent::StartFollowFlee()
+{
+	bFollowFleeing = true;
+	StartFollowFleeEvent.Broadcast();
+	JuicyStartFollowFlee();
+}
+
+void UFleeFollowerComponent::StopFollowFlee()
+{
+	bFollowFleeing = false;
+	StopFollowFleeEvent.Broadcast();
+	JuicyStopFollowFlee();
+}
+#pragma endregion 
+#pragma region GroupsFollowed
+
+
+TMap<int, FGroupFollowedData>& UFleeFollowerComponent::GetGroupFollowedDatas()
+{
+	return GroupFollowedDatas;
+}
+
+bool UFleeFollowerComponent::FollowsGroup(const int InGroupLeaderIndex) const
+{
+	return GroupFollowedDatas.Contains(InGroupLeaderIndex);
+}
+
+void UFleeFollowerComponent::AddGroupFollowed(const int InGroupLeaderIndex)
+{
+	GroupFollowedDatas.Add(InGroupLeaderIndex);
+
+	if(GroupFollowedDatas.Num() == 1) StartFollowFlee();
+}
+
+void UFleeFollowerComponent::RemoveGroupFollowed(const int InGroupLeaderIndex)
+{
+	GroupFollowedDatas.Remove(InGroupLeaderIndex);
+
+	if(GroupFollowedDatas.Num() == 0) StopFollowFlee();
 }
 #pragma endregion 

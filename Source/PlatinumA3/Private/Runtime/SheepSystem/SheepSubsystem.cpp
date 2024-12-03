@@ -18,6 +18,7 @@ void USheepSubsystem::InitSubsystem(const unsigned InSheepAmountRequired)
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsWithTag(GetWorld(),Settings->SheepTag,FoundActors);
 
+	int BornSheeps = 0;
 	for (int i = 0; i < FoundActors.Num(); ++i)
 	{
 		USheepComponent* SheepComponent = FoundActors[i]->FindComponentByClass<USheepComponent>();
@@ -25,10 +26,12 @@ void USheepSubsystem::InitSubsystem(const unsigned InSheepAmountRequired)
 
 		SheepComponent->InitSheep(i);
 		AddSheep(SheepComponent);
+
+		if(SheepComponent->GetIsAlive()) ++BornSheeps;
 	}
 
-	SetSheepAliveCount(Sheeps.Num());
-	// UE_LOG(LogTemp, Warning, TEXT("Sheeps Alive : %d"), SheepAliveCount);
+	SetSheepAliveCount(BornSheeps);
+	//UE_LOG(LogTemp, Warning, TEXT("Sheeps Alive : %d"), SheepAliveCount);
 
 	SheepSystemInitEvent.Broadcast();
 }
@@ -36,6 +39,7 @@ void USheepSubsystem::InitSubsystem(const unsigned InSheepAmountRequired)
 #pragma region Sheeps
 void USheepSubsystem::AddSheep(USheepComponent* SheepComponent)
 {
+	SheepComponent->SheepBirthEvent.AddDynamic(this, &USheepSubsystem::OnSheepBirth);
 	SheepComponent->SheepDeathEvent.AddDynamic(this, &USheepSubsystem::OnSheepDeath);
 	
 	Sheeps.Add(SheepComponent);
@@ -61,6 +65,11 @@ void USheepSubsystem::AddCapturedSheep(const unsigned int Amount)
 	{
 		ReachedRequiredSheepAmountEvent.Broadcast();
 	}
+}
+
+void USheepSubsystem::IncrementSheepAliveCount(const unsigned AmountToIncrement)
+{
+	SetSheepAliveCount(SheepAliveCount + AmountToIncrement);
 }
 
 void USheepSubsystem::DecrementSheepAliveCount(const unsigned AmountToDecrement)
@@ -113,6 +122,11 @@ void USheepSubsystem::SetSheepCapturedCount(const unsigned int NewValue)
 #pragma endregion
 
 #pragma region ReactionsToSheepEvents
+
+void USheepSubsystem::OnSheepBirth(int Index)
+{
+	
+}
 
 void USheepSubsystem::OnSheepDeath(int Index)
 {

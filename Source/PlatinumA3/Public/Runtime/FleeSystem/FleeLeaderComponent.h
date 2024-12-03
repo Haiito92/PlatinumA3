@@ -78,6 +78,8 @@ private:
 	UPROPERTY()
 	bool bFleeing = false;
 
+
+	
 	UPROPERTY()
 	unsigned int LeaderIndex;
 #pragma endregion 

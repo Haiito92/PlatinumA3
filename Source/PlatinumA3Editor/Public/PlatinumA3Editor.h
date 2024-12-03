@@ -4,6 +4,7 @@
 #include "Modules/ModuleManager.h"
 #include "UnrealEd.h"
 
+class UFleeLeaderComponent;
 DECLARE_LOG_CATEGORY_EXTERN(PlatinumA3Editor, All, All)
 
 class FPlatinumA3EditorModule : public IModuleInterface

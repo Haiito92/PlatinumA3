@@ -18,7 +18,7 @@ void UAIIdleBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	IdlingPawnDatas.Init({},Pawns.Num());
 }
 
-bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAIIdleBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	return Pawn->GetPawnStateID() == EAIPawnStateID::Activated;
 }
@@ -48,6 +48,8 @@ void UAIIdleBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 		MovementComponent->MaxWalkSpeed = AIDefaultBehavioursSettings->WalkSpeed;
 		MovementComponent->bCanWalkOffLedges = AIDefaultBehavioursSettings->CanIdleWalkOffLedges;
 	}
+
+	Pawn->StartMovingAICharacter();
 }
 
 void UAIIdleBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -91,6 +93,7 @@ void UAIIdleBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
+	Pawn->StopMovingAICharacter();
 	//int Index = Pawn->GetIndex();
 	//FIdlePawnData& Data = IdlingPawnDatas[Index];
 	//Data.TimerHandle.Invalidate();

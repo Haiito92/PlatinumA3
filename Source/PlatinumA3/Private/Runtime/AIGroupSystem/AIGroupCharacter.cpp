@@ -59,23 +59,24 @@ void AAIGroupCharacter::ActivatePawn()
 	SetPawnStateID(EAIPawnStateID::Activated);
 
 	UCapsuleComponent* pCapsuleComponent = GetCapsuleComponent();
-	if(pCapsuleComponent == nullptr) return
-	
-	pCapsuleComponent->SetEnableGravity(true);
-	pCapsuleComponent->SetSimulatePhysics(true);
-	pCapsuleComponent->SetVisibility(true, true);
-	SetActorEnableCollision(true);
+	if(pCapsuleComponent == nullptr) return;
 
+	pCapsuleComponent->SetEnableGravity(true);
+	pCapsuleComponent->SetVisibility(true, true);
+	pCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if(CharacterMovementComponent == nullptr)return;
-
-	CharacterMovementComponent->GravityScale = 1;
+	CharacterMovementComponent->GravityScale = 1.0f;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
+
+	ReceiveActivatePawn();
 }
 
 void AAIGroupCharacter::DisablePawn()
 {
 	SetPawnStateID(EAIPawnStateID::Disabled);
+
+	ReceiveDisablePawn();
 }
 
 void AAIGroupCharacter::UnActivatePawn()
@@ -86,16 +87,16 @@ void AAIGroupCharacter::UnActivatePawn()
 	if(pCapsuleComponent == nullptr) return
 	
 	pCapsuleComponent->SetEnableGravity(false);
-	pCapsuleComponent->SetSimulatePhysics(false);
 	pCapsuleComponent->SetVisibility(false, true);
-	SetActorEnableCollision(false);
+	pCapsuleComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 
 	UCharacterMovementComponent* CharacterMovementComponent = GetCharacterMovement();
 	if(CharacterMovementComponent == nullptr)return;
 
 	CharacterMovementComponent->GravityScale = 0;
 	CharacterMovementComponent->Velocity = FVector::ZeroVector;
-	
+
+	ReceiveUnActivatePawn();
 	// GEngine->AddOnScreenDebugMessage(
 	// 	-1, 3.0f,FColor::Black, TEXT("Unactivate pawn"));
 }
@@ -121,6 +122,16 @@ void AAIGroupCharacter::SetPawnStateID(const EAIPawnStateID NewPawnStateID)
 EAIPawnStateID AAIGroupCharacter::GetPawnStateID() const
 {
 	return PawnStateID;
+}
+
+void AAIGroupCharacter::StartMovingAICharacter()
+{
+	ReceiveStartMovingAICharacter();
+}
+
+void AAIGroupCharacter::StopMovingAICharacter()
+{
+	ReceiveStopMovingAICharacter();
 }
 
 void AAIGroupCharacter::StartRotateAICharacter(const FRotator& GoalRotation)

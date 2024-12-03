@@ -32,7 +32,7 @@ void UAISheepInPenBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Paw
 	}
 }
 
-bool UAISheepInPenBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn) const
+bool UAISheepInPenBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	const USheepComponent* SheepComponent = SheepComponents[Pawn->GetIndex()];
 	if(SheepComponent == nullptr) return false;
@@ -49,7 +49,8 @@ void UAISheepInPenBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 
 	CharacterMovement->MaxWalkSpeed = SheepPenSystemSettings->SheepSpeedInPen;
 	CharacterMovement->bCanWalkOffLedges = SheepPenSystemSettings->CanSheepWalkOffLedges;
-	
+
+	Pawn->StartMovingAICharacter();
 	// Super::BehaviourEntry(Pawn);
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
@@ -89,7 +90,7 @@ void UAISheepInPenBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Super::BehaviourExit(Pawn);
 
 	Pawn->StopRotateAICharacter();
-	
+	Pawn->StopMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

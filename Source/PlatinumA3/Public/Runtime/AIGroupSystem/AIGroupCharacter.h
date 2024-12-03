@@ -44,7 +44,13 @@ public:
 	void DisablePawn();
 	UFUNCTION(BlueprintCallable)
 	void UnActivatePawn();
-	
+protected:
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveActivatePawn();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveDisablePawn();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveUnActivatePawn();
 private:
 	UPROPERTY()
 	int Index;
@@ -70,6 +76,15 @@ public:
 
 
 public:
+	UFUNCTION()
+	void StartMovingAICharacter();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStartMovingAICharacter();
+	UFUNCTION()
+	void StopMovingAICharacter();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveStopMovingAICharacter();
+	
 	
 	UFUNCTION()
 	void StartRotateAICharacter(const FRotator& GoalRotation);

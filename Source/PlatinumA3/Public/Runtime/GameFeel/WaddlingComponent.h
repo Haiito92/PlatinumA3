@@ -28,7 +28,7 @@ public:
 #pragma endregion
 
 #pragma region Waddling
-public:
+protected:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void StartWaddling();
 

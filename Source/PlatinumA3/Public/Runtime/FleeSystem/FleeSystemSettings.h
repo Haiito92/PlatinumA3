@@ -25,6 +25,9 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Flee Behaviour")
 	bool CanFleeWalkOffLedges;
+
+	UPROPERTY(Config, EditAnywhere, Category="Flee Behaviour")
+	float PostFleeTime = 0.3f;
 	
 	UPROPERTY(Config,EditAnywhere, Category="Follow Flee Behaviour")
 	float FollowFleeDetectionRadius;

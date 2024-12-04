@@ -221,7 +221,7 @@ AAIGroupCharacter* UAIGroupSubsystem::FindUnActivatedPawn() const
 AAIGroupCharacter* UAIGroupSubsystem::CreatePawn(const FVector& InLocation, const FRotator& InRotation) const
 {
 	AAIGroupCharacter* Pawn =
-			GetWorld()->SpawnActor<AAIGroupCharacter>(Settings->PawnClass,InLocation, InRotation);
+			GetWorld()->SpawnActor<AAIGroupCharacter>(Settings->PawnClass.Get(),InLocation, InRotation);
 	if(Pawn != nullptr) Pawn->UnActivatePawn();
 	return Pawn;
 }

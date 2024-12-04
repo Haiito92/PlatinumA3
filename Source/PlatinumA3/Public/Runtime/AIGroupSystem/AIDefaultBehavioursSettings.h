@@ -35,4 +35,7 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Escape Corner Behaviour")
 	bool CanEscapeWalkOffLedges;
+
+	UPROPERTY(Config, EditAnywhere, Category="Escape Corner Behaviour")
+	float PostEscapeTime = 0.5f;
 };

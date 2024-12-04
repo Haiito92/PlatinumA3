@@ -7,7 +7,7 @@
 #include "JumpyWalkComponent.generated.h"
 
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
+UCLASS(Abstract, ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
 class PLATINUMA3_API UJumpyWalkComponent : public UActorComponent
 {
 	GENERATED_BODY()

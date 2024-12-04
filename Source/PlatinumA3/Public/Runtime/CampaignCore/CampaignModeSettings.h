@@ -21,10 +21,10 @@ public:
 	TSoftObjectPtr<UCampaignModeInputData> CampaignModeInputData;
 	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
-	TSubclassOf<AStateCharacter> CampaignCharacterClassP0;
+	TSoftClassPtr<AStateCharacter> CampaignCharacterClassP0;
 	
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
-	TSubclassOf<AStateCharacter> CampaignCharacterClassP1;
+	TSoftClassPtr<AStateCharacter> CampaignCharacterClassP1;
 
 	UFUNCTION(BlueprintCallable)
 	static const UCampaignModeSettings* GetCampaignModeSettings();

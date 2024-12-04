@@ -161,11 +161,12 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
 		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
-		TSoftClassPtr<AStateCharacter> CharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		TSoftClassPtr<AStateCharacter> SoftCharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		UClass* CharacterClass = SoftCharacterClass.LoadSynchronous();
 		if(CharacterClass == nullptr) continue;
 		
 		AStateCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<AStateCharacter>(
-			CharacterClass.Get(),
+			CharacterClass,
 			CampaignPlayerStart->GetTransform()
 			);
 

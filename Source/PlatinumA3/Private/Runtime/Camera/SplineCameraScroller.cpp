@@ -37,6 +37,7 @@ void ASplineCameraScroller::Tick(float DeltaTime)
 
 void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharacter*> Characters)
 {
+	if(Characters.Num() < 2) return;
 	if(!Characters[0] || !Characters[1]) return;
 	
 	m_Berger = Cast<AWoolStateCharacter>(Characters[0]);
@@ -100,6 +101,8 @@ void ASplineCameraScroller::UpdateSplineCamera()
 
 void ASplineCameraScroller::UpdateCharactersInFrustrum(ACharacter* Character)
 {
+	if(Character == nullptr)return;
+	
 	APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(),0));
         
 	if (PlayerController)

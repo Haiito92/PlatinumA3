@@ -324,7 +324,7 @@ AActor* AWoolStateCharacter::GetSomethingToInteractWith()
 		{	
 			if (AActor* OverlappedActor = Result.GetActor())
 			{
-				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
+				//if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
 				
 				if (OverlappedActor->Implements<UInteractInterface>())
 				{

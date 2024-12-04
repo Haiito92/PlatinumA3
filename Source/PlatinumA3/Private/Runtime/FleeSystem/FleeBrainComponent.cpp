@@ -54,10 +54,10 @@ void UFleeBrainComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion
 #pragma region Initialization
 
-void UFleeBrainComponent::InitBrain(const int InIndex, const float InLinkRadius, const float InDetectionRadius)
+void UFleeBrainComponent::InitBrain(const FFleeBrainInitData& InBrainInitData)
 {
-	BrainIndex = InIndex;
-	SetSphereRadius(InLinkRadius);
+	BrainIndex = InBrainInitData.Index;
+	SetSphereRadius(InBrainInitData.LinkRadius);
 
 	TArray<AActor*> OverlappingActors;
 	GetOverlappingActors(OverlappingActors, AAIGroupCharacter::StaticClass());
@@ -70,15 +70,15 @@ void UFleeBrainComponent::InitBrain(const int InIndex, const float InLinkRadius,
 		LinkedBrainComponents.AddUnique(FleeBrainComponent);
 	}
 
-	InitLeaderCortex(InIndex, InDetectionRadius);
+	InitLeaderCortex(InBrainInitData.Index, InBrainInitData.DetectionRadius, InBrainInitData.PostFleeTime);
 
-	InitFollowerCortex(InIndex);
+	InitFollowerCortex(InBrainInitData.Index);
 }
 
-void UFleeBrainComponent::InitLeaderCortex(const int InIndex, const float InDetectionRadius)
+void UFleeBrainComponent::InitLeaderCortex(const int InIndex, const float InDetectionRadius, const float InPostFleeTime)
 {
 	FleeLeaderComponent = GetOwner()->FindComponentByClass<UFleeLeaderComponent>();
-	if(FleeLeaderComponent != nullptr) FleeLeaderComponent->Init(InIndex, InDetectionRadius);
+	if(FleeLeaderComponent != nullptr) FleeLeaderComponent->Init(InIndex, InDetectionRadius, InPostFleeTime);
 
 	FleeLeaderComponent->StartFleeEvent.AddDynamic(this, &UFleeBrainComponent::OnLeaderCortexStartFleeEvent);
 	FleeLeaderComponent->StopFleeEvent.AddDynamic(this, &UFleeBrainComponent::OnLeaderCortexStopFleeEvent);

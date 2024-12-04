@@ -26,12 +26,19 @@ void UFleeSubsystem::InitSubsystem()
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(),AAIGroupCharacter::StaticClass(),FoundActors);
 
 	FleeBrainComponents.Init(nullptr, FoundActors.Num());
+
 	for (int i = 0; i < FleeBrainComponents.Num(); i++)
 	{
 		UFleeBrainComponent* BrainComponent = FoundActors[i]->FindComponentByClass<UFleeBrainComponent>();
 		if(BrainComponent == nullptr) continue;
 		
-		BrainComponent->InitBrain(i, Settings->FollowFleeDetectionRadius, Settings->FleeDetectionRadius);
+		FFleeBrainInitData BrainInitData =
+			{i,
+			Settings->FollowFleeDetectionRadius,
+			Settings->FleeDetectionRadius,
+			Settings->PostFleeTime};
+		
+		BrainComponent->InitBrain(BrainInitData);
 		FleeBrainComponents[i] = BrainComponent;
 
 		//Bind to Brain Events

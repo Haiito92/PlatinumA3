@@ -49,7 +49,7 @@ void UAIFleeBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 	
 }
 
-bool UAIFleeBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
+bool UAIFleeBehaviour::	CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 {
 	bool valid = false;
 
@@ -103,15 +103,16 @@ void UAIFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 	const FVector PawnLocation = Pawn->GetActorLocation();
 
 	if(FleeSystemSettings == nullptr) return;
-	
-	for (const AActor* ActorToFleeFrom : FleeLeaderComponents[Index]->GetScaryActors())
-	{
-		FVector AtoP = PawnLocation - ActorToFleeFrom->GetActorLocation();
-		Direction += AtoP;
-	}
 
-	Direction.Z = 0;
-	Direction.Normalize();
+	Direction = FleeLeaderComponents[Index]->GetFleeDirection();
+	// for (const AActor* ActorToFleeFrom : FleeLeaderComponents[Index]->GetScaryActors())
+	// {
+	// 	FVector AtoP = PawnLocation - ActorToFleeFrom->GetActorLocation();
+	// 	Direction += AtoP;
+	// }
+	//
+	// Direction.Z = 0;
+	// Direction.Normalize();
 
 	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(PawnLocation, PawnLocation+Direction);
 	

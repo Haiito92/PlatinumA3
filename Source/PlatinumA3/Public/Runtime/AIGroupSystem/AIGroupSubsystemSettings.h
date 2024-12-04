@@ -17,7 +17,7 @@ class PLATINUMA3_API UAIGroupSubsystemSettings : public UDeveloperSettings
 
 public:
 	UPROPERTY(Config, EditAnywhere, Category="Pawns")
-	TSubclassOf<AAIGroupCharacter> PawnClass;
+	TSoftClassPtr<AAIGroupCharacter> PawnClass;
 
 	UPROPERTY(Config, EditAnywhere, Category="Pool")
 	unsigned int PoolStartSize = 1;

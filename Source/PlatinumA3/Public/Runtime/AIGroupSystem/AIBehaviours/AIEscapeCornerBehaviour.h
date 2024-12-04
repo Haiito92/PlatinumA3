@@ -10,6 +10,16 @@ class UAIDefaultBehavioursSettings;
 /**
  * 
  */
+UENUM()
+enum class EEscapeState: uint8
+{
+	None,
+	NotEscaping,
+	Escaping,
+	PostEscaping,
+	FinishedEscaping
+};
+
 USTRUCT()
 struct FEscapeCornerPawnData
 {
@@ -17,7 +27,14 @@ struct FEscapeCornerPawnData
 public:
 	~FEscapeCornerPawnData() = default;
 
+	UPROPERTY()
 	FVector EscapeDirection = FVector::ZeroVector;
+
+	UPROPERTY()
+	EEscapeState EscapeState = EEscapeState::NotEscaping;
+
+	UPROPERTY()
+	float Timer = 0.0f;
 };
 
 
@@ -37,6 +54,7 @@ class PLATINUMA3_API UAIEscapeCornerBehaviour : public UAIBehaviour
 #pragma endregion
 
 private:
+	UPROPERTY()
 	const UAIDefaultBehavioursSettings* Settings;
 	
 	UPROPERTY()

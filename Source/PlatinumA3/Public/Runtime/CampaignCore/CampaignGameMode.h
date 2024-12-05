@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+enum class EWoolStateClassID : uint8;
+class AWoolStateCharacter;
 enum class ECampaignGameStateID : uint8;
 class ASheepCharacter;
 class ACampaignPlayerStart;
@@ -49,6 +51,8 @@ private:
 	void FindAndInitSplineCamera(TArray<AStateCharacter*>& Characters) const;
 
 	TSoftClassPtr<AStateCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
+
+	TEnumAsByte<EAutoReceiveInput::Type> GetPlayerByCharacterClassID(EWoolStateClassID InClassID) const;
 #pragma endregion 	
 
 

@@ -154,9 +154,11 @@ void AWoolStateCharacter::LaunchBite()
 		if (ActorToBite->Implements<UBiteable>())
 		{
 			IBiteable::Execute_Bite(ActorToBite,1.f);
-			JUICY_OnBite();
 		}
 	}
+
+	JUICY_OnBite();
+
 }
 
 
@@ -214,10 +216,11 @@ void AWoolStateCharacter::LaunchRally()
 		if (ActorToRally->Implements<URallyable>())
 		{
 			IRallyable::Execute_Rally(ActorToRally, GetActorLocation());
-			JUICY_OnRally();
 		}
 	}
 	
+	JUICY_OnRally();
+
 }
 
 TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
@@ -290,11 +293,10 @@ void AWoolStateCharacter::LaunchInteracting()
 		if (ActorToInteract->Implements<UInteractInterface>())
 		{
 			IInteractInterface::Execute_Interact(ActorToInteract, Cast<APlayerController>(GetOwner()));
-			JUICY_OnInteract();
 		}
 	}
 	
-	
+	JUICY_OnInteract();
 	
 }
 

@@ -59,10 +59,21 @@ bool UAIEscapeCornerBehaviour::CheckBehaviourValidity(AAIGroupCharacter* Pawn)
 		Direction.Normalize();
 	}
 
+	FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
 	if(bValid == true)
 	{
-		EscapeDatas[Pawn->GetIndex()].EscapeDirection = Direction;
-	}
+		Data.EscapeDirection = Direction;
+	}else if(Data.EscapeState == EEscapeState::Escaping)
+	{
+		Data.EscapeState = EEscapeState::PostEscaping;
+		Data.Timer = Settings->PostEscapeTime;
+		bValid = true;
+		GEngine->AddOnScreenDebugMessage(
+			-1,
+			3.0f,
+			FColor::Orange,
+			TEXT("Post Escape Entry"));
+	}else if(Data.EscapeState == EEscapeState::PostEscaping) bValid = true;
 	
 	return bValid;
 }
@@ -79,7 +90,8 @@ void UAIEscapeCornerBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 
 	if(Settings == nullptr) return;
 
-	const FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
+	FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
+	Data.EscapeState = EEscapeState::Escaping;
 	
 	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
 					Pawn->GetActorLocation() + Data.EscapeDirection);
@@ -93,21 +105,41 @@ void UAIEscapeCornerBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	}
 
 	Pawn->StartMovingAICharacter();
+	
 }
 
 void UAIEscapeCornerBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 	
-	const FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
-
+	FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
+	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
+						Pawn->GetActorLocation() + Data.EscapeDirection);
+	Pawn->StartRotateAICharacter(LookAtRotation);
 	Pawn->AddMovementInput(Data.EscapeDirection,1.0f);
+
+	if(Data.EscapeState == EEscapeState::PostEscaping)
+	{
+		Data.Timer -= DeltaTime;
+		if(Data.Timer <= 0)
+		{
+			Data.EscapeState = EEscapeState::FinishedEscaping;
+			GEngine->AddOnScreenDebugMessage(
+			-1,
+			3.0f,
+			FColor::Orange,
+			TEXT("Post Escape Finished"));
+		}
+	}
 }
 
 void UAIEscapeCornerBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 {
 	Super::BehaviourExit(Pawn);
 
+	FEscapeCornerPawnData& Data = EscapeDatas[Pawn->GetIndex()];
+	Data.EscapeState = EEscapeState::NotEscaping;
+	
 	Pawn->StopRotateAICharacter();
 	Pawn->StopMovingAICharacter();
 	// GEngine->AddOnScreenDebugMessage(

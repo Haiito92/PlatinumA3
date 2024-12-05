@@ -27,11 +27,10 @@ void ACampaignGameMode::BeginPlay()
 	//Spawn Players
 	CreateAndInitPlayers();
 
-	TArray<AStateCharacter*> Characters;
-
 	TArray<ACampaignPlayerStart*> PlayerStarts;
 	FindPlayerStartsActors(PlayerStarts);
-	Characters = SpawnCharacters(PlayerStarts);
+	TArray<AStateCharacter*> Characters;
+	SpawnCharacters(PlayerStarts, Characters);
 
 	
 	//Init Camera
@@ -155,15 +154,15 @@ void ACampaignGameMode::FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& In
 	}
 }
 
-TArray<AStateCharacter*> ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const
+void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts, TArray<AStateCharacter*>& InOutCharacters) const
 {
-	
-	TArray<AStateCharacter*> Characters;
+	InOutCharacters.Empty();
 	
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
 		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
-		TSubclassOf<AStateCharacter> CharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		TSoftClassPtr<AStateCharacter> SoftCharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		UClass* CharacterClass = SoftCharacterClass.LoadSynchronous();
 		if(CharacterClass == nullptr) continue;
 		
 		AStateCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<AStateCharacter>(
@@ -177,10 +176,8 @@ TArray<AStateCharacter*> ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlay
 		NewCharacter->AutoPossessPlayer = CampaignPlayerStart->AutoReceiveInput;
 		NewCharacter->FinishSpawning(CampaignPlayerStart->GetTransform());
 
-		Characters.Add(NewCharacter);
+		InOutCharacters.Add(NewCharacter);
 	}
-
-	return Characters;
 }
 
 void ACampaignGameMode::CreateAndInitPlayers() const
@@ -202,7 +199,7 @@ void ACampaignGameMode::FindAndInitSplineCamera(TArray<AStateCharacter*>& Charac
 	SplineCamera->InitializedSplineCameraScroller(Characters);
 }
 
-TSubclassOf<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(
+TSoftClassPtr<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInputType(
 	EAutoReceiveInput::Type InInputType) const
 {
 	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();

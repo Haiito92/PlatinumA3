@@ -77,6 +77,23 @@ void AStateCharacter::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	TickStateMachine(DeltaTime);
 	RotateMeshUsingOrientX();
+
+
+	if(InputMoves.Normalize() != 0.f)
+	{
+		if(!IsMoving)
+		{
+			IsMoving = true;
+			CharacterStartMove_Delegate.Broadcast();
+		}
+	}else
+	{
+		if(IsMoving)
+		{
+			IsMoving = false;
+			CharacterStopMove_Delegate.Broadcast();
+		}
+	}
 }
 
 void AStateCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
@@ -164,88 +181,6 @@ void AStateCharacter::Input_OnRallying(const FInputActionValue& ActionValue)
 
 void AStateCharacter::Move(FVector2D MovementsValues)
 {
-
-
-
-	 // FVector2D MovementVector = MovementsValues;
-	 //
-	 // if (m_CameraActor != nullptr && m_CameraActor != nullptr)
-	 // {
-	 // 	// Get the Camera's rotation and isolate the Yaw
-	 // 	const FRotator CameraRotation = m_CameraActor->GetActorRotation();
-	 // 	const FRotator YawRotation(0, CameraRotation.Yaw, 0);
-	 //
-	 // 	// Get Forward and Right direction vectors based on camera's yaw rotation
-	 // 	const FVector ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	 // 	const FVector RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	 //
-	 // 	// Add movement inputs relative to the camera direction
-	 // 	AddMovementInput(ForwardDirection, MovementVector.Y);
-	 // 	AddMovementInput(RightDirection, MovementVector.X);
-	 // }
-
-
-
-	
-
-	
-	// FVector2D MovementVector = MovementsValues;
-	// FVector NextPosition;
-	//
-	// FVector ForwardDirection;
-	// FVector RightDirection;
-	// if (m_CameraActor != nullptr && m_CameraActor != nullptr)
-	// {
-	// 	const FRotator CameraRotation = m_CameraActor->GetActorRotation();
-	// 	const FRotator YawRotation(0, CameraRotation.Yaw, 0);
-	//
-	// 	ForwardDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::X);
-	// 	RightDirection = FRotationMatrix(YawRotation).GetUnitAxis(EAxis::Y);
-	//
-	// 	// Add movement inputs relative to the camera direction
-	// 	NextPosition = GetActorLocation();
-	// 	NextPosition += ForwardDirection * MovementVector.Y * 2.0f;
-	// 	NextPosition += RightDirection * MovementVector.X * 2.0f;
-	// }
-	//
-	//
-	//
-	// APlayerController* PlayerController = Cast<APlayerController>(UGameplayStatics::GetPlayerController(GetWorld(),0));
- //        
-	// if (PlayerController)
-	// {
-	// 	FVector PlayerWorldPosition = NextPosition;
-	// 	FVector2D ScreenPosition;
-	//
-	// 	bool bIsOnScreen = PlayerController->ProjectWorldLocationToScreen(PlayerWorldPosition, ScreenPosition);
-	//
-	// 	if (bIsOnScreen)
-	// 	{
-	// 		// Get viewport size
-	// 		int32 ScreenWidth, ScreenHeight;
-	// 		PlayerController->GetViewportSize(ScreenWidth, ScreenHeight);
-	//
-	// 		float Margin = 0.2f;
-	// 		float MinX = ScreenWidth * Margin;
-	// 		float MaxX = ScreenWidth * (1.0f - Margin);
-	// 		float MinY = ScreenHeight * Margin;
-	// 		float MaxY = ScreenHeight * (1.0f - Margin);
-	//
-	// 		// Check if the position is within the screen boundaries
-	// 		if (ScreenPosition.X < MinX || ScreenPosition.X > MaxX || ScreenPosition.Y < MinY || ScreenPosition.Y > MaxY)
-	// 		{
-	// 			
-	// 		}else
-	// 		{
-	// 			AddMovementInput(ForwardDirection, MovementVector.Y);
-	// 			AddMovementInput(RightDirection, MovementVector.X);
-	// 		}
-	// 	}
-	// }
-
-
-
-	
 	FVector2D MovementVector = MovementsValues;
 	FVector NextPosition;
 

@@ -99,7 +99,7 @@ void AWoolStateCharacter::LaunchSomething()
 AActor* AWoolStateCharacter::GetSomethingToHold()
 {
 	const float CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
-	FVector Center = GetActorLocation() + (GetActorForwardVector() * CapsuleRadius);
+	FVector Center = GetActorLocation() + (GetActorForwardVector() * HoldOffset);
 	float Radius = 150.0f;
 	
 	FCollisionQueryParams QueryParams;
@@ -303,7 +303,8 @@ void AWoolStateCharacter::LaunchInteracting()
 
 AActor* AWoolStateCharacter::GetSomethingToInteractWith()
 {
-	FVector Center = GetActorLocation();
+	FVector Direction = GetActorForwardVector() * InteractOffset;
+	FVector Center = GetActorLocation() + Direction;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);

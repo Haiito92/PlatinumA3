@@ -89,7 +89,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		SheepSubsystem->InitSubsystem(3);
 	}
 
-#if UE_EDITOR
+// #if UE_EDITOR
 	//Init CheatSubsystem
 	UCheatsSubsystem* CheatsSubsystem = GetWorld()->GetSubsystem<UCheatsSubsystem>();
 	if(CheatsSubsystem != nullptr)
@@ -97,7 +97,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		CheatsSubsystem->InitSubsystem();
 	}
 	
-#endif
+// #endif
 }
 
 void ACampaignGameMode::BindToWorldSubsystemsEvents() const

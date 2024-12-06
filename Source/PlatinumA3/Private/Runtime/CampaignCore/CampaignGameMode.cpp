@@ -5,6 +5,7 @@
 
 #include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
+#include "Blueprints/FCTweenBlueprintLibrary.h"
 #include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystem.h"
@@ -23,6 +24,9 @@
 void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	UFCTweenBlueprintLibrary::EnsureTweenCapacity(150,150);
+	
 	//Init Game
 	GameStateID = ECampaignGameStateID::Not_Finishable;
 	
@@ -45,7 +49,6 @@ void ACampaignGameMode::BeginPlay()
 	InitWorldSubsystems();
 	BindToWorldSubsystemsEvents();
 
-	
 	//Setup Game
 	// FindAllSheepsInWorld(AllSheeps);	
 	// //Reset GameValue
@@ -86,7 +89,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		SheepSubsystem->InitSubsystem(3);
 	}
 
-#if UE_EDITOR
+// #if UE_EDITOR
 	//Init CheatSubsystem
 	UCheatsSubsystem* CheatsSubsystem = GetWorld()->GetSubsystem<UCheatsSubsystem>();
 	if(CheatsSubsystem != nullptr)
@@ -94,7 +97,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		CheatsSubsystem->InitSubsystem();
 	}
 	
-#endif
+// #endif
 }
 
 void ACampaignGameMode::BindToWorldSubsystemsEvents() const

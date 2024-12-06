@@ -169,7 +169,7 @@ AActor* AWoolStateCharacter::GetSomethingToBite()
 {
 	
 	FVector Center = GetActorLocation();
-	float Radius = 250.0f;
+	float Radius = BiteRadius;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);

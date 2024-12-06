@@ -87,7 +87,7 @@ private:
 #pragma region LeaderCortex
 public:
 	UFUNCTION()
-	inline UFleeLeaderComponent* GetFleeLeaderComponent() const;
+	UFleeLeaderComponent* GetFleeLeaderComponent() const;
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeaderCortexStartFleeEvent, int, LeaderIndex);
 	UPROPERTY()
@@ -109,7 +109,7 @@ private:
 
 public:
 	UFUNCTION()
-	inline UFleeFollowerComponent* GetFleeFollowerComponent() const;
+	UFleeFollowerComponent* GetFleeFollowerComponent() const;
 private:
 	UPROPERTY()
 	TObjectPtr<UFleeFollowerComponent> FleeFollowerComponent;

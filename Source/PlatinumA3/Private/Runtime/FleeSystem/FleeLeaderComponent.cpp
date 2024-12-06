@@ -85,7 +85,7 @@ void UFleeLeaderComponent::Init(const unsigned InIndex, const float InDetectionR
 	PostFleeTime = InPostFleeTime;
 }
 
-const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
+const TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
 {
 	return ScaryActors;
 }

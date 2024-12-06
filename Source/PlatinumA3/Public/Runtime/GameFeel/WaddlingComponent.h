@@ -3,12 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "GamefeelComponent.h"
 #include "Components/ActorComponent.h"
 #include "WaddlingComponent.generated.h"
 
 
 UCLASS(Abstract,ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
-class PLATINUMA3_API UWaddlingComponent : public UActorComponent
+class PLATINUMA3_API UWaddlingComponent : public UGamefeelComponent
 {
 	GENERATED_BODY()
 

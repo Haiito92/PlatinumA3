@@ -19,10 +19,10 @@ FReply UCharacterSelection::NativeOnAnalogValueChanged(const FGeometry& InGeomet
 	{
 		if (AnalogValue >= ActivationThreshold && !bLeftStickXActive)
 		{
-			bLeftStickXActive = true; // Marquer comme actif
-			OnJoystickMoved(DeviceId, AnalogValue); // Déclencher l'événement Blueprint
+			bLeftStickXActive = true;
+			OnJoystickMoved(DeviceId, AnalogValue);
 		}
-		// Si on pousse vers la gauche
+
 		else if (AnalogValue <= -ActivationThreshold && !bLeftStickXActive)
 		{
 			bLeftStickXActive = true;
@@ -31,7 +31,7 @@ FReply UCharacterSelection::NativeOnAnalogValueChanged(const FGeometry& InGeomet
 		// Réinitialisation
 		else if (FMath::Abs(AnalogValue) <= DeactivationThreshold && bLeftStickXActive)
 		{
-			bLeftStickXActive = false; // Réinitialiser l'état
+			bLeftStickXActive = false;
 		}
 	}
 	return Super::NativeOnAnalogValueChanged(InGeometry, InAnalogEvent);

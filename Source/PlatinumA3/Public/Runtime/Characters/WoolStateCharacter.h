@@ -120,7 +120,9 @@ public:
 #pragma region Bite Skill
 
 public:
-
+	UPROPERTY(EditAnywhere, Category="Rally Fields")
+	float BiteRadius = 350.0f;
+	
 	UFUNCTION(BlueprintCallable)
 	void LaunchBite();
 

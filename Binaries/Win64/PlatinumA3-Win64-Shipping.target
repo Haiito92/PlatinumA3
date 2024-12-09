@@ -3283,6 +3283,10 @@
 			"Type": "UFS"
 		},
 		{
+			"Path": "$(ProjectDir)/Plugins/FCTween/FCTween.uplugin",
+			"Type": "UFS"
+		},
+		{
 			"Path": "$(ProjectDir)/Plugins/FocusableWidgets/FocusableWidgets.uplugin",
 			"Type": "UFS"
 		},

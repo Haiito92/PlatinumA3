@@ -120,7 +120,7 @@ void ULocalMultiplayerSubsystem::SetCurrentInputMappingType(const ELocalMultipla
 	CurrentInputMappingType = NewType;
 }
 
-uint8 ULocalMultiplayerSubsystem::GetLastAssignedPlayerIndex() const
+int8 ULocalMultiplayerSubsystem::GetLastAssignedPlayerIndex() const
 {
 	return LastAssignedPlayerIndex;
 }

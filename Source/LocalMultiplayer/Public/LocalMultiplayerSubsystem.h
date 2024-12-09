@@ -36,13 +36,13 @@ public:
 	ELocalMultiplayerInputMappingType GetCurrentInputMappingType() const;
 	void SetCurrentInputMappingType(const ELocalMultiplayerInputMappingType NewType);
 
-	uint8 GetLastAssignedPlayerIndex() const;
+	int8 GetLastAssignedPlayerIndex() const;
 protected:
 	UPROPERTY()
 	ELocalMultiplayerInputMappingType CurrentInputMappingType;
 	
 	UPROPERTY()
-	uint8 LastAssignedPlayerIndex = -1;
+	int8 LastAssignedPlayerIndex = -1;
 
 	UPROPERTY()
 	TMap<int, int> PlayerIndexFromKeyboardProfileIndex;

@@ -26,6 +26,12 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
 	TSoftClassPtr<AStateCharacter> CampaignCharacterClassP1;
 
+	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
+	TEnumAsByte<EAutoReceiveInput::Type> PlayerPlayingShepherd;
+
+	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
+	TEnumAsByte<EAutoReceiveInput::Type> PlayerPlayingDog;
+	
 	UFUNCTION(BlueprintCallable)
 	static const UCampaignModeSettings* GetCampaignModeSettings();
 };

@@ -84,6 +84,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Launch Fields")
 	float LaunchTransTime = 2.0f;
+
+	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	float HoldOffset = 25.0f;
 	
 	UPROPERTY()
 	bool IsHoldingSomething;
@@ -117,7 +120,9 @@ public:
 #pragma region Bite Skill
 
 public:
-
+	UPROPERTY(EditAnywhere, Category="Rally Fields")
+	float BiteRadius = 350.0f;
+	
 	UFUNCTION(BlueprintCallable)
 	void LaunchBite();
 
@@ -151,6 +156,9 @@ public:
 
 	UPROPERTY(EditAnywhere, Category="Interact Fields")
 	float InteractRadius = 150.0f;
+
+	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	float InteractOffset = 25.0f;
 	
 	UFUNCTION(BlueprintCallable)
 	void LaunchInteracting();

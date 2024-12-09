@@ -3,6 +3,7 @@
 
 #include "Runtime/Characters/WoolStateCharacter.h"
 
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
@@ -97,8 +98,8 @@ void AWoolStateCharacter::LaunchSomething()
 
 AActor* AWoolStateCharacter::GetSomethingToHold()
 {
-	
-	FVector Center = GetActorLocation();
+	const float CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	FVector Center = GetActorLocation() + (GetActorForwardVector() * HoldOffset);
 	float Radius = 150.0f;
 	
 	FCollisionQueryParams QueryParams;
@@ -168,7 +169,7 @@ AActor* AWoolStateCharacter::GetSomethingToBite()
 {
 	
 	FVector Center = GetActorLocation();
-	float Radius = 250.0f;
+	float Radius = BiteRadius;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -302,7 +303,8 @@ void AWoolStateCharacter::LaunchInteracting()
 
 AActor* AWoolStateCharacter::GetSomethingToInteractWith()
 {
-	FVector Center = GetActorLocation();
+	FVector Direction = GetActorForwardVector() * InteractOffset;
+	FVector Center = GetActorLocation() + Direction;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);

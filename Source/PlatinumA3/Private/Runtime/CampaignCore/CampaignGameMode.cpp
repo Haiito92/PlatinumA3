@@ -5,6 +5,7 @@
 
 #include "LocalMultiplayerSettings.h"
 #include "LocalMultiplayerSubsystem.h"
+#include "Blueprints/FCTweenBlueprintLibrary.h"
 #include "Characters/StateCharacter.h"
 #include "Kismet/GameplayStatics.h"
 #include "Runtime/AIGroupSystem/AIGroupSubsystem.h"
@@ -13,6 +14,8 @@
 #include "Runtime/CampaignCore/CampaignPlayerStart.h"
 #include "Runtime/CampaignCore/CampaignGameStateID.h"
 #include "Runtime/CampaignCore/CampaignHUD.h"
+#include "Runtime/CampaignCore/EWoolStateClassID.h"
+#include "Runtime/Characters/WoolStateCharacter.h"
 #include "Runtime/CheatsSystem/CheatsSubsystem.h"
 #include "Runtime/FleeSystem/FleeSubsystem.h"
 #include "Runtime/SheepSystem/SheepSubsystem.h"
@@ -21,6 +24,9 @@
 void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+	
+	UFCTweenBlueprintLibrary::EnsureTweenCapacity(150,150);
+	
 	//Init Game
 	GameStateID = ECampaignGameStateID::Not_Finishable;
 	
@@ -43,7 +49,6 @@ void ACampaignGameMode::BeginPlay()
 	InitWorldSubsystems();
 	BindToWorldSubsystemsEvents();
 
-	
 	//Setup Game
 	// FindAllSheepsInWorld(AllSheeps);	
 	// //Reset GameValue
@@ -84,7 +89,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		SheepSubsystem->InitSubsystem(3);
 	}
 
-#if UE_EDITOR
+// #if UE_EDITOR
 	//Init CheatSubsystem
 	UCheatsSubsystem* CheatsSubsystem = GetWorld()->GetSubsystem<UCheatsSubsystem>();
 	if(CheatsSubsystem != nullptr)
@@ -92,7 +97,7 @@ void ACampaignGameMode::InitWorldSubsystems() const
 		CheatsSubsystem->InitSubsystem();
 	}
 	
-#endif
+// #endif
 }
 
 void ACampaignGameMode::BindToWorldSubsystemsEvents() const
@@ -160,9 +165,14 @@ void ACampaignGameMode::SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerS
 	
 	for (ACampaignPlayerStart* CampaignPlayerStart : InPlayerStarts)
 	{
-		EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
-		TSoftClassPtr<AStateCharacter> SoftCharacterClass = GetCampaignCharacterClassByInputType(InputType);
-		UClass* CharacterClass = SoftCharacterClass.LoadSynchronous();
+		EAutoReceiveInput::Type InputType = GetPlayerByCharacterClassID(CampaignPlayerStart->GetWoolStateClassID());
+		if(InputType == EAutoReceiveInput::Disabled) return;
+		CampaignPlayerStart->AutoReceiveInput=InputType;
+		
+		// EAutoReceiveInput::Type InputType = CampaignPlayerStart->AutoReceiveInput.GetValue();
+		// TSoftClassPtr<AStateCharacter> SoftCharacterClass = GetCampaignCharacterClassByInputType(InputType);
+		// UClass* CharacterClass = SoftCharacterClass.LoadSynchronous();
+		TSubclassOf<AWoolStateCharacter> CharacterClass = CampaignPlayerStart->GetClassToSpawn();
 		if(CharacterClass == nullptr) continue;
 		
 		AStateCharacter* NewCharacter = GetWorld()->SpawnActorDeferred<AStateCharacter>(
@@ -214,6 +224,23 @@ TSoftClassPtr<AStateCharacter> ACampaignGameMode::GetCampaignCharacterClassByInp
 	default: return nullptr;
 	}
 }
+
+TEnumAsByte<EAutoReceiveInput::Type> ACampaignGameMode::GetPlayerByCharacterClassID(EWoolStateClassID InClassID) const
+{
+	const UCampaignModeSettings* CampaignModeSettings = GetDefault<UCampaignModeSettings>();
+	if(CampaignModeSettings == nullptr) return EAutoReceiveInput::Disabled;
+	
+	switch (InClassID)
+	{
+	case EWoolStateClassID::Shepherd:
+		return CampaignModeSettings->PlayerPlayingShepherd;
+	case EWoolStateClassID::Dog:
+		return CampaignModeSettings->PlayerPlayingDog;
+	default:
+			return EAutoReceiveInput::Disabled;
+	}
+}
+
 
 #pragma endregion
 

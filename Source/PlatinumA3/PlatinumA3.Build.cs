@@ -16,7 +16,8 @@ public class PlatinumA3 : ModuleRules
 				"EnhancedInput",
 				"DeveloperSettings",
 				"StateMachine",
-				"FCTween"
+				"FCTween",
+				"AsyncLoadingScreen"
 			});
 		
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer", "StateMachine", "FocusableWidgets", "AIModule"});

@@ -16,6 +16,7 @@ class UEnhancedInputComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FInputMoveXEvent, float, InputMoveX);
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FMovementsEventDelegate);
 
 UCLASS()
 class STATEMACHINE_API AStateCharacter : public ACharacter
@@ -125,7 +126,15 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	bool GetIsRallying();
+
+	UPROPERTY(BlueprintReadOnly)
+	bool IsMoving;
 	
+	UPROPERTY(BlueprintAssignable)
+	FMovementsEventDelegate CharacterStartMove_Delegate;
+
+	UPROPERTY(BlueprintAssignable)
+	FMovementsEventDelegate CharacterStopMove_Delegate;
 protected:
 	UPROPERTY()
 	FVector2D InputMoves;

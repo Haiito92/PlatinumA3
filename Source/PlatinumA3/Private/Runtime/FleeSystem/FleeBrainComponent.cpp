@@ -133,7 +133,7 @@ void UFleeBrainComponent::OnLinkDetectionEndOverlap(UPrimitiveComponent* Overlap
 
 #pragma region LeaderCortex
 
-inline UFleeLeaderComponent* UFleeBrainComponent::GetFleeLeaderComponent() const
+UFleeLeaderComponent* UFleeBrainComponent::GetFleeLeaderComponent() const
 {
 	return FleeLeaderComponent;
 }
@@ -151,7 +151,7 @@ void UFleeBrainComponent::OnLeaderCortexStopFleeEvent(int InLeaderIndex)
 #pragma endregion 
 
 #pragma region FollowerCortex
-inline UFleeFollowerComponent* UFleeBrainComponent::GetFleeFollowerComponent() const
+UFleeFollowerComponent* UFleeBrainComponent::GetFleeFollowerComponent() const
 {
 	return FleeFollowerComponent;
 }

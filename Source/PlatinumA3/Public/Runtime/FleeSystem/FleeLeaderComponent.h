@@ -44,7 +44,7 @@ public:
 	void Init(const unsigned InIndex, const float InDetectionRadius, const float InPostFleeTime);
 	
 	UFUNCTION()
-	const inline TArray<AActor*>& GetScaryActors() const;
+	const TArray<AActor*>& GetScaryActors() const;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStartFleeEvent, int, InLeaderIndex);
 	UPROPERTY()

@@ -18,11 +18,12 @@ void ULocalMultiplayerGameViewportClient::PostInitProperties()
 
 bool ULocalMultiplayerGameViewportClient::InputKey(const FInputKeyEventArgs& EventArgs)
 {
+	
 	ULocalMultiplayerSubsystem* LocalMultiplayerSubsystem = GameInstance->GetSubsystem<ULocalMultiplayerSubsystem>();
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
 	if(LocalMultiplayerSettings == nullptr || LocalMultiplayerSubsystem == nullptr) return Super::InputKey(EventArgs);
 
-	ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
+	const ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
 	
 	int PlayerIndex = -1;
 	if (!EventArgs.IsGamepad())
@@ -80,7 +81,7 @@ bool ULocalMultiplayerGameViewportClient::InputAxis(FViewport* InViewport, FInpu
 	if(LocalMultiplayerSettings == nullptr || LocalMultiplayerSubsystem == nullptr)
 		return Super::InputAxis(InViewport, InputDevice, Key, Delta, DeltaTime, NumSamples, bGamepad);
 
-	ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
+	const ELocalMultiplayerInputMappingType CurrentMappingType = LocalMultiplayerSubsystem->GetCurrentInputMappingType();
 	
 	int PlayerIndex = -1;
 	if (!bGamepad)

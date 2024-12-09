@@ -35,7 +35,8 @@ public:
 public:
 	ELocalMultiplayerInputMappingType GetCurrentInputMappingType() const;
 	void SetCurrentInputMappingType(const ELocalMultiplayerInputMappingType NewType);
-	
+
+	uint8 GetLastAssignedPlayerIndex() const;
 protected:
 	UPROPERTY()
 	ELocalMultiplayerInputMappingType CurrentInputMappingType;

@@ -40,6 +40,8 @@ void UCheatTeleportMenu::UpdateTeleportInfos(const int IndexDelta)
 
 void UCheatTeleportMenu::GetTeleportInfos(const int Index)
 {
+	if(CheatsSubsystem == nullptr || CheatsSubsystem->GetCheatTeleportPoints().Num() == 0) return;
+	
 	const ACheatTeleportPoint* CheatTeleportPoint = CheatsSubsystem->GetCheatTeleportPoints()[Index];
 	if(CheatTeleportPoint == nullptr) return;
 	

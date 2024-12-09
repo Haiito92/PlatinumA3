@@ -48,19 +48,44 @@ void UFleeLeaderComponent::TickComponent(float DeltaTime, ELevelTick TickType,
                                          FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+	if(FleeLeadState == EFleeLeadState::Fleeing)
+	{
+		FVector NewFleeDirection;
+		for (const AActor* ActorToFleeFrom : ScaryActors)
+		{
+			FVector AtoP = GetOwner()->GetActorLocation() - ActorToFleeFrom->GetActorLocation();
+			NewFleeDirection += AtoP;
+		}
+		NewFleeDirection.Z = 0;
+		NewFleeDirection.Normalize();
+		FleeDirection = NewFleeDirection;
+	}
+	
+	if(FleeLeadState == EFleeLeadState::PostFleeing)
+	{
+		PostFleeTimer -= DeltaTime;
+		
+		if(PostFleeTimer <= 0) StopFlee();
 
+		// GEngine->AddOnScreenDebugMessage(
+		// -1,
+		// 4.0f,
+		// FColor::Purple,
+		// TEXT(" POST FLEE"));
+	}
 	// ...
 }
 #pragma endregion 
 #pragma region FleeLeader
 
-void UFleeLeaderComponent::Init(const unsigned InIndex, const int InDetectionRadius)
+void UFleeLeaderComponent::Init(const unsigned InIndex, const float InDetectionRadius, const float InPostFleeTime)
 {
 	LeaderIndex = InIndex;
 	SphereRadius = InDetectionRadius;
+	PostFleeTime = InPostFleeTime;
 }
 
-const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
+const TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
 {
 	return ScaryActors;
 }
@@ -69,6 +94,16 @@ const inline TArray<AActor*>& UFleeLeaderComponent::GetScaryActors() const
 bool UFleeLeaderComponent::GetFleeing() const
 {
 	return bFleeing;
+}
+
+EFleeLeadState UFleeLeaderComponent::GetFleeLeadState() const
+{
+	return FleeLeadState;
+}
+
+const FVector& UFleeLeaderComponent::GetFleeDirection() const
+{
+	return FleeDirection;
 }
 
 int UFleeLeaderComponent::GetLeaderIndex() const
@@ -97,7 +132,8 @@ void UFleeLeaderComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveC
 		ScaryActors.Remove(Actor);
 		if (ScaryActors.Num() == 0)
 		{
-			StopFlee();
+			PostFlee();
+			//StopFlee();
 		}
 	}
 }
@@ -105,13 +141,24 @@ void UFleeLeaderComponent::OnDetectionEndOverlap(UPrimitiveComponent* PrimitiveC
 void UFleeLeaderComponent::StartFlee()
 {
 	bFleeing = true;
+	FleeLeadState = EFleeLeadState::Fleeing;
 	StartFleeEvent.Broadcast(LeaderIndex);
 	JuicyStartFlee();
 }
 
+void UFleeLeaderComponent::PostFlee()
+{
+	PostFleeTimer = PostFleeTime;
+	FleeLeadState = EFleeLeadState::PostFleeing;
+	PostFleeEvent.Broadcast(LeaderIndex);
+	JuicyPostFlee();
+}
+
+
 void UFleeLeaderComponent::StopFlee()
 {
 	bFleeing = false;
+	FleeLeadState = EFleeLeadState::NotFleeing;
 	StopFleeEvent.Broadcast(LeaderIndex);
 	JuicyStopFlee();
 }

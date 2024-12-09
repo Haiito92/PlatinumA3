@@ -3,6 +3,7 @@
 
 #include "Runtime/Characters/WoolStateCharacter.h"
 
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
 #include "Runtime/Berger/Catchable.h"
@@ -97,8 +98,8 @@ void AWoolStateCharacter::LaunchSomething()
 
 AActor* AWoolStateCharacter::GetSomethingToHold()
 {
-	
-	FVector Center = GetActorLocation();
+	const float CapsuleRadius = GetCapsuleComponent()->GetScaledCapsuleRadius();
+	FVector Center = GetActorLocation() + (GetActorForwardVector() * HoldOffset);
 	float Radius = 150.0f;
 	
 	FCollisionQueryParams QueryParams;
@@ -154,9 +155,11 @@ void AWoolStateCharacter::LaunchBite()
 		if (ActorToBite->Implements<UBiteable>())
 		{
 			IBiteable::Execute_Bite(ActorToBite,1.f);
-			JUICY_OnBite();
 		}
 	}
+
+	JUICY_OnBite();
+
 }
 
 
@@ -166,7 +169,7 @@ AActor* AWoolStateCharacter::GetSomethingToBite()
 {
 	
 	FVector Center = GetActorLocation();
-	float Radius = 250.0f;
+	float Radius = BiteRadius;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -214,10 +217,11 @@ void AWoolStateCharacter::LaunchRally()
 		if (ActorToRally->Implements<URallyable>())
 		{
 			IRallyable::Execute_Rally(ActorToRally, GetActorLocation());
-			JUICY_OnRally();
 		}
 	}
 	
+	JUICY_OnRally();
+
 }
 
 TArray<AActor*> AWoolStateCharacter::GetSomethingToRally()
@@ -290,17 +294,17 @@ void AWoolStateCharacter::LaunchInteracting()
 		if (ActorToInteract->Implements<UInteractInterface>())
 		{
 			IInteractInterface::Execute_Interact(ActorToInteract, Cast<APlayerController>(GetOwner()));
-			JUICY_OnInteract();
 		}
 	}
 	
-	
+	JUICY_OnInteract();
 	
 }
 
 AActor* AWoolStateCharacter::GetSomethingToInteractWith()
 {
-	FVector Center = GetActorLocation();
+	FVector Direction = GetActorForwardVector() * InteractOffset;
+	FVector Center = GetActorLocation() + Direction;
 	
 	FCollisionQueryParams QueryParams;
 	QueryParams.AddIgnoredActor(this);
@@ -324,7 +328,7 @@ AActor* AWoolStateCharacter::GetSomethingToInteractWith()
 		{	
 			if (AActor* OverlappedActor = Result.GetActor())
 			{
-				if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
+				//if(Result.Component->GetCollisionProfileName() == "Trigger") continue;
 				
 				if (OverlappedActor->Implements<UInteractInterface>())
 				{

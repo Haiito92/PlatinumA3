@@ -8,7 +8,17 @@ public class PlatinumA3 : ModuleRules
 	{
 		PCHUsage = PCHUsageMode.UseExplicitOrSharedPCHs;
 
-		PublicDependencyModuleNames.AddRange(new string[] { "Core", "CoreUObject", "Engine", "InputCore", "EnhancedInput", "DeveloperSettings", "StateMachine" });
+		PublicDependencyModuleNames.AddRange(
+			new string[] { "Core",
+				"CoreUObject",
+				"Engine",
+				"InputCore",
+				"EnhancedInput",
+				"DeveloperSettings",
+				"StateMachine",
+				"FCTween",
+				"AsyncLoadingScreen"
+			});
 		
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer", "StateMachine", "FocusableWidgets", "AIModule"});
 		

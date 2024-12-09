@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "CampaignGameMode.generated.h"
 
+enum class EWoolStateClassID : uint8;
+class AWoolStateCharacter;
 enum class ECampaignGameStateID : uint8;
 class ASheepCharacter;
 class ACampaignPlayerStart;
@@ -42,13 +44,15 @@ private:
 #pragma region Players
 	void FindPlayerStartsActors(TArray<ACampaignPlayerStart*>& InOutPlayerStarts) const;
 
-	TArray<AStateCharacter*> SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts) const;
+	void SpawnCharacters(TArray<ACampaignPlayerStart*>& InPlayerStarts, TArray<AStateCharacter*>& InOutCharacters) const;
 
 	void CreateAndInitPlayers() const;
 
 	void FindAndInitSplineCamera(TArray<AStateCharacter*>& Characters) const;
 
-	TSubclassOf<AStateCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
+	TSoftClassPtr<AStateCharacter> GetCampaignCharacterClassByInputType(EAutoReceiveInput::Type InputType) const;
+
+	TEnumAsByte<EAutoReceiveInput::Type> GetPlayerByCharacterClassID(EWoolStateClassID InClassID) const;
 #pragma endregion 	
 
 

@@ -7,6 +7,14 @@
 #include "Components/SphereComponent.h"
 #include "FleeLeaderComponent.generated.h"
 
+UENUM()
+enum class EFleeLeadState : uint8
+{
+	None,
+	NotFleeing,
+	Fleeing,
+	PostFleeing
+};
 
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLATINUMA3_API UFleeLeaderComponent : public USphereComponent
@@ -33,15 +41,19 @@ public:
 #pragma region FleeLeader
 public:
 	UFUNCTION()
-	void Init(const unsigned InIndex, const int InDetectionRadius);
+	void Init(const unsigned InIndex, const float InDetectionRadius, const float InPostFleeTime);
 	
 	UFUNCTION()
-	const inline TArray<AActor*>& GetScaryActors() const;
+	const TArray<AActor*>& GetScaryActors() const;
 
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStartFleeEvent, int, InLeaderIndex);
 	UPROPERTY()
 	FStartFleeEvent StartFleeEvent;
 
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPostFleeEvent, int, InLeaderIndex);
+	UPROPERTY()
+	FPostFleeEvent PostFleeEvent;
+	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStopFleeEvent, int, InLeaderIndex);
 	UPROPERTY()
 	FStopFleeEvent StopFleeEvent;
@@ -49,6 +61,12 @@ public:
 	UFUNCTION()
 	bool GetFleeing() const;
 
+	UFUNCTION()
+	EFleeLeadState GetFleeLeadState() const;
+
+	UFUNCTION()
+	const FVector& GetFleeDirection() const;
+	
 	UFUNCTION()
 	int GetLeaderIndex() const;
 protected:
@@ -62,6 +80,11 @@ protected:
 	void StartFlee();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void JuicyStartFlee();
+
+	UFUNCTION()
+	void PostFlee();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void JuicyPostFlee();
 	
 	UFUNCTION()
 	void StopFlee();
@@ -78,6 +101,17 @@ private:
 	UPROPERTY()
 	bool bFleeing = false;
 
+	UPROPERTY()
+	EFleeLeadState FleeLeadState = EFleeLeadState::NotFleeing;
+
+	UPROPERTY()
+	FVector FleeDirection;
+	
+	UPROPERTY()
+	float PostFleeTime = 0.0f;
+	UPROPERTY()
+	float PostFleeTimer = 0.0f;
+	
 	UPROPERTY()
 	unsigned int LeaderIndex;
 #pragma endregion 

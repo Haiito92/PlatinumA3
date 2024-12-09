@@ -12,6 +12,21 @@
 class UFleeFollowerComponent;
 class UFleeLeaderComponent;
 
+USTRUCT()
+struct FFleeBrainInitData
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY()
+	int Index = 0;
+	UPROPERTY()
+	float LinkRadius = 0.0f;
+	UPROPERTY()
+	float DetectionRadius = 0.0f;
+	UPROPERTY()
+	float PostFleeTime = 0.0f;
+};
+
 UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLATINUMA3_API UFleeBrainComponent : public USphereComponent
 {
@@ -35,8 +50,8 @@ public:
 
 #pragma region Initialization
 public:
-	void InitBrain(const int InIndex, const float InLinkRadius, const float InDetectionRadius);
-	void InitLeaderCortex(const int InIndex, const float InDetectionRadius);
+	void InitBrain(const FFleeBrainInitData& InBrainInitData);
+	void InitLeaderCortex(const int InIndex, const float InDetectionRadius, const float InPostFleeTime);
 	void InitFollowerCortex(const int InIndex);
 #pragma endregion 
 #pragma region Brain&Links
@@ -72,7 +87,7 @@ private:
 #pragma region LeaderCortex
 public:
 	UFUNCTION()
-	inline UFleeLeaderComponent* GetFleeLeaderComponent() const;
+	UFleeLeaderComponent* GetFleeLeaderComponent() const;
 	
 	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FLeaderCortexStartFleeEvent, int, LeaderIndex);
 	UPROPERTY()
@@ -94,7 +109,7 @@ private:
 
 public:
 	UFUNCTION()
-	inline UFleeFollowerComponent* GetFleeFollowerComponent() const;
+	UFleeFollowerComponent* GetFleeFollowerComponent() const;
 private:
 	UPROPERTY()
 	TObjectPtr<UFleeFollowerComponent> FleeFollowerComponent;

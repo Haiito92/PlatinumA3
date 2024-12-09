@@ -75,12 +75,6 @@ void ULocalMultiplayerSubsystem::AssignKeyboardMapping(int PlayerIndex, int Keyb
 
 int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int DeviceID)
 {
-	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-	if(LocalMultiplayerSettings == nullptr) return -1;
-	const int NbMaxPlayers = LocalMultiplayerSettings->NbMaxGamepads + LocalMultiplayerSettings->GetNbKeyboardProfiles();
-	
-	if(LastAssignedPlayerIndex >= NbMaxPlayers - 1) return -1;
-	
 	if(PlayerIndexFromGamepadProfileIndex.Contains(DeviceID))
 	{
 		return PlayerIndexFromGamepadProfileIndex[DeviceID];
@@ -90,6 +84,12 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int De
 
 int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 {
+	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
+	if(LocalMultiplayerSettings == nullptr) return -1;
+	const int NbMaxPlayers = LocalMultiplayerSettings->NbMaxGamepads + LocalMultiplayerSettings->GetNbKeyboardProfiles();
+	
+	if(LastAssignedPlayerIndex >= NbMaxPlayers - 1) return -1;
+	
 	LastAssignedPlayerIndex++;
 	PlayerIndexFromGamepadProfileIndex.Add(DeviceID, LastAssignedPlayerIndex);
 	return LastAssignedPlayerIndex;

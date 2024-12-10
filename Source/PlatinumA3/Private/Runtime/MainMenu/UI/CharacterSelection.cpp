@@ -42,6 +42,27 @@ void UCharacterSelection::NativeConstruct()
 	Super::NativeConstruct();
 }
 
+FReply UCharacterSelection::NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent)
+{
+	FKey Key = InKeyEvent.GetKey();
+	
+	if (Key == EKeys::Q)
+	{
+		OnJoystickMoved(0, -1.0f);
+	}
+	else if (Key == EKeys::D)
+	{
+		OnJoystickMoved(0, 1.0f);
+	}else if (Key == EKeys::Left)
+	{
+		OnJoystickMoved(1, -1.0f);
+	}else if (Key == EKeys::Right){
+		OnJoystickMoved(1, 1.0f);
+	}
+	
+	return Super::NativeOnKeyDown(InGeometry, InKeyEvent);
+}
+
 
 
 

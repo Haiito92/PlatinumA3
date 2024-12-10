@@ -35,7 +35,7 @@ void UWoolsomeGameInstance::InitGameInstance()
 	bLoaded = false;
 }
 
-bool UWoolsomeGameInstance::GetLevelInfosByIndex(const uint8 InLevelIndex, FLevelInfos& InOutLevelInfo) const
+bool UWoolsomeGameInstance::GetLevelInfosByIndex(const int InLevelIndex, FLevelInfos& InOutLevelInfo) const
 {
 	if(InLevelIndex < 0 || !LevelInfos.IsValidIndex(InLevelIndex)) return false;
 
@@ -48,7 +48,7 @@ const FLevelInfos& UWoolsomeGameInstance::GetCurrentLevelInfo() const
 	return CurrentLevelInfo;
 }
 
-void UWoolsomeGameInstance::OpenLevelByIndex(const uint8 InLevelIndex)
+void UWoolsomeGameInstance::OpenLevelByIndex(const int InLevelIndex)
 {
 	FLevelInfos LevelInfo={};
 	if(!GetLevelInfosByIndex(InLevelIndex, LevelInfo)) return;

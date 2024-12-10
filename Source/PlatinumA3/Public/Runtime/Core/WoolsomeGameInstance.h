@@ -17,14 +17,14 @@ struct FLevelInfos : public FTableRowBase
 public:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 LevelIndex = 0;
+	int LevelIndex = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName LevelName = "NotName";
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 LevelSheepAmountToFinish = 1;
+	int LevelSheepAmountToFinish = 1;
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	uint8 NextLevelIndex = 0;
+	int NextLevelIndex = 0;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	FName NextLevelName = "NotNextName";
 };
@@ -48,7 +48,7 @@ protected:
 #pragma region LevelInfos
 public:
 	UFUNCTION(BlueprintCallable)
-	bool GetLevelInfosByIndex(const uint8 InLevelIndex, FLevelInfos& InOutLevelInfo) const;
+	bool GetLevelInfosByIndex(const int InLevelIndex, FLevelInfos& InOutLevelInfo) const;
 	UFUNCTION(BlueprintCallable)
 	const FLevelInfos& GetCurrentLevelInfo() const;
 protected:
@@ -62,7 +62,7 @@ protected:
 #pragma region Levels
 public:
 	UFUNCTION(BlueprintCallable)
-	void OpenLevelByIndex(const uint8 InLevelIndex);
+	void OpenLevelByIndex(const int InLevelIndex);
 
 	UFUNCTION(BlueprintCallable)
 	void OpenNextLevel();

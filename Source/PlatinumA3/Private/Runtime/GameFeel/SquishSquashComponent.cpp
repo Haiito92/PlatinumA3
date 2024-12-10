@@ -36,11 +36,5 @@ void USquishSquashComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion 
 
 #pragma region SquishSquash
-void USquishSquashComponent::StartSquishSquash_Implementation()
-{
-}
 
-void USquishSquashComponent::StopSquishSquash_Implementation()
-{
-}
 #pragma endregion 

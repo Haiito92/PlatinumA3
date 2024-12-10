@@ -21,7 +21,7 @@ class PLATINUMA3_API UCharacterSelection : public UUserWidget
 	
 	virtual void NativeConstruct() override;
 	
-	
+	virtual FReply NativeOnKeyDown(const FGeometry& InGeometry, const FKeyEvent& InKeyEvent) override;
 
 public:
 

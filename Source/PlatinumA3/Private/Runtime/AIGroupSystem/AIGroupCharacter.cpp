@@ -140,9 +140,9 @@ void AAIGroupCharacter::StartRotateAICharacter(const FRotator& GoalRotation)
 
 	ReceiveStartRotateAICharacter(GoalRotation);
 	
-	if(RotationHandled) return;
-
-	SetActorRotation(GoalRotation);
+	// if(RotationHandled) return;
+	//
+	// SetActorRotation(GoalRotation);
 }
 
 void AAIGroupCharacter::StopRotateAICharacter()

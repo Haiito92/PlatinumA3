@@ -34,8 +34,25 @@ void UGamefeelComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 	// ...
 }
 
+#pragma endregion 
+
+
+
 void UGamefeelComponent::InitGamefeelComponent_Implementation(USceneComponent* InComponentToModify)
 {
 	ModifiedSceneComponent = InComponentToModify;
 }
-#pragma endregion 
+
+void UGamefeelComponent::StartGamefeelComponent()
+{
+	if(!bIsOn) return;
+	
+	ReceiveStartGamefeelComponent();
+}
+
+void UGamefeelComponent::StopGamefeelComponent()
+{
+	if(!bIsOn) return;
+
+	ReceiveStopGamefeelComponent();
+}

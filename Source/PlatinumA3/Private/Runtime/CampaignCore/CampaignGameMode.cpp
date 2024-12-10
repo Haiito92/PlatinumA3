@@ -240,13 +240,27 @@ TEnumAsByte<EAutoReceiveInput::Type> ACampaignGameMode::GetPlayerByCharacterClas
 			return EAutoReceiveInput::Disabled;
 	}
 }
-
-
 #pragma endregion
 
 
 #pragma region GameLoop
+void ACampaignGameMode::PauseGame()
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), true);
 
+	ReceivePauseGame();
+	
+	GamePausedEvent.Broadcast();
+}
+
+void ACampaignGameMode::UnpauseGame()
+{
+	UGameplayStatics::SetGamePaused(GetWorld(), false);
+
+	ReceiveUnpauseGame();
+	
+	GameUnpausedEvent.Broadcast();
+}
 
 void ACampaignGameMode::FinishGame()
 {

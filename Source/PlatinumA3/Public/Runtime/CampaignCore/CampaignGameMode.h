@@ -75,8 +75,8 @@ public:
 	FGameUnpausedEvent GameUnpausedEvent;
 	
 	UFUNCTION(BlueprintCallable)
-	void FinishGame();
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishedEvent);
+	void FinishGame(bool bInWon);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameFinishedEvent, bool, bWon);
 	UPROPERTY(BlueprintAssignable)
 	FGameFinishedEvent GameFinishedEvent;
 	

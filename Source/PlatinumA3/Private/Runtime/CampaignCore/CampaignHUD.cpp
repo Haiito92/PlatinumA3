@@ -38,7 +38,7 @@ void ACampaignHUD::InitCampaignHUD()
 	CampaignGameMode->GameFinishedEvent.AddDynamic(this, &ACampaignHUD::OnGameFinishedEvent);
 }
 
-void ACampaignHUD::OnGameFinishedEvent()
+void ACampaignHUD::OnGameFinishedEvent(bool bInWon)
 {
-	ReceiveGameFinished();
+	ReceiveGameFinished(bInWon);
 }

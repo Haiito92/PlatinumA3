@@ -11,5 +11,5 @@ void UCheatEndGameMenu::CheatEndGame()
 	ACampaignGameMode* CampaignGameMode = Cast<ACampaignGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if(CampaignGameMode == nullptr)return;
 
-	CampaignGameMode->FinishGame();
+	CampaignGameMode->FinishGame(false);
 }

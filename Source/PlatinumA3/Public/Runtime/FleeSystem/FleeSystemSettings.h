@@ -37,4 +37,10 @@ public:
 
 	UPROPERTY(Config, EditAnywhere, Category="Follow Flee Behaviour")
 	bool CanFollowFleeWalkOffLedges;
+
+	UPROPERTY(Config, EditAnywhere, Category="Bark")
+	float BarkCooldownMin = 3.0f;
+	
+	UPROPERTY(Config, EditAnywhere, Category="Bark")
+	float BarkCooldownMax = 6.0f;
 };

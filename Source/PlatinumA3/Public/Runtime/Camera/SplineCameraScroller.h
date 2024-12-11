@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "WoolCineCameraActor.h"
 #include "Characters/StateCharacter.h"
 #include "GameFramework/Actor.h"
 #include "SplineCameraScroller.generated.h"
@@ -23,8 +24,11 @@ public:
 	TObjectPtr<USplineComponent> m_SplineComponent;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
-	TObjectPtr<ACameraActor> m_CameraActor;
+	TObjectPtr<AActor> m_CameraActor;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller", Meta = (Interpolate))
+	bool m_IsInCinematic = false;
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
 	float m_CameraMoveSpeed = 2.0f;
 
@@ -59,4 +63,8 @@ public:
 	void UpdateCharactersInFrustrum(ACharacter* Character);
 	
 	void LookAtTargetSmooth(FVector TargetLocation);
+
+
+	UFUNCTION(BlueprintCallable)
+	void ExitCinematic();
 };

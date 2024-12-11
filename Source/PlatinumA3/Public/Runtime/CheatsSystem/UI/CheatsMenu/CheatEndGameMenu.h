@@ -14,7 +14,29 @@ class PLATINUMA3_API UCheatEndGameMenu : public UUserWidget
 {
 	GENERATED_BODY()
 
-protected:
+public:
 	UFUNCTION(BlueprintCallable)
-	void CheatEndGame();
+	void InitEndGameMenu();
+	
+protected:
+
+	UFUNCTION(BlueprintCallable)
+	void PrevLevelInfos();
+	UFUNCTION(BlueprintCallable)
+	void NextLevelInfos();
+	
+	void UpdateLevelInfo(int InIndexDelta);
+	void GetLevelInfo(int InIndex);
+	
+	UFUNCTION(BlueprintCallable)
+	void CheatEndGame() const;
+
+	UPROPERTY()
+	TArray<FName> LevelNames;
+
+	UPROPERTY(BlueprintReadOnly)
+	FName CurrentName;
+	
+	UPROPERTY()
+	int CurrentIndex = 0;
 };

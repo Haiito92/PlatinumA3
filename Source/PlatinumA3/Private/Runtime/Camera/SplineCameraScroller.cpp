@@ -189,26 +189,26 @@ void ASplineCameraScroller::ExitCinematic()
 	m_IsInCinematic = false;
 	
 
-	if(!m_Berger || !m_Chien || !m_CameraActor) return;
-	
-	FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
-	FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
-	
-	float DistanceBetweenActors = FVector::Dist(m_Berger->GetActorLocation(), m_Chien->GetActorLocation());
-	//float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
-	float ZoomOutFactor = 0;
-	
-	FVector OffsetDirection = (CameraTargetLocation - InterpolatedLocation).GetSafeNormal(); 
-	FVector AdjustedCameraTargetLocation = CameraTargetLocation + OffsetDirection * ZoomOutFactor;
-	
-	m_CameraActor->SetActorLocation(AdjustedCameraTargetLocation);
-	
-	
-	FVector MyLocation = m_CameraActor->GetActorLocation();
-	Direction = (InterpolatedLocation - MyLocation).GetSafeNormal();
-	FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
-	
-	m_CameraActor->SetActorRotation(LookAtRotation);
+	// if(!m_Berger || !m_Chien || !m_CameraActor) return;
+	//
+	// FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
+	// FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
+	//
+	// float DistanceBetweenActors = FVector::Dist(m_Berger->GetActorLocation(), m_Chien->GetActorLocation());
+	// //float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
+	// float ZoomOutFactor = 0;
+	//
+	// FVector OffsetDirection = (CameraTargetLocation - InterpolatedLocation).GetSafeNormal(); 
+	// FVector AdjustedCameraTargetLocation = CameraTargetLocation + OffsetDirection * ZoomOutFactor;
+	//
+	// m_CameraActor->SetActorLocation(AdjustedCameraTargetLocation);
+	//
+	//
+	// FVector MyLocation = m_CameraActor->GetActorLocation();
+	// Direction = (InterpolatedLocation - MyLocation).GetSafeNormal();
+	// FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+	//
+	// m_CameraActor->SetActorRotation(LookAtRotation);
 	
 	
 

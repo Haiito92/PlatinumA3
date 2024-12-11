@@ -35,6 +35,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
 	float m_CameraRotationSpeed = 2.0f;
 
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "SplineCameraScroller")
+	float m_BlendingTime = 1.0f;
+	
 	UPROPERTY(BlueprintReadWrite, Category = "SplineCameraScroller")
 	FVector Direction;
 	
@@ -65,6 +68,9 @@ public:
 	void LookAtTargetSmooth(FVector TargetLocation);
 
 
+	UFUNCTION(BlueprintCallable)
+	void EnterCinematic();
+	
 	UFUNCTION(BlueprintCallable)
 	void ExitCinematic();
 };

@@ -48,6 +48,11 @@ const FLevelInfos& UWoolsomeGameInstance::GetCurrentLevelInfo() const
 	return CurrentLevelInfo;
 }
 
+const TArray<FLevelInfos>& UWoolsomeGameInstance::GetAllLevelInfos() const
+{
+	return LevelInfos;
+}
+
 void UWoolsomeGameInstance::OpenLevelByIndex(const int InLevelIndex)
 {
 	FLevelInfos LevelInfo={};

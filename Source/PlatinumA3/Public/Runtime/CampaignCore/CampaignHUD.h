@@ -27,8 +27,8 @@ public:
 	
 protected:
 	UFUNCTION()
-	void OnGameFinishedEvent();
+	void OnGameFinishedEvent(bool bInWon);
 
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
-	void ReceiveGameFinished();
+	void ReceiveGameFinished(bool bInWon);
 };

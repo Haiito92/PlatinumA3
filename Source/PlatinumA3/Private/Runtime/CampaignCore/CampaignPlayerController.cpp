@@ -57,5 +57,5 @@ void ACampaignPlayerController::OnFinishGameInputAction()
 		FColor::Turquoise,
 		TEXT("Finish Game"));
 	
-	CampaignGameMode->FinishGame();
+	CampaignGameMode->FinishGame(false);
 }

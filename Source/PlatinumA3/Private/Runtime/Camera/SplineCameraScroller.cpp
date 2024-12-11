@@ -29,10 +29,18 @@ void ASplineCameraScroller::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	
 	UpdateSplineCamera();
 	UpdateCharactersInFrustrum(m_Berger);
 	UpdateCharactersInFrustrum(m_Chien);
-
+	
+	
+	// if(!m_IsInCinematic)
+	// {
+	// 	UpdateSplineCamera();
+	// 	UpdateCharactersInFrustrum(m_Berger);
+	// 	UpdateCharactersInFrustrum(m_Chien);
+	// }
 }
 
 void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharacter*> Characters)
@@ -46,11 +54,11 @@ void ASplineCameraScroller::InitializedSplineCameraScroller(TArray<AStateCharact
 	
 	if(!m_CameraActor)
 	{
-		m_CameraActor = Cast<ACameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ACameraActor::StaticClass()));
-
-		m_Berger->m_CameraActor = m_CameraActor;
-		m_Chien->m_CameraActor = m_CameraActor;
+		//m_CameraActor = Cast<ACustomCameraActor>(UGameplayStatics::GetActorOfClass(GetWorld(), ACustomCameraActor::StaticClass()));
 	}
+
+	m_Berger->m_CameraActor = m_CameraActor;
+	m_Chien->m_CameraActor = m_CameraActor;
 }
 
 void ASplineCameraScroller::UpdateSplineCamera()
@@ -87,7 +95,8 @@ void ASplineCameraScroller::UpdateSplineCamera()
 	FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
 
 	float DistanceBetweenActors = FVector::Dist(m_Berger->GetActorLocation(), m_Chien->GetActorLocation());
-	float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
+	//float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
+	float ZoomOutFactor = 0;
 
 	FVector OffsetDirection = (CameraTargetLocation - InterpolatedLocation).GetSafeNormal(); 
 	FVector AdjustedCameraTargetLocation = CameraTargetLocation + OffsetDirection * ZoomOutFactor;
@@ -162,8 +171,54 @@ void ASplineCameraScroller::LookAtTargetSmooth(FVector TargetLocation)
 	Direction = (TargetLocation - MyLocation).GetSafeNormal();
 	FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
 
-	FRotator NewRotation = FMath::RInterpTo(m_CameraActor->GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), m_CameraRotationSpeed);
+
 	
+	//FRotator NewRotation = FMath::RInterpTo(m_CameraActor->GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds(), m_CameraRotationSpeed);
+	FRotator NewRotation = FMath::Lerp(m_CameraActor->GetActorRotation(), LookAtRotation, GetWorld()->GetDeltaSeconds() * m_CameraRotationSpeed);
+
 	m_CameraActor->SetActorRotation(NewRotation);
+}
+
+void ASplineCameraScroller::EnterCinematic()
+{
+	m_IsInCinematic = true;
+}
+
+void ASplineCameraScroller::ExitCinematic()
+{
+	m_IsInCinematic = false;
+	
+
+	if(!m_Berger || !m_Chien || !m_CameraActor) return;
+	
+	FVector InterpolatedLocation = FMath::Lerp(m_Berger->GetActorLocation(), m_Chien->GetActorLocation(), 0.5f);
+	FVector CameraTargetLocation = m_SplineComponent->FindLocationClosestToWorldLocation(InterpolatedLocation, ESplineCoordinateSpace::World);
+	
+	float DistanceBetweenActors = FVector::Dist(m_Berger->GetActorLocation(), m_Chien->GetActorLocation());
+	//float ZoomOutFactor = FMath::Clamp(DistanceBetweenActors * 1.0f, 0.f, 1000.f);
+	float ZoomOutFactor = 0;
+	
+	FVector OffsetDirection = (CameraTargetLocation - InterpolatedLocation).GetSafeNormal(); 
+	FVector AdjustedCameraTargetLocation = CameraTargetLocation + OffsetDirection * ZoomOutFactor;
+	
+	m_CameraActor->SetActorLocation(AdjustedCameraTargetLocation);
+	
+	
+	FVector MyLocation = m_CameraActor->GetActorLocation();
+	Direction = (InterpolatedLocation - MyLocation).GetSafeNormal();
+	FRotator LookAtRotation = FRotationMatrix::MakeFromX(Direction).Rotator();
+	
+	m_CameraActor->SetActorRotation(LookAtRotation);
+	
+	
+
+	APlayerController* PC = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+
+	if(PC)
+	{
+		//PC->SetViewTargetWithBlend(m_CameraActor, m_BlendingTime);
+
+		PC->SetViewTarget(m_CameraActor);
+	}
 }
 

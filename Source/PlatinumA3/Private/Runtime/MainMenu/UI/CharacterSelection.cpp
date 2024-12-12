@@ -1,7 +1,7 @@
 ﻿// Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "CharacterSelection.h"
+#include "Runtime/MainMenu/UI/CharacterSelection.h"
 
 
 FReply UCharacterSelection::NativeOnAnalogValueChanged(const FGeometry& InGeometry,

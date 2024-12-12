@@ -30,7 +30,10 @@ public:
 
 #pragma region SquishSquash
 protected:
-
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StartSquishSquash();
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StopSquishSquash();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void JuicySquishSquash();
 #pragma endregion 

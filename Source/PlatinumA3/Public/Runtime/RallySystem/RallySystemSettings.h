@@ -18,9 +18,6 @@ public:
 	UPROPERTY(Config, EditAnywhere, Category="Rally Emitter")
 	float SignalRadius;
 
-	UPROPERTY(Config, EditAnywhere, Category="Rally Emitter")
-	float RallyEmitCooldown = 1.0f;
-	
 	UPROPERTY(Config, EditAnywhere, Category="Rally Receiver")
 	float RallyTime;
 	

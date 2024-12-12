@@ -30,6 +30,12 @@ public:
 
 #pragma region Waddling
 protected:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StartWaddling();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StopWaddling();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void JuicyWaddling();
 #pragma endregion 

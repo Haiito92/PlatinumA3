@@ -31,19 +31,7 @@ public:
 	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
 	void InitGamefeelComponent(USceneComponent* InComponentToModify);
 
-	UFUNCTION(BlueprintCallable)
-	void StartGamefeelComponent();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ReceiveStartGamefeelComponent();
-	
-	UFUNCTION(BlueprintCallable)
-	void StopGamefeelComponent();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ReceiveStopGamefeelComponent();
 protected:
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Gamefeel Component")
-	bool bIsOn = true;
-	
 	UPROPERTY(BlueprintReadWrite)
 	TObjectPtr<USceneComponent> ModifiedSceneComponent;
 };

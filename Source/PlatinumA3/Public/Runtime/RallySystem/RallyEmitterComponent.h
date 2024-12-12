@@ -36,11 +36,5 @@ public:
 private:
 	UPROPERTY()
 	float SignalRadius;
-
-	UPROPERTY()
-	float RallyEmitCooldown;
-
-	UPROPERTY()
-	float RallyTimer;
 #pragma endregion 
 };

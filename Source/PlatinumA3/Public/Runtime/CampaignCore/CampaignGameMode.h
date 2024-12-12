@@ -59,24 +59,8 @@ private:
 #pragma region GameLoop
 public:
 	UFUNCTION(BlueprintCallable)
-	void PauseGame();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ReceivePauseGame();
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGamePausedEvent);
-	UPROPERTY(BlueprintAssignable)
-	FGamePausedEvent GamePausedEvent;
-	
-	UFUNCTION(BlueprintCallable)
-	void UnpauseGame();
-	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
-	void ReceiveUnpauseGame();
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameUnpausedEvent);
-	UPROPERTY(BlueprintAssignable)
-	FGameUnpausedEvent GameUnpausedEvent;
-	
-	UFUNCTION(BlueprintCallable)
-	void FinishGame(bool bInWon);
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameFinishedEvent, bool, bWon);
+	void FinishGame();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishedEvent);
 	UPROPERTY(BlueprintAssignable)
 	FGameFinishedEvent GameFinishedEvent;
 	

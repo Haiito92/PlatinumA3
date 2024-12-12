@@ -47,12 +47,6 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromKeyboardProfileIndex(i
 
 int ULocalMultiplayerSubsystem::AssignNewPlayerToKeyboardProfile(int KeyboardProfileIndex)
 {
-	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-	if(LocalMultiplayerSettings == nullptr) return -1;
-	const int NbMaxPlayers = LocalMultiplayerSettings->NbMaxGamepads + LocalMultiplayerSettings->GetNbKeyboardProfiles();
-	
-	if(LastAssignedPlayerIndex >= NbMaxPlayers - 1) return -1;
-	
 	LastAssignedPlayerIndex++;
 	PlayerIndexFromKeyboardProfileIndex.Add(KeyboardProfileIndex, LastAssignedPlayerIndex);
 	return LastAssignedPlayerIndex;
@@ -62,12 +56,9 @@ void ULocalMultiplayerSubsystem::AssignKeyboardMapping(int PlayerIndex, int Keyb
 	ELocalMultiplayerInputMappingType MappingType) const
 {
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-
-	const ULocalPlayer* LocalPlayer = GetGameInstance()->GetLocalPlayerByIndex(PlayerIndex);
-	if(LocalPlayer == nullptr) return;
-
-	UEnhancedInputLocalPlayerSubsystem * InputSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 	
+	UEnhancedInputLocalPlayerSubsystem * InputSubsystem = GetGameInstance()->GetLocalPlayerByIndex(PlayerIndex)->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
+
 	FModifyContextOptions ModifyContextOptions;
 	ModifyContextOptions.bForceImmediately = true;
 	InputSubsystem->AddMappingContext(LocalMultiplayerSettings->KeyboardProfilesData[KeyboardProfileIndex].GetIMCFromType(MappingType),0, ModifyContextOptions);
@@ -84,12 +75,6 @@ int ULocalMultiplayerSubsystem::GetAssignedPlayerIndexFromGamepadDeviceID(int De
 
 int ULocalMultiplayerSubsystem::AssignNewPlayerToGamepadDeviceID(int DeviceID)
 {
-	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
-	if(LocalMultiplayerSettings == nullptr) return -1;
-	const int NbMaxPlayers = LocalMultiplayerSettings->NbMaxGamepads + LocalMultiplayerSettings->GetNbKeyboardProfiles();
-	
-	if(LastAssignedPlayerIndex >= NbMaxPlayers - 1) return -1;
-	
 	LastAssignedPlayerIndex++;
 	PlayerIndexFromGamepadProfileIndex.Add(DeviceID, LastAssignedPlayerIndex);
 	return LastAssignedPlayerIndex;
@@ -100,11 +85,8 @@ void ULocalMultiplayerSubsystem::AssignGamepadInputMapping(int PlayerIndex,
 {
 	const ULocalMultiplayerSettings* LocalMultiplayerSettings = GetDefault<ULocalMultiplayerSettings>();
 	
-	const ULocalPlayer* LocalPlayer = GetGameInstance()->GetLocalPlayerByIndex(PlayerIndex);
-	if(LocalPlayer == nullptr) return;
+	UEnhancedInputLocalPlayerSubsystem * InputSubsystem = GetGameInstance()->GetLocalPlayerByIndex(PlayerIndex)->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
 
-	UEnhancedInputLocalPlayerSubsystem * InputSubsystem = LocalPlayer->GetSubsystem<UEnhancedInputLocalPlayerSubsystem>();
-	
 	FModifyContextOptions ModifyContextOptions;
 	ModifyContextOptions.bForceImmediately = true;
 	InputSubsystem->AddMappingContext(LocalMultiplayerSettings->GamepadProfileData.GetIMCFromType(MappingType),0, ModifyContextOptions);
@@ -118,9 +100,4 @@ ELocalMultiplayerInputMappingType ULocalMultiplayerSubsystem::GetCurrentInputMap
 void ULocalMultiplayerSubsystem::SetCurrentInputMappingType(const ELocalMultiplayerInputMappingType NewType)
 {
 	CurrentInputMappingType = NewType;
-}
-
-int8 ULocalMultiplayerSubsystem::GetLastAssignedPlayerIndex() const
-{
-	return LastAssignedPlayerIndex;
 }

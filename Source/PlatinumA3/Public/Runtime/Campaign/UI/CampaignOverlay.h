@@ -24,9 +24,4 @@ public:
 	void InitCampaignOverlay();
 	
 
-protected:
-	UFUNCTION()
-	void OnGamePauseEvent();
-	UFUNCTION()
-	void OnGameUnpauseEvent();
 };

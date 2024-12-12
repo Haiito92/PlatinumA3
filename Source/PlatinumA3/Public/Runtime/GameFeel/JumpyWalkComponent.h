@@ -30,6 +30,12 @@ public:
 
 #pragma region JumpyWalk
 protected:
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StartJumpyWalk();
+
+	UFUNCTION(BlueprintNativeEvent, BlueprintCallable)
+	void StopJumpyWalk();
+
 	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
 	void JuicyFootStep();
 #pragma endregion 

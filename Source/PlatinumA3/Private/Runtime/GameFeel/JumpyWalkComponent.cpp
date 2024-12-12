@@ -36,5 +36,12 @@ void UJumpyWalkComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion
 
 #pragma region JumpyWalk
+void UJumpyWalkComponent::StartJumpyWalk_Implementation()
+{
+	
+}
 
+void UJumpyWalkComponent::StopJumpyWalk_Implementation()
+{
+}
 #pragma endregion 

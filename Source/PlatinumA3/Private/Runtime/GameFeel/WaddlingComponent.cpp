@@ -38,5 +38,10 @@ void UWaddlingComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma endregion 
 
 #pragma region Waddling
-
+void UWaddlingComponent::StartWaddling_Implementation()
+{
+}
+void UWaddlingComponent::StopWaddling_Implementation()
+{
+}
 #pragma endregion 

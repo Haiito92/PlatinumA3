@@ -15,7 +15,7 @@ URallyEmitterComponent::URallyEmitterComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -27,10 +27,7 @@ void URallyEmitterComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	const URallySystemSettings* Settings = GetDefault<URallySystemSettings>();
-	if(Settings == nullptr) return;
-
-	RallyEmitCooldown = Settings->RallyEmitCooldown;
+	
 }
 
 
@@ -40,11 +37,6 @@ void URallyEmitterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	if(RallyTimer > 0.0f)
-	{
-		RallyTimer -= DeltaTime;
-	}
-	
 	// ...
 }
 #pragma endregion
@@ -52,10 +44,6 @@ void URallyEmitterComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 #pragma region EmitSignal
 void URallyEmitterComponent::EmitSignal()
 {
-	if(RallyTimer > 0.0f) return;
-	
-	RallyTimer = RallyEmitCooldown;
-	GEngine->AddOnScreenDebugMessage(-1, 3.0f, FColor::Emerald, TEXT("Real Rally"));
 	const FVector Location = GetOwner()->GetActorLocation();
 
 	const URallySystemSettings* RallySystemSettings = GetDefault<URallySystemSettings>();

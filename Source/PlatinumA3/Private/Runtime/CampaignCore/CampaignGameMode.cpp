@@ -25,7 +25,7 @@ void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UFCTweenBlueprintLibrary::EnsureTweenCapacity(150,150);
+	UFCTweenBlueprintLibrary::EnsureTweenCapacity(200,200, 200, 200);
 	
 	//Init Game
 	GameStateID = ECampaignGameStateID::Not_Finishable;

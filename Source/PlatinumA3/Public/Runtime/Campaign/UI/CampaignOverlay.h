@@ -16,6 +16,8 @@ class PLATINUMA3_API UCampaignOverlay : public UUserWidget
 	GENERATED_BODY()
 
 #pragma region Unreal Defaults
+
+	
 	virtual void NativeDestruct() override;
 #pragma endregion 
 	
@@ -29,4 +31,14 @@ protected:
 	void OnGamePauseEvent();
 	UFUNCTION()
 	void OnGameUnpauseEvent();
+
+	UFUNCTION()
+	void OnGameUnFinishedEvent();
+	UFUNCTION()
+	void OnGameFinishableEvent();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveOnGameUnFinishedEvent();
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveOnGameFinishableEvent();
 };

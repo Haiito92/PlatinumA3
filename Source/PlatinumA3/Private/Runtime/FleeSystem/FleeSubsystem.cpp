@@ -84,7 +84,7 @@ void UFleeSubsystem::OnUnlinkEvent(UFleeBrainComponent* Brain, UFleeBrainCompone
 	UFleeFollowerComponent* OtherFollowerComponent = OtherBrain->GetFleeFollowerComponent();
 
 	TArray<UFleeBrainComponent*> Visited;
-	for (const TTuple<int, FGroupFollowedData> Pair : OtherFollowerComponent->GetGroupFollowedDatas())
+	for (const TTuple<int, FGroupFollowedData> Pair : FollowerComponent->GetGroupFollowedDatas())
 	{
 		if(FindPathToLeader(Brain, Pair.Key, Visited)) continue;
 		for (const UFleeBrainComponent* FleeBrainComponent : Visited)

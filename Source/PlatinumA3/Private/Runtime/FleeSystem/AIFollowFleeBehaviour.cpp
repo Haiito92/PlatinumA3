@@ -71,11 +71,12 @@ void UAIFollowFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	}
 
 	Pawn->StartMovingAICharacter();
-	// GEngine->AddOnScreenDebugMessage(
-	// -1,
-	// 4.0f,
-	// FColor::Orange,
-	// TEXT("FOLLOW FLEE ENTRY"));
+	
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("FOLLOW FLEE ENTRY"));
 }
 
 void UAIFollowFleeBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime)
@@ -124,10 +125,10 @@ void UAIFollowFleeBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)
 	Pawn->StopRotateAICharacter();
 	Pawn->StopMovingAICharacter();
 	
-	// GEngine->AddOnScreenDebugMessage(
-	// -1,
-	// 4.0f,
-	// FColor::Orange,
-	// TEXT("FOLLOW FLEE EXIT"));
+	GEngine->AddOnScreenDebugMessage(
+	-1,
+	4.0f,
+	FColor::Orange,
+	TEXT("FOLLOW FLEE EXIT"));
 }
 #pragma endregion 

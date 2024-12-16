@@ -155,7 +155,8 @@ void UFleeSubsystem::PropagateFlee(const int StartIndex)
 void UFleeSubsystem::AddFollowerToGroup(const int InGroupLeaderIndex, UFleeFollowerComponent* InFollowerToAdd)
 {
 	if(!ActiveFleeGroups.Contains(InGroupLeaderIndex)) return;
-
+	if(InFollowerToAdd->GetFollowerIndex() == InGroupLeaderIndex) return;
+	
 	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
 	Data->Followers.AddUnique(InFollowerToAdd);
 
@@ -167,9 +168,13 @@ void UFleeSubsystem::RemoveFollowerFromGroup(const int InGroupLeaderIndex, UFlee
 	if(!ActiveFleeGroups.Contains(InGroupLeaderIndex)) return;
 
 	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
-	Data->Followers.Remove(InFollowerToRemove);
 
-	InFollowerToRemove->RemoveGroupFollowed(InGroupLeaderIndex);
+	if(Data->Followers.Contains(InFollowerToRemove))
+	{
+		Data->Followers.Remove(InFollowerToRemove);
+
+		InFollowerToRemove->RemoveGroupFollowed(InGroupLeaderIndex);
+	}
 }
 
 bool UFleeSubsystem::FindPathToLeader(UFleeBrainComponent* InStart, int InGroupLeaderIndex, TArray<UFleeBrainComponent*>& InOutVisitedBrains)

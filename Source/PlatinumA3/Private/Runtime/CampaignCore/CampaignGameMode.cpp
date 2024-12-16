@@ -262,9 +262,30 @@ void ACampaignGameMode::UnpauseGame()
 	GameUnpausedEvent.Broadcast();
 }
 
+void ACampaignGameMode::UnFinishGame()
+{
+	SetGameStateID(ECampaignGameStateID::Not_Finishable);
+
+	ReceiveUnFinishGame();
+
+	GameUnFinishedEvent.Broadcast();
+}
+
+void ACampaignGameMode::GameModeToFinishable()
+{
+	SetGameStateID(ECampaignGameStateID::Finishable);
+
+	ReceiveGameModeToFinishable();
+	
+	GameFinishableEvent.Broadcast();
+}
+
 void ACampaignGameMode::FinishGame(bool bInWon)
 {
 	SetGameStateID(ECampaignGameStateID::Finished);
+
+	ReceiveFinishGame();
+	
 	GameFinishedEvent.Broadcast(bInWon);
 	
 	GEngine->AddOnScreenDebugMessage(
@@ -291,8 +312,7 @@ void ACampaignGameMode::OnNotEnoughSheepLeftEvent()
 
 void ACampaignGameMode::OnReachedSheepAmountEvent()
 {
-	SetGameStateID(ECampaignGameStateID::Finishable);
-
+	GameModeToFinishable();
 	
 	
 	GEngine->AddOnScreenDebugMessage(

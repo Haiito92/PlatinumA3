@@ -34,11 +34,17 @@ void ACampaignHUD::InitCampaignHUD()
 	
 	ACampaignGameMode* CampaignGameMode = Cast<ACampaignGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
 	if(CampaignGameMode == nullptr) return;
-	
+
+	CampaignGameMode->GameFinishableEvent.AddDynamic(this, &ACampaignHUD::OnGameFinishableEvent);
 	CampaignGameMode->GameFinishedEvent.AddDynamic(this, &ACampaignHUD::OnGameFinishedEvent);
 }
 
-void ACampaignHUD::OnGameFinishedEvent()
+void ACampaignHUD::OnGameFinishableEvent()
 {
-	ReceiveGameFinished();
+	ReceiveGameFinishable();
+}
+
+void ACampaignHUD::OnGameFinishedEvent(bool bInWon)
+{
+	ReceiveGameFinished(bInWon);
 }

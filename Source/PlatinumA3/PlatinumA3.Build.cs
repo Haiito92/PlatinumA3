@@ -17,7 +17,7 @@ public class PlatinumA3 : ModuleRules
 				"DeveloperSettings",
 				"StateMachine",
 				"FCTween",
-				"AsyncLoadingScreen"
+				"AsyncLoadingScreen", "CinematicCamera", "CinematicCamera"
 			});
 		
 		PrivateDependencyModuleNames.AddRange(new string[] { "LocalMultiplayer", "StateMachine", "FocusableWidgets", "AIModule"});

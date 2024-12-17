@@ -25,7 +25,7 @@ void ACampaignGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 	
-	UFCTweenBlueprintLibrary::EnsureTweenCapacity(150,150);
+	UFCTweenBlueprintLibrary::EnsureTweenCapacity(200,200, 200, 200);
 	
 	//Init Game
 	GameStateID = ECampaignGameStateID::Not_Finishable;
@@ -248,10 +248,31 @@ TEnumAsByte<EAutoReceiveInput::Type> ACampaignGameMode::GetPlayerByCharacterClas
 #pragma region GameLoop
 
 
-void ACampaignGameMode::FinishGame()
+void ACampaignGameMode::UnFinishGame()
+{
+	SetGameStateID(ECampaignGameStateID::Not_Finishable);
+
+	ReceiveUnFinishGame();
+
+	GameUnFinishedEvent.Broadcast();
+}
+
+void ACampaignGameMode::GameModeToFinishable()
+{
+	SetGameStateID(ECampaignGameStateID::Finishable);
+
+	ReceiveGameModeToFinishable();
+	
+	GameFinishableEvent.Broadcast();
+}
+
+void ACampaignGameMode::FinishGame(bool bInWon)
 {
 	SetGameStateID(ECampaignGameStateID::Finished);
-	GameFinishedEvent.Broadcast();
+
+	ReceiveFinishGame();
+	
+	GameFinishedEvent.Broadcast(bInWon);
 	
 	GEngine->AddOnScreenDebugMessage(
 		-1,
@@ -272,13 +293,12 @@ void ACampaignGameMode::SetGameStateID(ECampaignGameStateID NewGameStateID)
 
 void ACampaignGameMode::OnNotEnoughSheepLeftEvent()
 {
-	FinishGame();
+	FinishGame(false);
 }
 
 void ACampaignGameMode::OnReachedSheepAmountEvent()
 {
-	SetGameStateID(ECampaignGameStateID::Finishable);
-
+	GameModeToFinishable();
 	
 	
 	GEngine->AddOnScreenDebugMessage(

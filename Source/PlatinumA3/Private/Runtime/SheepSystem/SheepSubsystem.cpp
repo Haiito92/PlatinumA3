@@ -4,13 +4,20 @@
 #include "Runtime/SheepSystem/SheepSubsystem.h"
 
 #include "Kismet/GameplayStatics.h"
+#include "Runtime/Core/WoolsomeGameInstance.h"
 #include "Runtime/SheepSystem/SheepComponent.h"
 #include "Runtime/SheepSystem/SheepPenSystemSettings.h"
 
 void USheepSubsystem::InitSubsystem(const unsigned InSheepAmountRequired)
 {
+	const UWoolsomeGameInstance* GameInstance =
+		Cast<UWoolsomeGameInstance>(UGameplayStatics::GetGameInstance(GetWorld()));
+
+	int tSheepAmountRequired = 3;
+	if(GameInstance != nullptr) tSheepAmountRequired = GameInstance->GetCurrentLevelInfo().LevelSheepAmountToFinish;
+	
 	SetSheepCapturedCount(0);
-	SetSheepAmountRequired(InSheepAmountRequired);
+	SetSheepAmountRequired(tSheepAmountRequired);
 
 	const USheepPenSystemSettings* Settings = GetDefault<USheepPenSystemSettings>();
 	if(Settings == nullptr) return;

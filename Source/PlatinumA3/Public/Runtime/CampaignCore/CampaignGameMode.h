@@ -59,10 +59,44 @@ private:
 #pragma region GameLoop
 public:
 	UFUNCTION(BlueprintCallable)
-	void FinishGame();
-	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishedEvent);
+	void PauseGame();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceivePauseGame();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGamePausedEvent);
+	UPROPERTY(BlueprintAssignable)
+	FGamePausedEvent GamePausedEvent;
+	
+	UFUNCTION(BlueprintCallable)
+	void UnpauseGame();
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveUnpauseGame();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameUnpausedEvent);
+	UPROPERTY(BlueprintAssignable)
+	FGameUnpausedEvent GameUnpausedEvent;
+
+	UFUNCTION()
+	void UnFinishGame();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameUnFinishedEvent);
+	UPROPERTY(BlueprintAssignable)
+	FGameUnFinishedEvent GameUnFinishedEvent;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveUnFinishGame();
+	
+	UFUNCTION()
+	void GameModeToFinishable();
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGameFinishableEvent);
+	UPROPERTY(BlueprintAssignable)
+	FGameFinishableEvent GameFinishableEvent;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveGameModeToFinishable();
+	
+	UFUNCTION(BlueprintCallable)
+	void FinishGame(bool bInWon);
+	DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FGameFinishedEvent, bool, bWon);
 	UPROPERTY(BlueprintAssignable)
 	FGameFinishedEvent GameFinishedEvent;
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReceiveFinishGame();
 	
 public:
 	UFUNCTION(BlueprintCallable)

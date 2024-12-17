@@ -22,13 +22,20 @@ class PLATINUMA3_API ACampaignHUD : public AHUD
 #pragma endregion 
 	
 public:
+	
 	UFUNCTION()
 	void InitCampaignHUD();
 	
 protected:
 	UFUNCTION()
-	void OnGameFinishedEvent();
+	void OnGameFinishableEvent();
+
+	UFUNCTION(BlueprintImplementableEvent, BlueprintCallable)
+	void ReceiveGameFinishable();
+	
+	UFUNCTION()
+	void OnGameFinishedEvent(bool bInWon);
 
 	UFUNCTION(BlueprintImplementableEvent,BlueprintCallable)
-	void ReceiveGameFinished();
+	void ReceiveGameFinished(bool bInWon);
 };

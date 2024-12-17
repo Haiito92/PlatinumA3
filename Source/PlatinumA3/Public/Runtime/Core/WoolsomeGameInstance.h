@@ -51,6 +51,9 @@ public:
 	bool GetLevelInfosByIndex(const int InLevelIndex, FLevelInfos& InOutLevelInfo) const;
 	UFUNCTION(BlueprintCallable)
 	const FLevelInfos& GetCurrentLevelInfo() const;
+
+	UFUNCTION(BlueprintCallable)
+	const TArray<FLevelInfos>& GetAllLevelInfos() const;
 protected:
 	UPROPERTY()
 	TArray<FLevelInfos> LevelInfos;

@@ -8,10 +8,13 @@
 #include "Runtime/AIGroupSystem/AIGroupCharacter.h"
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 #include "Runtime/RallySystem/RallySystemSettings.h"
+#include "Runtime/Utilities/BlueprintLibraries/DevSettingsBlueprintLibrary.h"
 
 void UAIRallyBehaviour::InitBehaviour(const TArray<AAIGroupCharacter*>& Pawns)
 {
 	Super::InitBehaviour(Pawns);
+	Settings = UDevSettingsBlueprintLibrary::GetRallySystemSettings();
+	
 	RallyReceiverComponents.Init(nullptr, Pawns.Num());
 
 	for (int i = 0; i < Pawns.Num(); ++i)
@@ -54,16 +57,30 @@ void UAIRallyBehaviour::BehaviourUpdate(AAIGroupCharacter* Pawn, float DeltaTime
 {
 	Super::BehaviourUpdate(Pawn, DeltaTime);
 
+	const FVector PawnLocation = Pawn->GetActorLocation();
+	
 	const URallyReceiverComponent* RallyReceiverComponent = RallyReceiverComponents[Pawn->GetIndex()];
-	FVector Direction = RallyReceiverComponent->GetDestination() - Pawn->GetActorLocation();
+	const FVector Destination = RallyReceiverComponent->GetDestination();
+	
+	FVector Direction = Destination - PawnLocation;
 	Direction.Z = 0;
+	float Distance = Direction.Length();
 	Direction.Normalize();
 
 	//Set Sheep Rotation
 	const FRotator LookAtRotation = UKismetMathLibrary::FindLookAtRotation(Pawn->GetActorLocation(),
-			Pawn->GetActorLocation() + Direction);
+			PawnLocation + Direction);
 	Pawn->StartRotateAICharacter(LookAtRotation);
-	Pawn->AddMovementInput(Direction, 1.0f);
+
+	if(Distance < Settings->RallySpeed * DeltaTime)
+	{
+		const FVector NewLocation(Destination.X, Destination.Y, PawnLocation.Z);
+		Pawn->SetActorLocation(NewLocation);
+	}
+	else
+	{
+		Pawn->AddMovementInput(Direction, 1.0f);
+	}
 }
 
 void UAIRallyBehaviour::BehaviourExit(AAIGroupCharacter* Pawn)

@@ -21,6 +21,7 @@ class PLATINUMA3_API UDevSettingsBlueprintLibrary : public UBlueprintFunctionLib
 {
 	GENERATED_BODY()
 
+public:
 	UFUNCTION(BlueprintCallable, BlueprintPure, Category="Dev Settings")
 	static const UAIDefaultBehavioursSettings* GetAIDefaultBehavioursSettings()
 	{

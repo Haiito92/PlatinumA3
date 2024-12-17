@@ -6,6 +6,7 @@
 #include "Runtime/AIGroupSystem/AIBehaviour.h"
 #include "AIRallyBehaviour.generated.h"
 
+class URallySystemSettings;
 class URallyReceiverComponent;
 /**
  * 
@@ -27,4 +28,7 @@ class PLATINUMA3_API UAIRallyBehaviour : public UAIBehaviour
 private:
 	UPROPERTY()
 	TArray<URallyReceiverComponent*> RallyReceiverComponents;
+
+	UPROPERTY()
+	const URallySystemSettings* Settings;
 };

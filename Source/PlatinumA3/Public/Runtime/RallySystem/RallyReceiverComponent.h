@@ -49,5 +49,9 @@ public:
 	void JuicyNotify();
 	UFUNCTION(BlueprintImplementableEvent, BlueprintAuthorityOnly)
 	void JuicyUnNotify();
+
+private:
+	UPROPERTY()
+	float RallySpeed;
 #pragma endregion 
 };

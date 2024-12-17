@@ -4,6 +4,7 @@
 #include "Runtime/RallySystem/RallyReceiverComponent.h"
 
 #include "Runtime/RallySystem/RallySystemSettings.h"
+#include "Runtime/Utilities/BlueprintLibraries/DevSettingsBlueprintLibrary.h"
 
 #pragma region Unreal Defaults
 // Sets default values for this component's properties
@@ -23,7 +24,10 @@ void URallyReceiverComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
+	const URallySystemSettings* Settings = UDevSettingsBlueprintLibrary::GetRallySystemSettings();
+	if(Settings == nullptr) return;
+
+	RallySpeed = Settings->RallySpeed;
 }
 
 
@@ -32,10 +36,10 @@ void URallyReceiverComponent::TickComponent(float DeltaTime, ELevelTick TickType
                                             FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
+	
 	if(bIsNotified)
 	{
-		if(FVector::Distance(Destination, GetOwner()->GetActorLocation()) <= 50)
+		if(FVector::Distance(Destination, GetOwner()->GetActorLocation()) <= RallySpeed*DeltaTime)
 		{
 			UnNotify();
 		}

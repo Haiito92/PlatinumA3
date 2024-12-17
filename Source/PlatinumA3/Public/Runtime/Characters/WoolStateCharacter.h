@@ -79,13 +79,13 @@ public:
 #pragma region Holding Skill
 
 public:
-	UPROPERTY(EditAnywhere, Category="Launch Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Launch Fields")
 	float ThrowStrength = 10000;
 
-	UPROPERTY(EditAnywhere, Category="Launch Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Launch Fields")
 	float LaunchTransTime = 2.0f;
 
-	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interact Fields")
 	float HoldOffset = 25.0f;
 	
 	UPROPERTY()
@@ -120,7 +120,7 @@ public:
 #pragma region Bite Skill
 
 public:
-	UPROPERTY(EditAnywhere, Category="Rally Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rally Fields")
 	float BiteRadius = 350.0f;
 	
 	UFUNCTION(BlueprintCallable)
@@ -136,7 +136,7 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere, Category="Rally Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Rally Fields")
 	float RallyRadius = 350.0f;
 	
 	UFUNCTION(BlueprintCallable)
@@ -154,10 +154,10 @@ public:
 
 public:
 
-	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interact Fields")
 	float InteractRadius = 150.0f;
 
-	UPROPERTY(EditAnywhere, Category="Interact Fields")
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category="Interact Fields")
 	float InteractOffset = 25.0f;
 	
 	UFUNCTION(BlueprintCallable)

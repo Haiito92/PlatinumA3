@@ -14,6 +14,9 @@ void UCampaignOverlay::NativeDestruct()
 
 	CampaignGameMode->GamePausedEvent.RemoveDynamic(this, &UCampaignOverlay::OnGamePauseEvent);
 	CampaignGameMode->GameUnpausedEvent.RemoveDynamic(this, &UCampaignOverlay::OnGameUnpauseEvent);
+	
+	CampaignGameMode->GameUnFinishedEvent.RemoveDynamic(this, &UCampaignOverlay::OnGameUnFinishedEvent);
+	CampaignGameMode->GameFinishableEvent.RemoveDynamic(this, &UCampaignOverlay::OnGameFinishableEvent);
 }
 
 void UCampaignOverlay::InitCampaignOverlay_Implementation()
@@ -25,6 +28,9 @@ void UCampaignOverlay::InitCampaignOverlay_Implementation()
 
 	CampaignGameMode->GamePausedEvent.AddDynamic(this, &UCampaignOverlay::OnGamePauseEvent);
 	CampaignGameMode->GameUnpausedEvent.AddDynamic(this, &UCampaignOverlay::OnGameUnpauseEvent);
+
+	CampaignGameMode->GameUnFinishedEvent.AddDynamic(this, &UCampaignOverlay::OnGameUnFinishedEvent);
+	CampaignGameMode->GameFinishableEvent.AddDynamic(this, &UCampaignOverlay::OnGameFinishableEvent);
 }
 
 void UCampaignOverlay::OnGamePauseEvent()
@@ -37,4 +43,14 @@ void UCampaignOverlay::OnGameUnpauseEvent()
 {
 	UE_LOGFMT(LogTemp, Warning, "Overlay On Game Un Paused");
 	SetVisibility(ESlateVisibility::Visible);
+}
+
+void UCampaignOverlay::OnGameUnFinishedEvent()
+{
+	ReceiveOnGameUnFinishedEvent();
+}
+
+void UCampaignOverlay::OnGameFinishableEvent()
+{
+	ReceiveOnGameFinishableEvent();
 }

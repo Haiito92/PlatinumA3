@@ -16,7 +16,7 @@ enum class EFleeLeadState : uint8
 	PostFleeing
 };
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLATINUMA3_API UFleeLeaderComponent : public USphereComponent
 {
 	GENERATED_BODY()
@@ -58,7 +58,7 @@ public:
 	UPROPERTY()
 	FStopFleeEvent StopFleeEvent;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION()
 	bool GetFleeing() const;
 
 	UFUNCTION()

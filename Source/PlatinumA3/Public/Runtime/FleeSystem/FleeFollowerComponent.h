@@ -22,7 +22,7 @@ public:
 	FVector GroupDirection = FVector::ZeroVector;
 };
 
-UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable)
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class PLATINUMA3_API UFleeFollowerComponent : public USphereComponent
 {
 	GENERATED_BODY()
@@ -60,7 +60,7 @@ public:
 	UFUNCTION()
 	int GetFollowerIndex()const;
 
-	UFUNCTION(BlueprintCallable, BlueprintPure)
+	UFUNCTION()
 	bool GetFollowFleeing() const;
 protected:
 	

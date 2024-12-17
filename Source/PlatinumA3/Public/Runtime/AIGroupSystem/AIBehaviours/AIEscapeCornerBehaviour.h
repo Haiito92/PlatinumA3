@@ -56,9 +56,6 @@ class PLATINUMA3_API UAIEscapeCornerBehaviour : public UAIBehaviour
 private:
 	UPROPERTY()
 	const UAIDefaultBehavioursSettings* Settings;
-
-	UPROPERTY()
-	TArray<FVector> Directions = {FVector::LeftVector,FVector::RightVector, FVector::ForwardVector, FVector::BackwardVector};
 	
 	UPROPERTY()
 	TArray<FEscapeCornerPawnData> EscapeDatas;

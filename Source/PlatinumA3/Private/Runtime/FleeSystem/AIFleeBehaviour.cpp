@@ -85,7 +85,6 @@ void UAIFleeBehaviour::BehaviourEntry(AAIGroupCharacter* Pawn)
 	}
 	
 	Pawn->StartMovingAICharacter();
-	
 	// GEngine->AddOnScreenDebugMessage(
 	// -1,
 	// 4.0f,

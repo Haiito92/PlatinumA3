@@ -31,7 +31,7 @@ void UFleeLeaderComponent::BeginPlay()
 	if (Settings == nullptr) return;
 
 	TagToFleeFrom = Settings->TagToFleeFrom;
-	// SphereRadius = Settings->FleeDetectionRadius;
+	SphereRadius = Settings->FleeDetectionRadius;
 	
 }
 
@@ -81,8 +81,7 @@ void UFleeLeaderComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 void UFleeLeaderComponent::Init(const unsigned InIndex, const float InDetectionRadius, const float InPostFleeTime)
 {
 	LeaderIndex = InIndex;
-	SetSphereRadius(InDetectionRadius);
-	// SphereRadius = InDetectionRadius;
+	SphereRadius = InDetectionRadius;
 	PostFleeTime = InPostFleeTime;
 }
 

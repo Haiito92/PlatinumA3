@@ -32,11 +32,11 @@ public:
 	UPROPERTY(Config, EditAnywhere, BlueprintReadWrite, Category="Characters")
 	TEnumAsByte<EAutoReceiveInput::Type> PlayerPlayingDog;
 	
-	// UFUNCTION(BlueprintCallable)
-	// static const UCampaignModeSettings* GetCampaignModeSettings();
+	UFUNCTION(BlueprintCallable)
+	static const UCampaignModeSettings* GetCampaignModeSettings();
 };
 
-// inline const UCampaignModeSettings* UCampaignModeSettings::GetCampaignModeSettings()
-// {
-// 	return GetDefault<UCampaignModeSettings>();
-// }
+inline const UCampaignModeSettings* UCampaignModeSettings::GetCampaignModeSettings()
+{
+	return GetDefault<UCampaignModeSettings>();
+}

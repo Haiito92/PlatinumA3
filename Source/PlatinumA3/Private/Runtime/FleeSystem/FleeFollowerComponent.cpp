@@ -93,6 +93,8 @@ bool UFleeFollowerComponent::FollowsGroup(const int InGroupLeaderIndex) const
 
 void UFleeFollowerComponent::AddGroupFollowed(const int InGroupLeaderIndex)
 {
+	if(InGroupLeaderIndex == FollowerIndex || GroupFollowedDatas.Contains(InGroupLeaderIndex)) return;
+	
 	GroupFollowedDatas.Add(InGroupLeaderIndex);
 
 	if(GroupFollowedDatas.Num() == 1) StartFollowFlee();
@@ -100,8 +102,10 @@ void UFleeFollowerComponent::AddGroupFollowed(const int InGroupLeaderIndex)
 
 void UFleeFollowerComponent::RemoveGroupFollowed(const int InGroupLeaderIndex)
 {
+	// if(InGroupLeaderIndex == FollowerIndex || !GroupFollowedDatas.Contains(InGroupLeaderIndex)) return;
+
 	GroupFollowedDatas.Remove(InGroupLeaderIndex);
 
-	if(GroupFollowedDatas.Num() == 0) StopFollowFlee();
+	if(GroupFollowedDatas.Num() <= 0) StopFollowFlee();
 }
 #pragma endregion 

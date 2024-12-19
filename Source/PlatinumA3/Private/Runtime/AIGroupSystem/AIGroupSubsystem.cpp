@@ -174,6 +174,7 @@ void UAIGroupSubsystem::InitPawnPool(const int InStartPawnAmount)
 	
 	for (int i = 0; i < InStartPawnAmount; ++i)
 	{
+		PoolLocation.Z -= 200;
 		AAIGroupCharacter* Pawn = CreatePawn(PoolLocation, FRotator::ZeroRotator);
 		if(Pawn == nullptr) continue;
 		

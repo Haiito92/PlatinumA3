@@ -89,7 +89,7 @@ protected:
 	UFUNCTION()
 	void PropagateFlee(const int StartIndex, const int LeaderIndex);
 	UFUNCTION()
-	void PropagateStopFlee(int StartIndex);
+	void PropagateStopFlee(int StartIndex, const int LeaderIndex);
 
 private:
 	UPROPERTY()

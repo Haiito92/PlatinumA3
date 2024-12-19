@@ -102,7 +102,7 @@ void UFleeFollowerComponent::AddGroupFollowed(const int InGroupLeaderIndex)
 
 void UFleeFollowerComponent::RemoveGroupFollowed(const int InGroupLeaderIndex)
 {
-	// if(InGroupLeaderIndex == FollowerIndex || !GroupFollowedDatas.Contains(InGroupLeaderIndex)) return;
+	if(!GroupFollowedDatas.Contains(InGroupLeaderIndex)) return;
 
 	GroupFollowedDatas.Remove(InGroupLeaderIndex);
 

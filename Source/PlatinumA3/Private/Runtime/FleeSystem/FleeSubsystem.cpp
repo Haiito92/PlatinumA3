@@ -68,23 +68,40 @@ void UFleeSubsystem::UpdateSubsystem(float InDeltaTime)
 #pragma region FleeBrains
 void UFleeSubsystem::OnLinkEvent(UFleeBrainComponent* Brain, UFleeBrainComponent* OtherBrain)
 {
+	UFleeLeaderComponent* LeaderComponent = Brain->GetFleeLeaderComponent();
 	UFleeFollowerComponent* FollowerComponent = Brain->GetFleeFollowerComponent();
 	
 	const UFleeLeaderComponent* OtherLeaderComponent = OtherBrain->GetFleeLeaderComponent();
-	if(OtherLeaderComponent->GetFleeing())
-	{
-		// AddFollowerToGroup(OtherBrain->GetBrainIndex(), FollowerComponent);
-		PropagateFlee(Brain->GetBrainIndex(), OtherBrain->GetBrainIndex());
-	}
-	
 	UFleeFollowerComponent* OtherFollowerComponent = OtherBrain->GetFleeFollowerComponent();
 
+	if(LeaderComponent->GetFleeing()
+		&& !OtherFollowerComponent->FollowsGroup(LeaderComponent->GetLeaderIndex()))
+	{
+		// AddFollowerToGroup(OtherBrain->GetBrainIndex(), FollowerComponent);
+		PropagateFlee(OtherFollowerComponent->GetFollowerIndex(), LeaderComponent->GetLeaderIndex());
+	}
+	
+	if(OtherLeaderComponent->GetFleeing()
+		&& !FollowerComponent->FollowsGroup(OtherLeaderComponent->GetLeaderIndex()))
+	{
+		// AddFollowerToGroup(OtherBrain->GetBrainIndex(), FollowerComponent);
+		PropagateFlee(FollowerComponent->GetFollowerIndex(), OtherLeaderComponent->GetLeaderIndex());
+	}
+	
+	for (const TTuple<int, FGroupFollowedData> Pair : FollowerComponent->GetGroupFollowedDatas())
+	{
+		if(OtherFollowerComponent->FollowsGroup(Pair.Key)) continue;
+
+		// AddFollowerToGroup(Pair.Key, FollowerComponent);
+		PropagateFlee(OtherFollowerComponent->GetFollowerIndex(), Pair.Key);
+	}
+	
 	for (const TTuple<int, FGroupFollowedData> Pair : OtherFollowerComponent->GetGroupFollowedDatas())
 	{
 		if(FollowerComponent->FollowsGroup(Pair.Key)) continue;
 
 		// AddFollowerToGroup(Pair.Key, FollowerComponent);
-		PropagateFlee(Brain->GetBrainIndex(), Pair.Key);
+		PropagateFlee(FollowerComponent->GetFollowerIndex(), Pair.Key);
 	}
 
 	
@@ -93,10 +110,12 @@ void UFleeSubsystem::OnLinkEvent(UFleeBrainComponent* Brain, UFleeBrainComponent
 void UFleeSubsystem::OnUnlinkEvent(UFleeBrainComponent* Brain, UFleeBrainComponent* OtherBrain)
 {
 	UFleeFollowerComponent* FollowerComponent = Brain->GetFleeFollowerComponent();
+
 	UFleeFollowerComponent* OtherFollowerComponent = OtherBrain->GetFleeFollowerComponent();
 
 	TArray<UFleeBrainComponent*> Visited;
 	TArray<int> IndexesToRemove;
+	
 	for (const TTuple<int, FGroupFollowedData> Pair : FollowerComponent->GetGroupFollowedDatas())
 	{
 		if(FindPathToLeader(Brain, Pair.Key, Visited)) continue;
@@ -105,12 +124,34 @@ void UFleeSubsystem::OnUnlinkEvent(UFleeBrainComponent* Brain, UFleeBrainCompone
 		{
 			if(FleeBrainComponent == Brain) continue;
 			RemoveFollowerFromGroup(Pair.Key, FleeBrainComponent->GetFleeFollowerComponent());
+			FleeBrainComponent->GetFleeFollowerComponent()->RemoveGroupFollowed(Pair.Key);
 		}
 	}
-
+	
 	for (const int Index : IndexesToRemove)
 	{
 		RemoveFollowerFromGroup(Index, FollowerComponent);
+		FollowerComponent->RemoveGroupFollowed(Index);
+	}
+	IndexesToRemove.Empty();
+
+	
+	for (const TTuple<int, FGroupFollowedData> Pair : OtherFollowerComponent->GetGroupFollowedDatas())
+	{
+		if(FindPathToLeader(OtherBrain, Pair.Key, Visited)) continue;
+		IndexesToRemove.Add(Pair.Key);
+		for (const UFleeBrainComponent* FleeBrainComponent : Visited)
+		{
+			if(FleeBrainComponent == OtherBrain) continue;
+			RemoveFollowerFromGroup(Pair.Key, FleeBrainComponent->GetFleeFollowerComponent());
+			FleeBrainComponent->GetFleeFollowerComponent()->RemoveGroupFollowed(Pair.Key);
+		}
+	}
+	
+	for (const int Index : IndexesToRemove)
+	{
+		RemoveFollowerFromGroup(Index, OtherFollowerComponent);
+		OtherFollowerComponent->RemoveGroupFollowed(Index);
 	}
 }
 
@@ -134,7 +175,7 @@ void UFleeSubsystem::OnLeaderStopFlee(int LeaderIndex)
 	// }
 	// ClearFollowerGroup(LeaderIndex);
 
-	PropagateStopFlee(LeaderIndex);
+	PropagateStopFlee(LeaderIndex, LeaderIndex);
 	ActiveFleeGroups.Remove(LeaderIndex);
 }
 
@@ -173,7 +214,7 @@ void UFleeSubsystem::PropagateFlee(const int StartIndex, const int LeaderIndex)
 	}
 }
 
-void UFleeSubsystem::PropagateStopFlee(const int StartIndex)
+void UFleeSubsystem::PropagateStopFlee(const int StartIndex, const int LeaderIndex)
 {
 	UFleeBrainComponent* BrainComponent = FleeBrainComponents[StartIndex];
 	if(BrainComponent == nullptr) return;
@@ -199,12 +240,13 @@ void UFleeSubsystem::PropagateStopFlee(const int StartIndex)
 			Frontier.Enqueue(LinkedBrain);
 		}
 
-		if(CurrentBrain->GetBrainIndex() == StartIndex) continue;
+		if(CurrentBrain->GetBrainIndex() == LeaderIndex) continue;
 
 		UFleeFollowerComponent* FollowerComponent = CurrentBrain->GetFleeFollowerComponent();
 		if(!FollowerComponent->FollowsGroup(StartIndex)) continue;
 
-		RemoveFollowerFromGroup(StartIndex, FollowerComponent);
+		RemoveFollowerFromGroup(LeaderIndex, FollowerComponent);
+		FollowerComponent->RemoveGroupFollowed(LeaderIndex);
 	}
 }
 #pragma endregion 
@@ -223,9 +265,8 @@ void UFleeSubsystem::AddFollowerToGroup(const int InGroupLeaderIndex, UFleeFollo
 
 void UFleeSubsystem::RemoveFollowerFromGroup(const int InGroupLeaderIndex, UFleeFollowerComponent* InFollowerToRemove)
 {
-	if(!ActiveFleeGroups.Contains(InGroupLeaderIndex)) return;
-
 	FFleeGroupData* Data = ActiveFleeGroups.Find(InGroupLeaderIndex);
+	if(Data == nullptr) return;
 
 	if(Data->Followers.Contains(InFollowerToRemove))
 	{
@@ -253,8 +294,7 @@ bool UFleeSubsystem::FindPathToLeader(UFleeBrainComponent* InStart, int InGroupL
 {
 	if(InStart == nullptr) return false;
 
-	bool Found = false;
-	if(InStart->GetBrainIndex() == InGroupLeaderIndex) Found = true;
+	if(InStart->GetBrainIndex() == InGroupLeaderIndex) return true;
 
 	InOutVisitedBrains.Empty();
 	
@@ -275,11 +315,11 @@ bool UFleeSubsystem::FindPathToLeader(UFleeBrainComponent* InStart, int InGroupL
 
 			if(LinkedBrain->GetFleeFollowerComponent() == nullptr) continue;
 
-			if(LinkedBrain->GetBrainIndex() == InGroupLeaderIndex) Found = true;
+			if(LinkedBrain->GetBrainIndex() == InGroupLeaderIndex) return true;
 			
 			Frontier.Enqueue(LinkedBrain);
 		}
 	}
-	return Found;
+	return false;
 }
 #pragma endregion 

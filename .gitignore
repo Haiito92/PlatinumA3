@@ -94,3 +94,4 @@ Plugins/SkyCreatorPlugin/Binaries/Win64/UnrealEditor-SkyCreatorPlugin-Win64-Debu
 Plugins/StateMachine/Binaries/Win64/UnrealEditor-StateMachine-Win64-DebugGame.dll
 PlatinumA3.sln.DotSettings.user
 Binaries/Win64/UnrealEditor-PlatinumA3Editor-Win64-DebugGame.dll
+Plugins/FCTween/Binaries/Win64/UnrealEditor-FCTween-Win64-DebugGame.dll

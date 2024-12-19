@@ -98,8 +98,8 @@ void UThrowComponent::Catch(UPhysicsHandleComponent* InPhysicsHandle, USceneComp
 
 		//PrimitiveComponent->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 
-		PrimitiveComponent->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
-		PrimitiveComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
+		// PrimitiveComponent->SetCollisionObjectType(ECollisionChannel::ECC_PhysicsBody);
+		// PrimitiveComponent->SetCollisionResponseToAllChannels(ECollisionResponse::ECR_Block);
 		
 		//PrimitiveComponent->SetCollisionProfileName(TEXT("PhysicsActor"));
 	

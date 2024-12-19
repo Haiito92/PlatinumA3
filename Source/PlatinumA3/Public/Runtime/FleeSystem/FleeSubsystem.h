@@ -87,7 +87,10 @@ protected:
 	void OnLeaderStopFlee(int LeaderIndex);
 
 	UFUNCTION()
-	void PropagateFlee(const int StartIndex);
+	void PropagateFlee(const int StartIndex, const int LeaderIndex);
+	UFUNCTION()
+	void PropagateStopFlee(int StartIndex, const int LeaderIndex);
+
 private:
 	UPROPERTY()
 	TMap<int, FFleeGroupData>ActiveFleeGroups;
@@ -101,6 +104,9 @@ protected:
 	UFUNCTION()
 	void RemoveFollowerFromGroup(const int InGroupLeaderIndex,UFleeFollowerComponent* InFollowerToRemove);
 
+	UFUNCTION()
+	void ClearFollowerGroup(const int InGroupLeaderIndex);
+	
 	UFUNCTION()
 	bool FindPathToLeader(UFleeBrainComponent* InStart, int InGroupLeaderIndex, TArray<UFleeBrainComponent*>& InOutVisitedBrains);
 

@@ -111,8 +111,10 @@ void UFleeBrainComponent::OnLinkDetectionBeginOverlap(UPrimitiveComponent* Overl
 
 	UFleeBrainComponent* OtherBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
 	if(OtherBrainComponent == nullptr) return;
-
+	if(LinkedBrainComponents.Contains(OtherBrainComponent)) return;
+	
 	LinkedBrainComponents.AddUnique(OtherBrainComponent);
+	OtherBrainComponent->GetLinkedBrainComponents().AddUnique(this);
 
 	LinkEvent.Broadcast(this, OtherBrainComponent);
 }
@@ -124,9 +126,11 @@ void UFleeBrainComponent::OnLinkDetectionEndOverlap(UPrimitiveComponent* Overlap
 
 	UFleeBrainComponent* OtherBrainComponent = OtherActor->FindComponentByClass<UFleeBrainComponent>();
 	if(OtherBrainComponent == nullptr) return;
-
+	if(!LinkedBrainComponents.Contains(OtherBrainComponent)) return;
+	
 	LinkedBrainComponents.Remove(OtherBrainComponent);
-
+	OtherBrainComponent->GetLinkedBrainComponents().Remove(this);
+	
 	UnlinkEvent.Broadcast(this, OtherBrainComponent);
 }
 #pragma endregion

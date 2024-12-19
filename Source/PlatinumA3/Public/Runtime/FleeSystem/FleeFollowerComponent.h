@@ -11,7 +11,7 @@
 
 class UFleeLeaderComponent;
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FGroupFollowedData
 {
 	GENERATED_BODY()
@@ -84,7 +84,7 @@ private:
 
 #pragma region GroupsFollowed
 public:
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable, BlueprintPure)
 	TMap<int,FGroupFollowedData>& GetGroupFollowedDatas();
 
 	UFUNCTION()
